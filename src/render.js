@@ -6,6 +6,5 @@ export const RenderPosition = {
 };
 
 export const renderTemplate = (container, template, place) => {
-  console.log(container, template, place);
   container.insertAdjacentHTML(place, template);
 };
