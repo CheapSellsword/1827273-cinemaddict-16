@@ -1,0 +1,4 @@
+const CARDS_REQUIRED = 5;
+
+
+export {CARDS_REQUIRED};

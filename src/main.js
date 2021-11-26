@@ -1,3 +1,4 @@
+import * as consts from './consts';
 import { RenderPosition, renderTemplate } from './render';
 
 import { createSortAndStatsBar } from './view/sort-stats-view';
@@ -13,18 +14,19 @@ const mainElement = document.querySelector('.main');
 const footerElement = document.querySelector('.footer');
 const footerStatsElement = footerElement.querySelector('.footer__statistics');
 
-renderTemplate(headerElement, createProfileRankAndAvatar(), RenderPosition.BEFOREEND);
-renderTemplate(mainElement, createSortAndStatsBar(), RenderPosition.AFTERBEGIN);
-renderTemplate(mainElement, createFilmsSection(), RenderPosition.BEFOREEND);
+renderTemplate(headerElement, createProfileRankAndAvatar(), RenderPosition.BEFORE_END);
+renderTemplate(mainElement, createSortAndStatsBar(), RenderPosition.AFTER_BEGIN);
+renderTemplate(mainElement, createFilmsSection(), RenderPosition.BEFORE_END);
 
+// closest?
 const cardContainerElement = mainElement.querySelector('.films-list__container');
 
-for (let i = 0; i < 5; i++) {
-  renderTemplate(cardContainerElement, createFilmCard(), RenderPosition.AFTERBEGIN);
+for (let i = 0; i < consts.CARDS_REQUIRED; i++) {
+  renderTemplate(cardContainerElement, createFilmCard(), RenderPosition.AFTER_BEGIN);
 }
 
-renderTemplate(cardContainerElement, createShowMoreButton(), RenderPosition.AFTEREND);
-renderTemplate(footerStatsElement, createFilmCount(), RenderPosition.AFTERBEGIN);
+renderTemplate(cardContainerElement, createShowMoreButton(), RenderPosition.AFTER_END);
+renderTemplate(footerStatsElement, createFilmCount(), RenderPosition.AFTER_BEGIN);
 
 // Мешающий попап!
-renderTemplate(footerElement, createFilmPopup(), RenderPosition.AFTEREND);
+renderTemplate(footerElement, createFilmPopup(), RenderPosition.AFTER_END);
