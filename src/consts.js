@@ -1,4 +1,4 @@
-const CARDS_REQUIRED = 5;
+const FILM_CARDS_COUNT = 5;
 
 
-export {CARDS_REQUIRED};
+export {FILM_CARDS_COUNT};

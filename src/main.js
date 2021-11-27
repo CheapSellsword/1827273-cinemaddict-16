@@ -15,18 +15,16 @@ const footerElement = document.querySelector('.footer');
 const footerStatsElement = footerElement.querySelector('.footer__statistics');
 
 renderTemplate(headerElement, createProfileRankAndAvatar(), RenderPosition.BEFORE_END);
-renderTemplate(mainElement, createSortAndStatsBar(), RenderPosition.AFTER_BEGIN);
+renderTemplate(mainElement, createSortAndStatsBar());
 renderTemplate(mainElement, createFilmsSection(), RenderPosition.BEFORE_END);
 
-// closest?
 const cardContainerElement = mainElement.querySelector('.films-list__container');
 
-for (let i = 0; i < consts.CARDS_REQUIRED; i++) {
-  renderTemplate(cardContainerElement, createFilmCard(), RenderPosition.AFTER_BEGIN);
+for (let i = 0; i < consts.FILM_CARDS_COUNT; i++) {
+  renderTemplate(cardContainerElement, createFilmCard());
 }
 
 renderTemplate(cardContainerElement, createShowMoreButton(), RenderPosition.AFTER_END);
-renderTemplate(footerStatsElement, createFilmCount(), RenderPosition.AFTER_BEGIN);
+renderTemplate(footerStatsElement, createFilmCount());
 
-// Мешающий попап!
 renderTemplate(footerElement, createFilmPopup(), RenderPosition.AFTER_END);
