@@ -1,0 +1,4 @@
+const FILM_CARDS_COUNT = 5;
+
+
+export {FILM_CARDS_COUNT};
