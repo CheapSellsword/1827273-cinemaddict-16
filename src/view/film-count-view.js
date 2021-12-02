@@ -1,4 +1,4 @@
-import { GENERATED_FILMS_COUNT } from "../consts";
+import { GENERATED_FILMS_COUNT } from '../consts';
 
 export const createFilmCount = () => (
   `<p>
