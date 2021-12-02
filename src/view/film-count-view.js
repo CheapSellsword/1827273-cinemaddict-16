@@ -1,5 +1,7 @@
+import { GENERATED_FILMS_COUNT } from "../consts";
+
 export const createFilmCount = () => (
   `<p>
-    130 291 movies inside
+    ${GENERATED_FILMS_COUNT} movies inside
   </p>`
 );
