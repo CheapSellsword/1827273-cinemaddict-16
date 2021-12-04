@@ -10,13 +10,17 @@ export const getRandomInteger = (a = 0, b = 1) => {
 // Допустимы ли магические числа ниже (dateGap и timeGap)? Они же временные?
 export const generateFullReleaseDate = () => {
   const dateGap = 100;
-  const randomDate = dayjs().subtract(getRandomInteger(0, dateGap), 'year').subtract(getRandomInteger(0, dateGap), 'month').subtract(getRandomInteger(0, dateGap), 'day');
-  return randomDate.format('DD/MM/YYYY');
+  const randomDate = dayjs()
+    .subtract(getRandomInteger(0, dateGap), 'year')
+    .subtract(getRandomInteger(0, dateGap), 'month')
+    .subtract(getRandomInteger(0, dateGap), 'day');
+  return randomDate.format('DD MMMM YYYY');
 };
 
 export const generateYearOnly = () => {
   const dateGap = 100;
-  const randomDate = dayjs().subtract(getRandomInteger(0, dateGap), 'year');
+  const randomDate = dayjs()
+    .subtract(getRandomInteger(0, dateGap), 'year');
   return randomDate.format('YYYY');
 };
 
@@ -24,7 +28,10 @@ export const getFormattedTimeOfComment = () => {
   const currentTime = dayjs();
   const timeGap = 10;
 
-  const timeOfComment = dayjs().subtract(getRandomInteger(0, timeGap), 'day').subtract(getRandomInteger(0, timeGap), 'hour').subtract(getRandomInteger(0, timeGap),'minute');
+  const timeOfComment = dayjs()
+    .subtract(getRandomInteger(0, timeGap), 'day')
+    .subtract(getRandomInteger(0, timeGap), 'hour')
+    .subtract(getRandomInteger(0, timeGap), 'minute');
   const daysDifference = currentTime.diff(timeOfComment, 'day');
 
   let formattedTimeOfComment;

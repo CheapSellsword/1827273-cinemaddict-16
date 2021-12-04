@@ -1,142 +1,78 @@
-import { getRandomInteger } from '../util';
-import { getFormattedTimeOfComment } from '../util';
-import { generateFullReleaseDate } from '../util';
-import { generateYearOnly } from '../util';
+import { MIN_ITEMS_COUNT, MIN_NUMBER, MAX_NUMBER, TITLES, POSTERS, DESCRIPTIONS, MAX_DESCRIPTIONS_COUNT, MAX_FILM_HOURS, MAX_FILM_MINUTES, GENRES, MAX_GENRES_COUNT, COUNTRIES, AGE_RESTRICTIONS, EMOJIS, NAMES, SURNAMES, MAX_NAMES_COUNT, PIECES_OF_COMMENTS, MAX_PIECES_OF_COMMENTS, MAX_COMMENTS } from '../consts';
+import { getRandomInteger, getFormattedTimeOfComment, generateFullReleaseDate, generateYearOnly } from '../util';
 
 // Информация о фильме
-const titles = [
-  'The Dance of Life',
-  'Sagebrush Trail',
-  'The Man with the Golden Arm',
-  'Santa Claus Conquers the Martians',
-  'Popeye the Sailor Meets Sindbad the Sailor',
-  'The Great Flamarion',
-  'Made for Each Other',
-];
 
-const generateTitle = () => titles[getRandomInteger(0, titles.length - 1)];
+// Функции такого вида (где ты используешь такую конструкцию [getRandomInteger(MIN_NUMBER, TITLES.length - 1)]),
+// можно заменить на одну функцию.
+// Она будет похожа на функцию getRandomInteger
+// Данная функция будет принимать любой массив и возвращать случайный элемент массива.
+// И ту конструкцию, которую ты используешь, будет написана 1 раз вместо 8.Плюс будет меньше магических чисел.
+const generateTitle = () => TITLES[getRandomInteger(MIN_NUMBER, TITLES.length - 1)];
 
-const posters = [
-  './images/posters/the-dance-of-life.jpg',
-  './images/posters/made-for-each-other.png',
-  './images/posters/popeye-meets-sinbad.png',
-  './images/posters/sagebrush-trail.jpg',
-  './images/posters/santa-claus-conquers-the-martians.jpg',
-  './images/posters/the-great-flamarion.jpg',
-  './images/posters/the-man-with-the-golden-arm.jpg',
-];
-
-const generatePoster = () => posters[getRandomInteger(0, posters.length - 1)];
+const generatePoster = () => POSTERS[getRandomInteger(MIN_NUMBER, POSTERS.length - 1)];
 
 const generateDescription = () => {
-  const descriptions = [
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
-    'Cras aliquet varius magna, non porta ligula feugiat eget. ',
-    'Fusce tristique felis at fermentum pharetra. ',
-    'Aliquam id orci ut lectus varius viverra. ',
-    'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. ',
-    'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. ',
-    'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. ',
-    'Sed sed nisi sed augue convallis suscipit in sed felis. ',
-    'Aliquam erat volutpat. ',
-    'Nunc fermentum tortor ac porta dapibus. ',
-    'In rutrum ac purus sit amet tempus. ',
-  ];
 
-  const maxDescriptionsCount = 5;
-  const randomCount = getRandomInteger(1, maxDescriptionsCount);
+  const randomDescriptionsCount = getRandomInteger(MIN_ITEMS_COUNT, MAX_DESCRIPTIONS_COUNT);
   let fullDescription = '';
-  for (let i = 1; i <= randomCount; i++) {
-    const randomDescriptionIndex = getRandomInteger(0, descriptions.length - 1);
-    fullDescription += descriptions[randomDescriptionIndex];
+  for (let i = MIN_ITEMS_COUNT; i <= randomDescriptionsCount; i++) {
+    const randomDescriptionIndex = getRandomInteger(MIN_NUMBER, DESCRIPTIONS.length - 1);
+    fullDescription += DESCRIPTIONS[randomDescriptionIndex];
   }
   return fullDescription;
 };
 
-const generateRating = () => {
-  const randomRating = `${getRandomInteger(0, 9)  }.${  getRandomInteger(0, 9)}`;
-  return randomRating;
-};
+const generateRating = () => `${getRandomInteger(MIN_NUMBER, MAX_NUMBER)  }.${  getRandomInteger(MIN_NUMBER, MAX_NUMBER)}`;
 
-const generateLength = () => {
-  const maxFilmLengthInHours = 2;
-  const maxMinutes = 59;
-  const randomLength = `${getRandomInteger(0, maxFilmLengthInHours)  }h ${  getRandomInteger(0, maxMinutes)  }m`;
-  return randomLength;
-};
+const generateLength = () => `${getRandomInteger(MIN_NUMBER, MAX_FILM_HOURS)  }h ${  getRandomInteger(MIN_NUMBER, MAX_FILM_MINUTES)  }m`;
 
-const genres = [
-  ' Musical',
-  ' Western',
-  ' Drama',
-  ' Comedy',
-  ' Cartoon',
-  ' Mystery',
-  ' Film-Noir',
-];
+// Много кода для функции, которая должна возвращать массив жанров различной длины.
+// Функция возвращающая рандомный жанр у тебя есть.
+// Подумай как реализовать функцию, которая будет принимать 2 параметра.
 
-const generateGenre = () => genres[getRandomInteger(0, genres.length - 1)];
+// Случайное число - это будет длина массива с жанрами
+// Функция возвращающая рандомный элемент массива (жанр, имя, любое значение)
+// и будет возвращать массив с рандомными элементами.
+
+// Ты делал похожее с карточками фильмов.
+const generateGenre = () => GENRES[getRandomInteger(MIN_NUMBER, GENRES.length - 1)];
 
 const generateGenres = () => {
-  const maxGenresCount = 3;
-  const randomGenresCount = getRandomInteger(1, maxGenresCount);
+  const randomGenresCount = getRandomInteger(MIN_ITEMS_COUNT, MAX_GENRES_COUNT);
   const genresArray = [];
-  for (let i = 0; i < randomGenresCount; i++) {
+  for (let i = MIN_NUMBER; i < randomGenresCount; i++) {
     const newGenre = generateGenre();
     genresArray.push(newGenre);
   }
   return genresArray;
 };
 
-const countries = ['US', 'Germany', 'France', 'Russia', 'England', 'Italy'];
-const generateCountry = () => countries[getRandomInteger(0, countries.length - 1)];
+const generateCountry = () => COUNTRIES[getRandomInteger(MIN_NUMBER, COUNTRIES.length - 1)];
 
-const ageRestrictions = ['0+', '12+', '16+', '18+'];
-const generateAgeRestriction = () => ageRestrictions[getRandomInteger(0, ageRestrictions.length - 1)];
+const generateAgeRestriction = () => AGE_RESTRICTIONS[getRandomInteger(MIN_NUMBER, AGE_RESTRICTIONS.length - 1)];
 
 
 // Комментарии и имена
-const emojis = [
-  './images/emoji/smile.png',
-  './images/emoji/sleeping.png',
-  './images/emoji/angry.png',
-  './images/emoji/puke.png',
-];
 
-const generateEmoji = () => emojis[getRandomInteger(0, emojis.length - 1)];
-
-const names = [
-  'Иван',
-  'Хуан Себастьян',
-  'Мария',
-  'Кристоф',
-  'Виктор',
-  'Юлия',
-  'Люпита',
-  'Вашингтон',
-];
-
-const surnames = [
-  'да Марья',
-  'Верон',
-  'Мирабелла',
-  'Вальц',
-  'Онопко',
-  'Топольницкая',
-  'Нионго',
-  'Ирвинг',
-];
+const generateEmoji = () => EMOJIS[getRandomInteger(MIN_NUMBER, EMOJIS.length - 1)];
 
 const generateName = () => {
-  const fullName = `${names[getRandomInteger(0, names.length - 1)]  } ${  surnames[getRandomInteger(0, surnames.length - 1)]}`;
+  const fullName = `${NAMES[getRandomInteger(MIN_NUMBER, NAMES.length - 1)]  } ${  SURNAMES[getRandomInteger(MIN_NUMBER, SURNAMES.length - 1)]}`;
   return fullName;
 };
 
+// Подумай как реализовать функцию, которая будет принимать 2 параметра.
+
+// Случайное число - это будет длина массива с жанрами
+// Функция возвращающая рандомный элемент массива (жанр, имя, любое значение)
+// и будет возвращать массив с рандомными элементами.
+
+// Ты делал похожее с карточками фильмов.
 const generateNames = () => {
-  const maxNamesCount = 4;
-  const randomNamesCount = getRandomInteger(1, maxNamesCount);
+  const randomNamesCount = getRandomInteger(MIN_ITEMS_COUNT, MAX_NAMES_COUNT);
   const fullNames = [];
-  for (let i = 0; i < randomNamesCount; i++) {
+  for (let i = MIN_NUMBER; i < randomNamesCount; i++) {
     const newName = generateName();
     fullNames.push(newName);
   }
@@ -144,22 +80,11 @@ const generateNames = () => {
 };
 
 const generateCommentText = () => {
-  const piecesOfComments = [
-    'Interesting setting! ',
-    'A good cast! ',
-    'Booooooooooring. ',
-    'Very very old. ',
-    'Meh ',
-    'Almost two hours? ',
-    'Seriously? ',
-  ];
-
-  const maxPiecesOfComments = 3;
-  const randomCount = getRandomInteger(1, maxPiecesOfComments);
+  const randomCount = getRandomInteger(MIN_ITEMS_COUNT, MAX_PIECES_OF_COMMENTS);
   let fullComment = '';
-  for (let i = 1; i <= randomCount; i++) {
-    const randomPieceOfCommentIndex = getRandomInteger(0, piecesOfComments.length - 1);
-    fullComment += piecesOfComments[randomPieceOfCommentIndex];
+  for (let i = MIN_ITEMS_COUNT; i <= randomCount; i++) {
+    const randomPieceOfCommentIndex = getRandomInteger(MIN_NUMBER, PIECES_OF_COMMENTS.length - 1);
+    fullComment += PIECES_OF_COMMENTS[randomPieceOfCommentIndex];
   }
   return fullComment;
 };
@@ -173,11 +98,18 @@ const generateComment = () => (
   }
 );
 
+
+// Подумай как реализовать функцию, которая будет принимать 2 параметра.
+
+// Случайное число - это будет длина массива с жанрами
+// Функция возвращающая рандомный элемент массива (жанр, имя, любое значение)
+// и будет возвращать массив с рандомными элементами.
+
+// Ты делал похожее с карточками фильмов.
 const generateComments = () => {
-  const maxComments = 5;
-  const randomCommentsCount = getRandomInteger(1, maxComments);
+  const randomCommentsCount = getRandomInteger(MIN_ITEMS_COUNT, MAX_COMMENTS);
   const filmComments = [];
-  for (let i = 0; i < randomCommentsCount; i++) {
+  for (let i = MIN_NUMBER; i < randomCommentsCount; i++) {
     const newComment = generateComment();
     filmComments.push(newComment);
   }
