@@ -11,7 +11,6 @@ import { createComments } from './view/comments-view';
 import { generateFilm } from './mock/film';
 import { generateFilter } from './mock/filter';
 
-
 const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
 const filters = generateFilter(films);
 

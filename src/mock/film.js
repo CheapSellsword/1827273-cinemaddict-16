@@ -1,18 +1,9 @@
 import { MIN_ITEMS_COUNT, MIN_NUMBER, MAX_NUMBER, TITLES, POSTERS, DESCRIPTIONS, MAX_DESCRIPTIONS_COUNT, MAX_FILM_HOURS, MAX_FILM_MINUTES, GENRES, MAX_GENRES_COUNT, COUNTRIES, AGE_RESTRICTIONS, EMOJIS, NAMES, SURNAMES, MAX_NAMES_COUNT, PIECES_OF_COMMENTS, MAX_PIECES_OF_COMMENTS, MAX_COMMENTS } from '../consts';
-import { getRandomInteger, getFormattedTimeOfComment, generateFullReleaseDate, generateYearOnly } from '../util';
+import { getRandomInteger, getRandomPositiveFloat, getFormattedTimeOfComment, generateFullReleaseDate, generateYearOnly, getRandomItemFromArray } from '../util';
 
 // Информация о фильме
 
-// Функции такого вида (где ты используешь такую конструкцию [getRandomInteger(MIN_NUMBER, TITLES.length - 1)]),
-// можно заменить на одну функцию.
-// Она будет похожа на функцию getRandomInteger
-// Данная функция будет принимать любой массив и возвращать случайный элемент массива.
-// И ту конструкцию, которую ты используешь, будет написана 1 раз вместо 8.Плюс будет меньше магических чисел.
-
-const getRandomItemFromArray = (array) => array[getRandomInteger(MIN_NUMBER, array.length - 1)];
-
 const generateTitle = () => getRandomItemFromArray(TITLES);
-
 const generatePoster = () => getRandomItemFromArray(POSTERS);
 
 const generateDescription = () => {
@@ -25,8 +16,7 @@ const generateDescription = () => {
   return fullDescription;
 };
 
-const generateRating = () => `${getRandomInteger(MIN_NUMBER, MAX_NUMBER)  }.${  getRandomInteger(MIN_NUMBER, MAX_NUMBER)}`;
-
+const generateRating = () => getRandomPositiveFloat(MIN_NUMBER, MAX_NUMBER);
 const generateLength = () => `${getRandomInteger(MIN_NUMBER, MAX_FILM_HOURS)  }h ${  getRandomInteger(MIN_NUMBER, MAX_FILM_MINUTES)  }m`;
 
 // Много кода для функции, которая должна возвращать массив жанров различной длины.

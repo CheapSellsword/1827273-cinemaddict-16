@@ -1,10 +1,18 @@
 import dayjs from 'dayjs';
+import { MIN_NUMBER } from './consts';
 
 export const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
 
   return Math.floor(lower + Math.random() * (upper - lower + 1));
+};
+
+export const getRandomPositiveFloat = (first, second, digits = 1) => {
+  const lower = Math.min(Math.abs(first), Math.abs(second));
+  const upper = Math.max(Math.abs(first), Math.abs(second));
+  const result = Math.random() * (upper - lower) + lower;
+  return result.toFixed(digits);
 };
 
 // Допустимы ли магические числа ниже (dateGap и timeGap)? Они же временные?
@@ -48,3 +56,5 @@ export const getFormattedTimeOfComment = () => {
 
   return formattedTimeOfComment;
 };
+
+export const getRandomItemFromArray = (array) => array[getRandomInteger(MIN_NUMBER, array.length - 1)];
