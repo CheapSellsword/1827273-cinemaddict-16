@@ -8,12 +8,14 @@ import { getRandomInteger, getFormattedTimeOfComment, generateFullReleaseDate, g
 // Она будет похожа на функцию getRandomInteger
 // Данная функция будет принимать любой массив и возвращать случайный элемент массива.
 // И ту конструкцию, которую ты используешь, будет написана 1 раз вместо 8.Плюс будет меньше магических чисел.
-const generateTitle = () => TITLES[getRandomInteger(MIN_NUMBER, TITLES.length - 1)];
 
-const generatePoster = () => POSTERS[getRandomInteger(MIN_NUMBER, POSTERS.length - 1)];
+const getRandomItemFromArray = (array) => array[getRandomInteger(MIN_NUMBER, array.length - 1)];
+
+const generateTitle = () => getRandomItemFromArray(TITLES);
+
+const generatePoster = () => getRandomItemFromArray(POSTERS);
 
 const generateDescription = () => {
-
   const randomDescriptionsCount = getRandomInteger(MIN_ITEMS_COUNT, MAX_DESCRIPTIONS_COUNT);
   let fullDescription = '';
   for (let i = MIN_ITEMS_COUNT; i <= randomDescriptionsCount; i++) {
@@ -36,7 +38,7 @@ const generateLength = () => `${getRandomInteger(MIN_NUMBER, MAX_FILM_HOURS)  }h
 // и будет возвращать массив с рандомными элементами.
 
 // Ты делал похожее с карточками фильмов.
-const generateGenre = () => GENRES[getRandomInteger(MIN_NUMBER, GENRES.length - 1)];
+const generateGenre = () => getRandomItemFromArray(GENRES);
 
 const generateGenres = () => {
   const randomGenresCount = getRandomInteger(MIN_ITEMS_COUNT, MAX_GENRES_COUNT);
@@ -48,17 +50,17 @@ const generateGenres = () => {
   return genresArray;
 };
 
-const generateCountry = () => COUNTRIES[getRandomInteger(MIN_NUMBER, COUNTRIES.length - 1)];
+const generateCountry = () => getRandomItemFromArray(COUNTRIES);
 
-const generateAgeRestriction = () => AGE_RESTRICTIONS[getRandomInteger(MIN_NUMBER, AGE_RESTRICTIONS.length - 1)];
+const generateAgeRestriction = () => getRandomItemFromArray(AGE_RESTRICTIONS);
 
 
 // Комментарии и имена
 
-const generateEmoji = () => EMOJIS[getRandomInteger(MIN_NUMBER, EMOJIS.length - 1)];
+const generateEmoji = () => getRandomItemFromArray(EMOJIS);
 
 const generateName = () => {
-  const fullName = `${NAMES[getRandomInteger(MIN_NUMBER, NAMES.length - 1)]  } ${  SURNAMES[getRandomInteger(MIN_NUMBER, SURNAMES.length - 1)]}`;
+  const fullName = `${getRandomItemFromArray(NAMES)  } ${  getRandomItemFromArray(SURNAMES)}`;
   return fullName;
 };
 
