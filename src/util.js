@@ -1,10 +1,14 @@
 import dayjs from 'dayjs';
 import { MIN_NUMBER } from './consts';
+import { DATE_GAP } from './consts';
+import { TIME_GAP } from './consts';
+import { YESTERDAY_LIMIT } from './consts';
+import { TODAY_LIMIT } from './consts';
+import { DAYS_DIFFERENCE_LIMIT } from './consts';
 
 export const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
-
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
@@ -15,46 +19,42 @@ export const getRandomPositiveFloat = (first, second, digits = 1) => {
   return result.toFixed(digits);
 };
 
-// Допустимы ли магические числа ниже (dateGap и timeGap)? Они же временные?
+export const generateRandomBoolean = () => Boolean(getRandomInteger(0, 1));
+
 export const generateFullReleaseDate = () => {
-  const dateGap = 100;
   const randomDate = dayjs()
-    .subtract(getRandomInteger(0, dateGap), 'year')
-    .subtract(getRandomInteger(0, dateGap), 'month')
-    .subtract(getRandomInteger(0, dateGap), 'day');
+    .subtract(getRandomInteger(MIN_NUMBER, DATE_GAP), 'year')
+    .subtract(getRandomInteger(MIN_NUMBER, DATE_GAP), 'month')
+    .subtract(getRandomInteger(MIN_NUMBER, DATE_GAP), 'day');
   return randomDate.format('DD MMMM YYYY');
 };
 
 export const generateYearOnly = () => {
-  const dateGap = 100;
   const randomDate = dayjs()
-    .subtract(getRandomInteger(0, dateGap), 'year');
+    .subtract(getRandomInteger(MIN_NUMBER, DATE_GAP), 'year');
   return randomDate.format('YYYY');
 };
 
 export const getFormattedTimeOfComment = () => {
   const currentTime = dayjs();
-  const timeGap = 10;
-
   const timeOfComment = dayjs()
-    .subtract(getRandomInteger(0, timeGap), 'day')
-    .subtract(getRandomInteger(0, timeGap), 'hour')
-    .subtract(getRandomInteger(0, timeGap), 'minute');
+    .subtract(getRandomInteger(MIN_NUMBER, TIME_GAP), 'day')
+    .subtract(getRandomInteger(MIN_NUMBER, TIME_GAP), 'hour')
+    .subtract(getRandomInteger(MIN_NUMBER, TIME_GAP), 'minute');
   const daysDifference = currentTime.diff(timeOfComment, 'day');
 
   let formattedTimeOfComment;
-
-  if (daysDifference < 5 && daysDifference > 1) {
+  if (daysDifference < DAYS_DIFFERENCE_LIMIT && daysDifference > YESTERDAY_LIMIT) {
     formattedTimeOfComment = `${daysDifference  } days ago`;
-  } else if (daysDifference === 1) {
+  } else if (daysDifference === YESTERDAY_LIMIT) {
     formattedTimeOfComment = 'Yesterday';
-  } else if (daysDifference === 0) {
+  } else if (daysDifference === TODAY_LIMIT) {
     formattedTimeOfComment = 'Today';
   } else {
     formattedTimeOfComment = timeOfComment.format('DD/MM/YYYY HH:mm');
   }
-
   return formattedTimeOfComment;
 };
 
 export const getRandomItemFromArray = (array) => array[getRandomInteger(MIN_NUMBER, array.length - 1)];
+export const generateDataArray = (elementsCount, randomItem) => Array.from ({length: elementsCount}, randomItem);

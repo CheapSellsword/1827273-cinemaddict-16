@@ -1,6 +1,7 @@
 export const GENERATED_FILMS_COUNT = 17;
 export const FILMS_COUNT_PER_STEP = 5;
-
+export const DATE_GAP = 100;
+export const TIME_GAP = 10;
 export const MAX_DESCRIPTION_LENGTH = 140;
 export const TITLES = [
   'The Dance of Life',
@@ -43,13 +44,13 @@ export const MAX_FILM_HOURS = 2;
 export const MAX_FILM_MINUTES = 59;
 
 export const GENRES = [
-  ' Musical',
-  ' Western',
-  ' Drama',
-  ' Comedy',
-  ' Cartoon',
-  ' Mystery',
-  ' Film-Noir',
+  'Musical',
+  'Western',
+  'Drama',
+  'Comedy',
+  'Cartoon',
+  'Mystery',
+  'Film-Noir',
 ];
 export const MAX_GENRES_COUNT = 3;
 export const COUNTRIES = ['US', 'Germany', 'France', 'Russia', 'England', 'Italy'];
@@ -92,3 +93,7 @@ export const PIECES_OF_COMMENTS = [
 ];
 export const MAX_PIECES_OF_COMMENTS = 3;
 export const MAX_COMMENTS = 5;
+
+export const DAYS_DIFFERENCE_LIMIT = 5;
+export const YESTERDAY_LIMIT = 1;
+export const TODAY_LIMIT = 0;

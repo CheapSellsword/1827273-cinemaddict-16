@@ -7,7 +7,6 @@ import { createProfileRankAndAvatar } from './view/profile-rank-avatar-view';
 import { createShowMoreButton } from './view/show-more-button-view';
 import { createFilmPopup } from './view/film-popup.view';
 import { createFilmCount } from './view/film-count-view';
-import { createComments } from './view/comments-view';
 import { generateFilm } from './mock/film';
 import { generateFilter } from './mock/filter';
 
@@ -52,6 +51,3 @@ if (films.length > FILMS_COUNT_PER_STEP) {
 
 renderTemplate(footerStatsElement, createFilmCount());
 renderTemplate(footerElement, createFilmPopup(films[0]), RenderPosition.AFTER_END);
-
-const commentsList = document.querySelector('.film-details__comments-list');
-renderTemplate (commentsList, createComments(films[0]), RenderPosition.BEFORE_END);

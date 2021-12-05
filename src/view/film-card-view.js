@@ -1,11 +1,7 @@
 import { MAX_DESCRIPTION_LENGTH } from '../consts';
 
 export const createFilmCard = (film) => {
-  const {title, poster, releaseYear, rating, length, genres, comments, isOnWatchlist, isWatched, isFavorite} = film;
-  let {description} = film;
-  description = description.length > MAX_DESCRIPTION_LENGTH ?
-    `${description.substring(0, MAX_DESCRIPTION_LENGTH - 1)  }...` : description;
-
+  const {description, title, poster, releaseYear, rating, length, genres, comments, isOnWatchlist, isWatched, isFavorite} = film;
   const watchlistClassName = isOnWatchlist
     ? 'film-card__controls-item--active'
     : '';
@@ -25,10 +21,11 @@ export const createFilmCard = (film) => {
               <p class="film-card__info">
                 <span class="film-card__year">${releaseYear}</span>
                 <span class="film-card__duration">${length}</span>
-                <span class="film-card__genre">${genres}</span>
+                <span class="film-card__genre">${genres[0]}</span>
               </p>
               <img src="${poster}" alt="" class="film-card__poster">
-              <p class="film-card__description">${description}</p>
+              <p class="film-card__description">${description.length > MAX_DESCRIPTION_LENGTH ?
+    `${description.substring(0, MAX_DESCRIPTION_LENGTH - 1)  }...` : description}</p>
               <span class="film-card__comments">${comments.length} comments</span>
             </a>
             <div class="film-card__controls">

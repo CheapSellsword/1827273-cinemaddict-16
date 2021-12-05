@@ -1,7 +1,10 @@
 import { MIN_ITEMS_COUNT, MIN_NUMBER, MAX_NUMBER, TITLES, POSTERS, DESCRIPTIONS, MAX_DESCRIPTIONS_COUNT, MAX_FILM_HOURS, MAX_FILM_MINUTES, GENRES, MAX_GENRES_COUNT, COUNTRIES, AGE_RESTRICTIONS, EMOJIS, NAMES, SURNAMES, MAX_NAMES_COUNT, PIECES_OF_COMMENTS, MAX_PIECES_OF_COMMENTS, MAX_COMMENTS } from '../consts';
-import { getRandomInteger, getRandomPositiveFloat, getFormattedTimeOfComment, generateFullReleaseDate, generateYearOnly, getRandomItemFromArray } from '../util';
-
-// Информация о фильме
+import { getRandomInteger, getFormattedTimeOfComment, generateFullReleaseDate, generateYearOnly } from '../util';
+//как лучше импортировать?
+import { getRandomItemFromArray } from '../util';
+import { getRandomPositiveFloat } from '../util';
+import { generateRandomBoolean } from '../util';
+import { generateDataArray } from '../util';
 
 const generateTitle = () => getRandomItemFromArray(TITLES);
 const generatePoster = () => getRandomItemFromArray(POSTERS);
@@ -16,60 +19,20 @@ const generateDescription = () => {
   return fullDescription;
 };
 
-const generateRating = () => getRandomPositiveFloat(MIN_NUMBER, MAX_NUMBER);
-const generateLength = () => `${getRandomInteger(MIN_NUMBER, MAX_FILM_HOURS)  }h ${  getRandomInteger(MIN_NUMBER, MAX_FILM_MINUTES)  }m`;
-
-// Много кода для функции, которая должна возвращать массив жанров различной длины.
-// Функция возвращающая рандомный жанр у тебя есть.
-// Подумай как реализовать функцию, которая будет принимать 2 параметра.
-
-// Случайное число - это будет длина массива с жанрами
-// Функция возвращающая рандомный элемент массива (жанр, имя, любое значение)
-// и будет возвращать массив с рандомными элементами.
-
-// Ты делал похожее с карточками фильмов.
+const generateEmoji = () => getRandomItemFromArray(EMOJIS);
 const generateGenre = () => getRandomItemFromArray(GENRES);
-
-const generateGenres = () => {
-  const randomGenresCount = getRandomInteger(MIN_ITEMS_COUNT, MAX_GENRES_COUNT);
-  const genresArray = [];
-  for (let i = MIN_NUMBER; i < randomGenresCount; i++) {
-    const newGenre = generateGenre();
-    genresArray.push(newGenre);
-  }
-  return genresArray;
-};
-
+const generateGenres = () => generateDataArray(getRandomInteger(MIN_ITEMS_COUNT, MAX_GENRES_COUNT), generateGenre);
+const generateLength = () => `${getRandomInteger(MIN_NUMBER, MAX_FILM_HOURS)  }h ${  getRandomInteger(MIN_NUMBER, MAX_FILM_MINUTES)  }m`;
+const generateRating = () => getRandomPositiveFloat(MIN_NUMBER, MAX_NUMBER);
 const generateCountry = () => getRandomItemFromArray(COUNTRIES);
-
 const generateAgeRestriction = () => getRandomItemFromArray(AGE_RESTRICTIONS);
 
-
-// Комментарии и имена
-
-const generateEmoji = () => getRandomItemFromArray(EMOJIS);
-
 const generateName = () => {
-  const fullName = `${getRandomItemFromArray(NAMES)  } ${  getRandomItemFromArray(SURNAMES)}`;
+  const fullName = `${getRandomItemFromArray(NAMES)} ${getRandomItemFromArray(SURNAMES)}`;
   return fullName;
 };
 
-// Подумай как реализовать функцию, которая будет принимать 2 параметра.
-
-// Случайное число - это будет длина массива с жанрами
-// Функция возвращающая рандомный элемент массива (жанр, имя, любое значение)
-// и будет возвращать массив с рандомными элементами.
-
-// Ты делал похожее с карточками фильмов.
-const generateNames = () => {
-  const randomNamesCount = getRandomInteger(MIN_ITEMS_COUNT, MAX_NAMES_COUNT);
-  const fullNames = [];
-  for (let i = MIN_NUMBER; i < randomNamesCount; i++) {
-    const newName = generateName();
-    fullNames.push(newName);
-  }
-  return fullNames;
-};
+const generateNames = () => generateDataArray(getRandomInteger(MIN_ITEMS_COUNT, MAX_NAMES_COUNT), generateName);
 
 const generateCommentText = () => {
   const randomCount = getRandomInteger(MIN_ITEMS_COUNT, MAX_PIECES_OF_COMMENTS);
@@ -81,8 +44,9 @@ const generateCommentText = () => {
   return fullComment;
 };
 
-const generateComment = () => (
+const generateComment = (id) => (
   {
+    id,
     emoji: generateEmoji(),
     author: generateName(),
     text: generateCommentText(),
@@ -90,30 +54,23 @@ const generateComment = () => (
   }
 );
 
+const generateComments = () => generateDataArray(getRandomInteger(MIN_NUMBER, MAX_COMMENTS), generateComment);
 
-// Подумай как реализовать функцию, которая будет принимать 2 параметра.
-
-// Случайное число - это будет длина массива с жанрами
-// Функция возвращающая рандомный элемент массива (жанр, имя, любое значение)
-// и будет возвращать массив с рандомными элементами.
-
-// Ты делал похожее с карточками фильмов.
-const generateComments = () => {
+// Получается создать массив из id комментариев, но не понимаю как связать их с объектами комментариев с помощью ссылок
+/* const generateComments = () => {
   const randomCommentsCount = getRandomInteger(MIN_ITEMS_COUNT, MAX_COMMENTS);
   const filmComments = [];
   for (let i = MIN_NUMBER; i < randomCommentsCount; i++) {
-    const newComment = generateComment();
+    const newComment = generateComment(i+1);
     filmComments.push(newComment);
   }
-  return filmComments;
-};
-
-// Экспорт
-const generateRandomBoolean = () => Boolean(getRandomInteger(0, 1));
+  return filmComments.map((comment) => comment.id);
+}; */
 
 export const generateFilm = () => (
   {
     title: generateTitle(),
+    alternativeTitle: generateTitle(),
     poster: generatePoster(),
     description: generateDescription(),
     fullReleaseDate: generateFullReleaseDate(),
