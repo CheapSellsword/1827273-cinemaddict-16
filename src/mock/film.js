@@ -1,10 +1,5 @@
 import { MIN_ITEMS_COUNT, MIN_NUMBER, MAX_NUMBER, TITLES, POSTERS, DESCRIPTIONS, MAX_DESCRIPTIONS_COUNT, MAX_FILM_HOURS, MAX_FILM_MINUTES, GENRES, MAX_GENRES_COUNT, COUNTRIES, AGE_RESTRICTIONS, EMOJIS, NAMES, SURNAMES, MAX_NAMES_COUNT, PIECES_OF_COMMENTS, MAX_PIECES_OF_COMMENTS, MAX_COMMENTS } from '../consts';
-import { getRandomInteger, getFormattedTimeOfComment, generateFullReleaseDate, generateYearOnly } from '../util';
-//как лучше импортировать?
-import { getRandomItemFromArray } from '../util';
-import { getRandomPositiveFloat } from '../util';
-import { generateRandomBoolean } from '../util';
-import { generateDataArray } from '../util';
+import { generateDataArray, generateRandomBoolean, getRandomPositiveFloat, getRandomItemFromArray, getRandomInteger, getFormattedTimeOfComment, generateFullReleaseDate, generateYearOnly } from '../util';
 
 const generateTitle = () => getRandomItemFromArray(TITLES);
 const generatePoster = () => getRandomItemFromArray(POSTERS);
@@ -44,9 +39,11 @@ const generateCommentText = () => {
   return fullComment;
 };
 
-const generateComment = (id) => (
+const generateRandomId = () => getRandomInteger(MIN_NUMBER, MAX_NUMBER);
+
+const generateComment = () => (
   {
-    id,
+    id: generateRandomId(),
     emoji: generateEmoji(),
     author: generateName(),
     text: generateCommentText(),
@@ -55,17 +52,6 @@ const generateComment = (id) => (
 );
 
 const generateComments = () => generateDataArray(getRandomInteger(MIN_NUMBER, MAX_COMMENTS), generateComment);
-
-// Получается создать массив из id комментариев, но не понимаю как связать их с объектами комментариев с помощью ссылок
-/* const generateComments = () => {
-  const randomCommentsCount = getRandomInteger(MIN_ITEMS_COUNT, MAX_COMMENTS);
-  const filmComments = [];
-  for (let i = MIN_NUMBER; i < randomCommentsCount; i++) {
-    const newComment = generateComment(i+1);
-    filmComments.push(newComment);
-  }
-  return filmComments.map((comment) => comment.id);
-}; */
 
 export const generateFilm = () => (
   {

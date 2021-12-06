@@ -1,10 +1,5 @@
 import dayjs from 'dayjs';
-import { MIN_NUMBER } from './consts';
-import { DATE_GAP } from './consts';
-import { TIME_GAP } from './consts';
-import { YESTERDAY_LIMIT } from './consts';
-import { TODAY_LIMIT } from './consts';
-import { DAYS_DIFFERENCE_LIMIT } from './consts';
+import { DAYS_DIFFERENCE_LIMIT, TODAY_LIMIT, YESTERDAY_LIMIT, TIME_GAP, MIN_NUMBER, DATE_GAP } from './consts';
 
 export const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
