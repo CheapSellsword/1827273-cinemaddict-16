@@ -1,6 +1,7 @@
 import { MAX_DESCRIPTION_LENGTH } from '../consts';
+import { createElement } from '../render';
 
-export const createFilmCard = (film) => {
+const createFilmCard = (film) => {
   const {description, title, poster, releaseYear, rating, length, genres, comments, isOnWatchlist, isWatched, isFavorite} = film;
   const watchlistClassName = isOnWatchlist
     ? 'film-card__controls-item--active'
@@ -36,3 +37,27 @@ export const createFilmCard = (film) => {
           </article>`;
 };
 
+export default class FilmCardView {
+  #element = null;
+  #film = null;
+
+  constructor(film) {
+    this.#film = film;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createFilmCard(this.#film);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}

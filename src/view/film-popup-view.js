@@ -1,8 +1,8 @@
-import { MIN_ITEMS_COUNT } from '../consts';
+import { createElement } from '../render';
 
-export const createFilmPopup = (film) => {
+const createFilmPopup = (film) => {
   const {title, poster, fullReleaseDate, rating, length, genres, director, writers, cast, country, description, ageRestriction, comments, isOnWatchlist, isWatched, isFavourite} = film;
-  const genreSuffix = genres.length > MIN_ITEMS_COUNT ? 'Genres' : 'Genre';
+  const genreSuffix = genres.length > 1 ? 'Genres' : 'Genre';
 
   const createGenresTemplate = () => genres.map((genre) =>
     `<span class="film-details__genre">${genre || ''}</span>`
@@ -23,7 +23,6 @@ export const createFilmPopup = (film) => {
       </div>
     </li>`
   ).join('');
-
 
   const watchlistClassName = isOnWatchlist
     ? 'film-details__control-button--active'
@@ -149,3 +148,28 @@ export const createFilmPopup = (film) => {
             </form>
           </section>`;
 };
+
+export default class FilmPopupView {
+  #element = null;
+  #film = null;
+
+  constructor(film) {
+    this.#film = film;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createFilmPopup(this.#film);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
