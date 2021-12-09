@@ -1,5 +1,7 @@
 import { createElement } from '../render';
 
+
+// map
 const createSortItemTemplate = (type, isActive) => {
   const activeClass = isActive ? 'sort__button--active' : '';
 

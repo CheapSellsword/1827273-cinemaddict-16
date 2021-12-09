@@ -11,6 +11,7 @@ import FilmCardView from './view/film-card-view';
 import ShowMoreButtonView from './view/show-more-button-view';
 import FilmPopupView from './view/film-popup-view';
 
+//Почему функция generateFilm здесь идёт без вызова?
 const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
 const filters = generateFilter(films);
 
@@ -25,6 +26,7 @@ const renderFilm = (filmListElement, film) => {
   const body = document.querySelector('body');
   const closePopupButton = filmPopupComponent.element.querySelector('.film-details__close-btn');
 
+  // Как сделать так, чтобы, при открытии попапа, закрывался уже открытый попап? Или это будет в следующих заданиях?
   const onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
@@ -77,7 +79,14 @@ if (films.length > FILMS_COUNT_PER_STEP) {
 
   render(cardContainerElement, showMoreButtonComponent.element, RenderPosition.AFTER_END);
 
-  const showMoreButton = document.querySelector('.films-list__show-more');
+  // Почему, если '.films-list__show-more' искать селектором не в 'mainElement', а в 'showMoreButtonComponent.element', то консоль выдает
+  // Uncaught TypeError: Cannot read properties of null (reading 'addEventListener')
+  //   at main.js:84
+  //   at bundle.js:5605
+  //   at bundle.js:5607
+
+  const showMoreButton = mainElement.querySelector('.films-list__show-more');
+  //const showMoreButton = showMoreButtonComponent.element.querySelector('.films-list__show-more');
 
   showMoreButton.addEventListener('click', (evt) => {
     evt.preventDefault();
