@@ -1,14 +1,24 @@
 import { createElement } from '../render';
 
-const createSortTemplate = () => (
-  `<ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-    <li><a href="#" class="sort__button">Sort by date</a></li>
-    <li><a href="#" class="sort__button">Sort by rating</a></li>
-  </ul>`
-);
+const createSortItemTemplate = (type, isActive) => {
+  const activeClass = isActive ? 'sort__button--active' : '';
 
-export default class FilmSortView {
+  return (
+    `<li>
+      <a href="${type}" class="sort__button ${activeClass}">Sort by ${type}</a>
+    </li>`
+  );
+};
+
+const sortTypesArray = [
+  'date',
+  'rating',
+  'default',
+];
+
+const createSortTemplate = () => sortTypesArray.map((type) => createSortItemTemplate(type));
+
+export default class SortView {
     #element = null;
 
     get element() {

@@ -3,9 +3,9 @@ import { RenderPosition, render } from './render';
 import { generateFilm } from './mock/film';
 import { generateFilter } from './mock/filter';
 import FilmCountView from './view/film-count-view';
-import FiltersAndStatsBarView from './view/filter-stats-view';
-import FilmSortView from './view/sort-view';
-import ProfileRankAndAvatarView from './view/profile-rank-avatar-view';
+import FiltersAndStatsBarView from './view/filters-and-stats-bar-view.js';
+import SortView from './view/sort-view';
+import ProfileRankAndAvatarView from './view/profile-and-rank-avatar-view';
 import FilmsSectionView from './view/films-section-view';
 import FilmCardView from './view/film-card-view';
 import ShowMoreButtonView from './view/show-more-button-view';
@@ -54,18 +54,29 @@ render(headerElement, new ProfileRankAndAvatarView().element, RenderPosition.BEF
 
 const filtersAndStatsBar =  new FiltersAndStatsBarView(filters);
 render(mainElement, filtersAndStatsBar.element, RenderPosition.AFTER_BEGIN);
-const filmSort = new FilmSortView();
+
+// Для второй части задания
+// if (films.length === 0) {
+//   render(filtersAndStatsBar.element, new NoFilmView(filters).element, RenderPosition.AFTER_END);
+// } else {}
+const filmSort = new SortView();
 render(filtersAndStatsBar.element, filmSort.element, RenderPosition.AFTER_END);
+
 render(filmSort.element, new FilmsSectionView().element, RenderPosition.AFTER_END);
 
 const cardContainerElement = mainElement.querySelector('.films-list__container');
+
 for (let i = 0; i < Math.min(films.length, FILMS_COUNT_PER_STEP); i++) {
   renderFilm(cardContainerElement, films[i]);
 }
 
 if (films.length > FILMS_COUNT_PER_STEP) {
   let renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
-  render(cardContainerElement, new ShowMoreButtonView().element, RenderPosition.AFTER_END);
+
+  const showMoreButtonComponent = new ShowMoreButtonView();
+
+  render(cardContainerElement, showMoreButtonComponent.element, RenderPosition.AFTER_END);
+
   const showMoreButton = document.querySelector('.films-list__show-more');
 
   showMoreButton.addEventListener('click', (evt) => {
@@ -77,9 +88,11 @@ if (films.length > FILMS_COUNT_PER_STEP) {
     renderedFilmCardsCount += FILMS_COUNT_PER_STEP;
 
     if (renderedFilmCardsCount >= films.length) {
-      showMoreButton.remove();
+      showMoreButtonComponent.element.remove();
+      showMoreButtonComponent.removeElement();
     }
   });
 }
+
 
 render(footerStatsElement, new FilmCountView(films).element, RenderPosition.BEFORE_END);

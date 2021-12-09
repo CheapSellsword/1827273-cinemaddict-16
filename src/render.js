@@ -23,9 +23,10 @@ export const render = (container, element, place = RenderPosition.BEFORE_END) =>
   }
 };
 
-export const createElement = (template) => {
-  const newElement = document.createElement('div');
-  newElement.innerHTML = template;
 
-  return newElement.firstChild;
+export const createElement = (template) => {
+  const newDiv = document.createElement('div');
+  newDiv.innerHTML = template;
+
+  return newDiv.firstChild;
 };
