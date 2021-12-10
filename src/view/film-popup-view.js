@@ -1,7 +1,7 @@
 import { createElement } from '../render';
 
 const createFilmPopup = (film) => {
-  const {title, poster, fullReleaseDate, rating, length, genres, director, writers, cast, country, description, ageRestriction, comments, isOnWatchlist, isWatched, isFavourite} = film;
+  const {title, poster, fullReleaseDate, rating, length, genres, director, writers, cast, country, description, ageRestriction, comments, isOnWatchlist, isWatched, isFavorite} = film;
   const genreSuffix = genres.length > 1 ? 'Genres' : 'Genre';
 
   const createGenresTemplate = () => genres.map((genre) =>
@@ -32,7 +32,7 @@ const createFilmPopup = (film) => {
     ? 'film-details__control-button--active'
     : '';
 
-  const favouriteClassName = isFavourite
+  const favoriteClassName = isFavorite
     ? 'film-details__control-button--active'
     : '';
 
@@ -102,7 +102,7 @@ const createFilmPopup = (film) => {
                 <section class="film-details__controls">
                   <button type="button" class="film-details__control-button ${watchlistClassName} film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
                   <button type="button" class="film-details__control-button ${watchedClassName} film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-                  <button type="button" class="film-details__control-button ${favouriteClassName} film-details__control-button--favorite ${favouriteClassName}" id="favorite" name="favorite">Add to favorites</button>
+                  <button type="button" class="film-details__control-button ${favoriteClassName} film-details__control-button--favorite ${favoriteClassName}" id="favorite" name="favorite">Add to favorites</button>
                 </section>
               </div>
 

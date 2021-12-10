@@ -72,6 +72,6 @@ export const generateFilm = () => (
     comments: generateComments(),
     isOnWatchlist: generateRandomBoolean(),
     isWatched: generateRandomBoolean(),
-    isFavourite: generateRandomBoolean(),
+    isFavorite: generateRandomBoolean(),
   }
 );
