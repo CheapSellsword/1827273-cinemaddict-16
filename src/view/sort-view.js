@@ -1,7 +1,6 @@
 import { createElement } from '../render';
+import { SORT_TYPES } from '../consts';
 
-
-// map
 const createSortItemTemplate = (type, isActive) => {
   const activeClass = isActive ? 'sort__button--active' : '';
 
@@ -12,13 +11,14 @@ const createSortItemTemplate = (type, isActive) => {
   );
 };
 
-const sortTypesArray = [
-  'date',
-  'rating',
-  'default',
-];
-
-const createSortTemplate = () => sortTypesArray.map((type) => createSortItemTemplate(type));
+const createSortTemplate = () => {
+  const createSortList = SORT_TYPES.map((sortElement, index) => createSortItemTemplate(sortElement, index === 0)).join('');
+  return (
+    `<ul class ="sort">
+      ${createSortList}
+    </ul>`
+  );
+};
 
 export default class SortView {
     #element = null;

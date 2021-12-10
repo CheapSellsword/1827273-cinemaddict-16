@@ -1,33 +1,31 @@
 import { createElement } from '../render';
 
-const createFiltersAndStatsBar = (filters, isChecked) => {
-  const filterClassName = isChecked
-    ? 'main-navigation__item--active'
-    : '';
+const createFilterItemTemplate = (filter, isActive) =>  {
+  const activeClass = isActive ? 'main-navigation__item--active' : '';
 
-  const createFiltersTemplate = () => filters.map((filter) => {
-    if(filter.name === 'All movies') {
-      return `<a href="#${filter.href}" class="main-navigation__item ${filterClassName}">${filter.name}</a>`;
-    }
-    return `<a href="#${filter.href}" class="main-navigation__item ${filterClassName}">${filter.name} <span class="main-navigation__item-count">${filter.count}</span></a>`;
-  }).join('');
+  if (filter.name === 'All movies') {
+    return `<a href="#${filter.href}" class="main-navigation__item ${activeClass ? 'main-navigation__item--active'  : ''}">${filter.name}</a>`;
+  }
+  return `<a href="#${filter.href}" class="main-navigation__item ${activeClass ? 'main-navigation__item--active'  : ''}">${filter.name} <span class="main-navigation__item-count">${filter.count}</span></a>`;
+};
+
+const createFiltersAndStatsBar = (filters) => {
+  const createFilterList = filters.map((filter, index) => createFilterItemTemplate(filter, index === 0)).join('');
 
   return `<nav class="main-navigation">
-          <div class="main-navigation__items">
-           ${createFiltersTemplate()}
-          </div>
-          <a href="#stats" class="main-navigation__additional">Stats</a>
-        </nav>`;
+            <div class="main-navigation__items">
+              ${createFilterList}
+            </div>
+            <a href="#stats" class="main-navigation__additional">Stats</a>
+          </nav>`;
 };
 
 export default class FiltersAndStatsBarView {
   #element = null;
   #filters = null;
-  #isChecked = null;
 
-  constructor (filters, isChecked) {
+  constructor (filters) {
     this.#filters = filters;
-    this.#isChecked = isChecked;
   }
 
   get element() {
@@ -39,7 +37,7 @@ export default class FiltersAndStatsBarView {
   }
 
   get template() {
-    return createFiltersAndStatsBar(this.#filters, this.#isChecked);
+    return createFiltersAndStatsBar(this.#filters);
   }
 
   removeElement() {
