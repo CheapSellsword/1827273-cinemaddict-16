@@ -3,7 +3,7 @@ import { RenderPosition, render } from './render';
 import { generateFilm } from './mock/film';
 import { generateFilter } from './mock/filter';
 import FilmCountView from './view/film-count-view';
-import FiltersAndStatsBarView from './view/filters-and-stats-bar-view.js';
+import FiltersAndStatsView from './view/filters-and-stats-view.js';
 import SortView from './view/sort-view';
 import ProfileRankAndAvatarView from './view/profile-and-rank-avatar-view';
 import FilmsSectionView from './view/films-section-view';
@@ -52,15 +52,15 @@ const renderFilm = (filmListElement, film) => {
 
 render(headerElement, new ProfileRankAndAvatarView().element, RenderPosition.BEFORE_END);
 
-const filtersAndStatsBar =  new FiltersAndStatsBarView(filters);
-render(mainElement, filtersAndStatsBar.element, RenderPosition.AFTER_BEGIN);
+const filtersAndStats =  new FiltersAndStatsView(filters);
+render(mainElement, filtersAndStats.element, RenderPosition.AFTER_BEGIN);
 
 // Для второй части задания
 // if (films.length === 0) {
-//   render(filtersAndStatsBar.element, new NoFilmView(filters).element, RenderPosition.AFTER_END);
+//   render(filtersAndStats.element, new NoFilmView(filters).element, RenderPosition.AFTER_END);
 // } else {}
 const filmSort = new SortView();
-render(filtersAndStatsBar.element, filmSort.element, RenderPosition.AFTER_END);
+render(filtersAndStats.element, filmSort.element, RenderPosition.AFTER_END);
 
 render(filmSort.element, new FilmsSectionView().element, RenderPosition.AFTER_END);
 

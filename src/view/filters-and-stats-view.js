@@ -9,7 +9,7 @@ const createFilterItemTemplate = (filter, isActive) =>  {
   return `<a href="#${filter.href}" class="main-navigation__item ${activeClass ? 'main-navigation__item--active'  : ''}">${filter.name} <span class="main-navigation__item-count">${filter.count}</span></a>`;
 };
 
-const createFiltersAndStatsBar = (filters) => {
+const createFiltersAndStatsTemplate = (filters) => {
   const createFilterList = filters.map((filter, index) => createFilterItemTemplate(filter, index === 0)).join('');
 
   return `<nav class="main-navigation">
@@ -20,7 +20,7 @@ const createFiltersAndStatsBar = (filters) => {
           </nav>`;
 };
 
-export default class FiltersAndStatsBarView {
+export default class FiltersAndStatsView {
   #element = null;
   #filters = null;
 
@@ -37,7 +37,7 @@ export default class FiltersAndStatsBarView {
   }
 
   get template() {
-    return createFiltersAndStatsBar(this.#filters);
+    return createFiltersAndStatsTemplate(this.#filters);
   }
 
   removeElement() {
