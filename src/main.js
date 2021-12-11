@@ -10,6 +10,7 @@ import FilmsSectionView from './view/films-section-view';
 import FilmCardView from './view/film-card-view';
 import ShowMoreButtonView from './view/show-more-button-view';
 import FilmPopupView from './view/film-popup-view';
+import NoFilmView from './view/no-film-view';
 
 const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
 const filters = generateFilter(films);
@@ -55,43 +56,43 @@ render(headerElement, new ProfileRankAndAvatarView().element, RenderPosition.BEF
 const filtersAndStats =  new FiltersAndStatsView(filters);
 render(mainElement, filtersAndStats.element, RenderPosition.AFTER_BEGIN);
 
-// Для второй части задания
-// if (films.length === 0) {
-//   render(filtersAndStats.element, new NoFilmView(filters).element, RenderPosition.AFTER_END);
-// } else {}
-const filmSort = new SortView();
-render(filtersAndStats.element, filmSort.element, RenderPosition.AFTER_END);
+if (films.length === 0) {
+  render(filtersAndStats.element, new NoFilmView().element, RenderPosition.AFTER_END);
+} else {
+  const filmSort = new SortView();
+  render(filtersAndStats.element, filmSort.element, RenderPosition.AFTER_END);
 
-render(filmSort.element, new FilmsSectionView().element, RenderPosition.AFTER_END);
+  render(filmSort.element, new FilmsSectionView().element, RenderPosition.AFTER_END);
 
-const cardContainerElement = mainElement.querySelector('.films-list__container');
+  const cardContainerElement = mainElement.querySelector('.films-list__container');
 
-for (let i = 0; i < Math.min(films.length, FILMS_COUNT_PER_STEP); i++) {
-  renderFilm(cardContainerElement, films[i]);
-}
+  for (let i = 0; i < Math.min(films.length, FILMS_COUNT_PER_STEP); i++) {
+    renderFilm(cardContainerElement, films[i]);
+  }
 
-if (films.length > FILMS_COUNT_PER_STEP) {
-  let renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
+  if (films.length > FILMS_COUNT_PER_STEP) {
+    let renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
 
-  const showMoreButtonComponent = new ShowMoreButtonView();
+    const showMoreButtonComponent = new ShowMoreButtonView();
 
-  render(cardContainerElement, showMoreButtonComponent.element, RenderPosition.AFTER_END);
+    render(cardContainerElement, showMoreButtonComponent.element, RenderPosition.AFTER_END);
 
-  const showMoreButton = mainElement.querySelector('.films-list__show-more');
+    const showMoreButton = mainElement.querySelector('.films-list__show-more');
 
-  showMoreButton.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    films
-      .slice(renderedFilmCardsCount, renderedFilmCardsCount + FILMS_COUNT_PER_STEP)
-      .forEach((film) => renderFilm(cardContainerElement, film));
+    showMoreButton.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      films
+        .slice(renderedFilmCardsCount, renderedFilmCardsCount + FILMS_COUNT_PER_STEP)
+        .forEach((film) => renderFilm(cardContainerElement, film));
 
-    renderedFilmCardsCount += FILMS_COUNT_PER_STEP;
+      renderedFilmCardsCount += FILMS_COUNT_PER_STEP;
 
-    if (renderedFilmCardsCount >= films.length) {
-      showMoreButtonComponent.element.remove();
-      showMoreButtonComponent.removeElement();
-    }
-  });
+      if (renderedFilmCardsCount >= films.length) {
+        showMoreButtonComponent.element.remove();
+        showMoreButtonComponent.removeElement();
+      }
+    });
+  }
 }
 
 render(footerStatsElement, new FilmCountView(films).element, RenderPosition.BEFORE_END);

@@ -11,7 +11,7 @@ const createFilmCard = (film) => {
     ? 'film-card__controls-item--active'
     : '';
 
-  const favouriteClassName = isFavorite
+  const favoriteClassName = isFavorite
     ? 'film-card__controls-item--active'
     : '';
 
@@ -32,7 +32,7 @@ const createFilmCard = (film) => {
             <div class="film-card__controls">
               <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${watchlistClassName}" type="button">Add to watchlist</button>
               <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${watchedClassName}" type="button">Mark as watched</button>
-              <button class="film-card__controls-item film-card__controls-item--favorite ${favouriteClassName}" type="button">Mark as favorite</button>
+              <button class="film-card__controls-item film-card__controls-item--favorite ${favoriteClassName}" type="button">Mark as favorite</button>
             </div>
           </article>`;
 };
