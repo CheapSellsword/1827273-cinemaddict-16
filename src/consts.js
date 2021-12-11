@@ -97,3 +97,9 @@ export const MAX_COMMENTS = 5;
 export const DAYS_DIFFERENCE_LIMIT = 5;
 export const YESTERDAY_LIMIT = 1;
 export const TODAY_LIMIT = 0;
+
+export const SORT_TYPES = [
+  'date',
+  'rating',
+  'default',
+];
