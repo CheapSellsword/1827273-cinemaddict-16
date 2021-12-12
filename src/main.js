@@ -1,5 +1,5 @@
 import { GENERATED_FILMS_COUNT, FILMS_COUNT_PER_STEP } from './consts';
-import { RenderPosition, render } from './render';
+import { RenderPosition, render, remove, appendChild } from './utils/render';
 import { generateFilm } from './mock/film';
 import { generateFilter } from './mock/filter';
 import FilmCountView from './view/film-count-view';
@@ -24,45 +24,45 @@ const renderFilm = (filmListElement, film) => {
   const filmComponent = new FilmCardView(film);
   const filmPopupComponent = new FilmPopupView(film);
   const body = document.querySelector('body');
-  const closePopupButton = filmPopupComponent.element.querySelector('.film-details__close-btn');
 
-  const onEscKeyDown = (evt) => {
+  const escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       body.classList.remove('hide-overflow');
-      body.removeChild(filmPopupComponent.element);
-      document.removeEventListener('keydown', onEscKeyDown);
+      remove(filmPopupComponent);
+      document.removeEventListener('keydown', escKeyDownHandler);
     }
   };
 
-  const onCloseButtonClick = () => {
+  const closePopupClickHandler = () => {
     body.classList.remove('hide-overflow');
-    body.removeChild(filmPopupComponent.element);
-    document.removeEventListener('keydown', onEscKeyDown);
-    closePopupButton.removeEventListener('click', onCloseButtonClick);
+    remove(filmPopupComponent);
+    document.removeEventListener('keydown', escKeyDownHandler);
+    filmPopupComponent.element.removeEventListener('click', closePopupClickHandler);
   };
 
-  filmComponent.element.querySelector('.film-card__link').addEventListener('click', () => {
-    body.appendChild(filmPopupComponent.element);
+  filmComponent.setCardClickHandler(() => {
+    appendChild(body, filmPopupComponent);
     body.classList.add('hide-overflow');
-    document.addEventListener('keydown', onEscKeyDown);
-    closePopupButton.addEventListener('click', onCloseButtonClick);
+    document.addEventListener('keydown', escKeyDownHandler);
+    filmPopupComponent.setClosePopupClickHandler(closePopupClickHandler);
   });
-  render(filmListElement, filmComponent.element, RenderPosition.BEFORE_END);
+
+  render(filmListElement, filmComponent, RenderPosition.BEFORE_END);
 };
 
-render(headerElement, new ProfileRankAndAvatarView().element, RenderPosition.BEFORE_END);
+render(headerElement, new ProfileRankAndAvatarView(), RenderPosition.BEFORE_END);
 
 const filtersAndStats =  new FiltersAndStatsView(filters);
-render(mainElement, filtersAndStats.element, RenderPosition.AFTER_BEGIN);
+render(mainElement, filtersAndStats, RenderPosition.AFTER_BEGIN);
 
 if (films.length === 0) {
-  render(filtersAndStats.element, new NoFilmView().element, RenderPosition.AFTER_END);
+  render(filtersAndStats.element, new NoFilmView(), RenderPosition.AFTER_END);
 } else {
   const filmSort = new SortView();
-  render(filtersAndStats.element, filmSort.element, RenderPosition.AFTER_END);
+  render(filtersAndStats.element, filmSort, RenderPosition.AFTER_END);
 
-  render(filmSort.element, new FilmsSectionView().element, RenderPosition.AFTER_END);
+  render(filmSort.element, new FilmsSectionView(), RenderPosition.AFTER_END);
 
   const cardContainerElement = mainElement.querySelector('.films-list__container');
 
@@ -75,12 +75,9 @@ if (films.length === 0) {
 
     const showMoreButtonComponent = new ShowMoreButtonView();
 
-    render(cardContainerElement, showMoreButtonComponent.element, RenderPosition.AFTER_END);
+    render(cardContainerElement, showMoreButtonComponent, RenderPosition.AFTER_END);
 
-    const showMoreButton = mainElement.querySelector('.films-list__show-more');
-
-    showMoreButton.addEventListener('click', (evt) => {
-      evt.preventDefault();
+    showMoreButtonComponent.setShowMoreButtonClickHandler(() => {
       films
         .slice(renderedFilmCardsCount, renderedFilmCardsCount + FILMS_COUNT_PER_STEP)
         .forEach((film) => renderFilm(cardContainerElement, film));
@@ -95,4 +92,4 @@ if (films.length === 0) {
   }
 }
 
-render(footerStatsElement, new FilmCountView(films).element, RenderPosition.BEFORE_END);
+render(footerStatsElement, new FilmCountView(films), RenderPosition.BEFORE_END);

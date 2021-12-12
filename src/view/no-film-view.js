@@ -1,6 +1,4 @@
-// Для второй части задания
-
-import { createElement } from '../render';
+import AbstractView from './abstract-view';
 
 const createEmptySectionTemplate = () => (
   `<section class="films">
@@ -10,22 +8,9 @@ const createEmptySectionTemplate = () => (
   </section>`
 );
 
-export default class NoFilmView {
-  #element = null;
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
+export default class FilmCardView extends AbstractView {
 
   get template() {
     return createEmptySectionTemplate();
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

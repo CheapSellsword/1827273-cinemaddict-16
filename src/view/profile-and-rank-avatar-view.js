@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from './abstract-view';
 
 const createProfileRankAndAvatar = () => (
   `<section class="header__profile profile">
@@ -7,22 +7,9 @@ const createProfileRankAndAvatar = () => (
   </section>`
 );
 
-export default class ProfileRankAndAvatarView {
-  #element = null;
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
+export default class ProfileRankAndAvatarView extends AbstractView {
 
   get template() {
     return createProfileRankAndAvatar();
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

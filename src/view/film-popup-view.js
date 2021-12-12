@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from './abstract-view';
 
 const createFilmPopup = (film) => {
   const {title, poster, fullReleaseDate, rating, length, genres, director, writers, cast, country, description, ageRestriction, comments, isOnWatchlist, isWatched, isFavorite} = film;
@@ -149,27 +149,30 @@ const createFilmPopup = (film) => {
           </section>`;
 };
 
-export default class FilmPopupView {
-  #element = null;
+export default class FilmCardView extends AbstractView {
   #film = null;
 
   constructor(film) {
+    super();
     this.#film = film;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createFilmPopup(this.#film);
   }
 
-  removeElement() {
-    this.#element = null;
+
+  setClosePopupClickHandler = (callback) => {
+
+    this._callback.closePopupClick = callback;
+
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closePopupClickHandler);
+  }
+
+  #closePopupClickHandler = (evt) => {
+
+    evt.preventDefault();
+
+    this._callback.closePopupClick();
   }
 }
