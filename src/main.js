@@ -1,5 +1,6 @@
 import { GENERATED_FILMS_COUNT, FILMS_COUNT_PER_STEP } from './consts';
 import { RenderPosition, render, remove, appendChild } from './utils/render';
+import { createTopRatedFilmList, createMostCommentedFilmList } from './mock/extra-films';
 import { generateFilm } from './mock/film';
 import { generateFilter } from './mock/filter';
 import FilmCountView from './view/film-count-view';
@@ -56,17 +57,36 @@ const filtersAndStatsComponent =  new FiltersAndStatsView(filters);
 render(mainElement, filtersAndStatsComponent, RenderPosition.AFTER_BEGIN);
 
 if (films.length === 0) {
-  render(filtersAndStatsComponent.element, new NoFilmView(), RenderPosition.AFTER_END);
+  render(filtersAndStatsComponent, new NoFilmView(), RenderPosition.AFTER_END);
 } else {
   const filmSortComponent = new SortView();
-  render(filtersAndStatsComponent.element, filmSortComponent, RenderPosition.AFTER_END);
+  render(filtersAndStatsComponent, filmSortComponent, RenderPosition.AFTER_END);
 
-  render(filmSortComponent.element, new FilmsSectionView(), RenderPosition.AFTER_END);
+  const filmsSectionComponent = new FilmsSectionView();
+  render(filmSortComponent, filmsSectionComponent, RenderPosition.AFTER_END);
 
   const cardContainerElement = mainElement.querySelector('.films-list__container');
 
   for (let i = 0; i < Math.min(films.length, FILMS_COUNT_PER_STEP); i++) {
     renderFilm(cardContainerElement, films[i]);
+  }
+
+  const topRatedSection = filmsSectionComponent.element.querySelector('.films-list--extra');
+  const topRatedFilmContainer = topRatedSection.querySelector('.films-list__container');
+
+  if (createTopRatedFilmList(films) === null) {
+    topRatedSection.remove();
+  } else {
+    createTopRatedFilmList(films).forEach((film) => renderFilm(topRatedFilmContainer, film));
+  }
+
+  const mostCommentedSection = filmsSectionComponent.element.querySelector('.most-commented');
+  const mostCommentedFilmContainer = mostCommentedSection.querySelector('.films-list__container');
+
+  if (createMostCommentedFilmList(films) === null) {
+    mostCommentedSection.remove();
+  } else {
+    createMostCommentedFilmList(films).forEach((film) => renderFilm(mostCommentedFilmContainer, film));
   }
 
   if (films.length > FILMS_COUNT_PER_STEP) {
