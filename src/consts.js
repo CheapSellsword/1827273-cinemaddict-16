@@ -103,3 +103,13 @@ export const SORT_TYPES = [
   'rating',
   'default',
 ];
+
+export const RANKS = {
+  NOVICE: 'Novice',
+  FAN: 'Fan',
+  MOVIE_BUFF: 'Movie buff',
+};
+
+export const NOVICE_FILM_COUNT = 0;
+export const FAN_FILM_COUNT = 11;
+export const MOVIE_BUFF_FILM_COUNT = 21;
