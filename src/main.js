@@ -38,7 +38,6 @@ const renderFilm = (filmListElement, film) => {
     body.classList.remove('hide-overflow');
     remove(filmPopupComponent);
     document.removeEventListener('keydown', escKeyDownHandler);
-    filmPopupComponent.element.removeEventListener('click', closePopupClickHandler);
   };
 
   filmComponent.setCardClickHandler(() => {
@@ -53,16 +52,16 @@ const renderFilm = (filmListElement, film) => {
 
 render(headerElement, new ProfileRankAndAvatarView(), RenderPosition.BEFORE_END);
 
-const filtersAndStats =  new FiltersAndStatsView(filters);
-render(mainElement, filtersAndStats, RenderPosition.AFTER_BEGIN);
+const filtersAndStatsComponent =  new FiltersAndStatsView(filters);
+render(mainElement, filtersAndStatsComponent, RenderPosition.AFTER_BEGIN);
 
 if (films.length === 0) {
-  render(filtersAndStats.element, new NoFilmView(), RenderPosition.AFTER_END);
+  render(filtersAndStatsComponent.element, new NoFilmView(), RenderPosition.AFTER_END);
 } else {
-  const filmSort = new SortView();
-  render(filtersAndStats.element, filmSort, RenderPosition.AFTER_END);
+  const filmSortComponent = new SortView();
+  render(filtersAndStatsComponent.element, filmSortComponent, RenderPosition.AFTER_END);
 
-  render(filmSort.element, new FilmsSectionView(), RenderPosition.AFTER_END);
+  render(filmSortComponent.element, new FilmsSectionView(), RenderPosition.AFTER_END);
 
   const cardContainerElement = mainElement.querySelector('.films-list__container');
 
@@ -85,8 +84,7 @@ if (films.length === 0) {
       renderedFilmCardsCount += FILMS_COUNT_PER_STEP;
 
       if (renderedFilmCardsCount >= films.length) {
-        showMoreButtonComponent.element.remove();
-        showMoreButtonComponent.removeElement();
+        remove(showMoreButtonComponent);
       }
     });
   }
