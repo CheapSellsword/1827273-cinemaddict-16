@@ -17,7 +17,7 @@ const createFilmsSection = () => (
       <div class="films-list__container"></div>
     </section>
   </section>`
-);
+);//!
 
 export default class FilmsSectionView extends AbstractView {
 
