@@ -1,5 +1,5 @@
 import { MAX_DESCRIPTION_LENGTH } from '../consts';
-import { createElement } from '../render';
+import AbstractView from './abstract-view';
 
 const createFilmCard = (film) => {
   const {description, title, poster, releaseYear, rating, length, genres, comments, isOnWatchlist, isWatched, isFavorite} = film;
@@ -37,27 +37,29 @@ const createFilmCard = (film) => {
           </article>`;
 };
 
-export default class FilmCardView {
-  #element = null;
+export default class FilmCardView extends AbstractView {
   #film = null;
 
   constructor(film) {
+    super();
     this.#film = film;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createFilmCard(this.#film);
   }
 
-  removeElement() {
-    this.#element = null;
+  setCardClickHandler = (callback) => {
+
+    this._callback.cardClick = callback;
+
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#cardClickHandler);
+  }
+
+  #cardClickHandler = (evt) => {
+
+    evt.preventDefault();
+
+    this._callback.cardClick();
   }
 }

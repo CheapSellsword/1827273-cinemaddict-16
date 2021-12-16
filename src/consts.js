@@ -1,4 +1,4 @@
-export const GENERATED_FILMS_COUNT = 0;
+export const GENERATED_FILMS_COUNT = 6;
 export const FILMS_COUNT_PER_STEP = 5;
 export const DATE_GAP = 100;
 export const TIME_GAP = 10;
@@ -103,3 +103,15 @@ export const SORT_TYPES = [
   'rating',
   'default',
 ];
+
+export const RANKS = {
+  NOVICE: 'Novice',
+  FAN: 'Fan',
+  MOVIE_BUFF: 'Movie buff',
+};
+
+export const FILMS_COUNT_FOR_RANK = {
+  NOVICE: 0,
+  FAN: 11,
+  MOVIE_BUFF: 21,
+};

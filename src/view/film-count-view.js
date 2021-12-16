@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from './abstract-view';
 
 const createFilmCount = (films) => (
   `<p>
@@ -6,27 +6,15 @@ const createFilmCount = (films) => (
   </p>`
 );
 
-export default class FilmCountView {
-  #element = null;
+export default class FilmCountView extends AbstractView {
   #films = null;
 
   constructor(films) {
+    super();
     this.#films = films;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createFilmCount(this.#films);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

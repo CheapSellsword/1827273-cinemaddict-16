@@ -1,28 +1,41 @@
-import { createElement } from '../render';
+import { RANKS, FILMS_COUNT_FOR_RANK } from '../consts';
+import AbstractView from './abstract-view';
 
-const createProfileRankAndAvatar = () => (
+const createRank = (filmsCount) => {
+  let rank = '';
+
+  if (filmsCount >= FILMS_COUNT_FOR_RANK.NOVICE && filmsCount < FILMS_COUNT_FOR_RANK.FAN) {
+    rank = RANKS.NOVICE;
+
+  } else if (filmsCount >= FILMS_COUNT_FOR_RANK.FAN && filmsCount < FILMS_COUNT_FOR_RANK.MOVIE_BUFF) {
+    rank = RANKS.FAN;
+
+  } else if (filmsCount >= FILMS_COUNT_FOR_RANK.MOVIE_BUFF) {
+    rank = RANKS.MOVIE_BUFF;
+
+  } else {
+    rank = '';
+  }
+
+  return rank;
+};
+
+const createProfileRankAndAvatar = (filmsCount) => (
   `<section class="header__profile profile">
-    <p class="profile__rating">Movie Buff</p>
+    <p class="profile__rating">${createRank(filmsCount)}</p>
     <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
   </section>`
 );
 
-export default class ProfileRankAndAvatarView {
-  #element = null;
+export default class ProfileRankAndAvatarView extends AbstractView {
+  #films = null;
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
+  constructor(films) {
+    super();
+    this.#films = films;
   }
 
   get template() {
-    return createProfileRankAndAvatar();
-  }
-
-  removeElement() {
-    this.#element = null;
+    return createProfileRankAndAvatar(this.#films.length);
   }
 }
