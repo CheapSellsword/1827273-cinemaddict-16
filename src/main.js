@@ -13,7 +13,7 @@ import ShowMoreButtonView from './view/show-more-button-view';
 import FilmPopupView from './view/film-popup-view';
 import NoFilmView from './view/no-film-view';
 
-const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
+export const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
 const filters = generateFilter(films);
 
 const headerElement = document.querySelector('.header');

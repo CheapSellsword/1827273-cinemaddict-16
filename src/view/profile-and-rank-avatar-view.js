@@ -1,16 +1,17 @@
-import { RANKS, FILMS_COUNT_FOR_RANK, GENERATED_FILMS_COUNT } from '../consts';
+import { RANKS, FILMS_COUNT_FOR_RANK } from '../consts';
+import { films } from '../main';
 import AbstractView from './abstract-view';
 
-const createRank = (filmCount) => {
+const createRank = (filmsCount) => {
   let rank = '';
 
-  if (filmCount >= FILMS_COUNT_FOR_RANK.NOVICE && filmCount < FILMS_COUNT_FOR_RANK.FAN) {
+  if (filmsCount >= FILMS_COUNT_FOR_RANK.NOVICE && filmsCount < FILMS_COUNT_FOR_RANK.FAN) {
     rank = RANKS.NOVICE;
 
-  } else if (filmCount >= FILMS_COUNT_FOR_RANK.FAN && filmCount < FILMS_COUNT_FOR_RANK.MOVIE_BUFF) {
+  } else if (filmsCount >= FILMS_COUNT_FOR_RANK.FAN && filmsCount < FILMS_COUNT_FOR_RANK.MOVIE_BUFF) {
     rank = RANKS.FAN;
 
-  } else if (filmCount >= FILMS_COUNT_FOR_RANK.MOVIE_BUFF) {
+  } else if (filmsCount >= FILMS_COUNT_FOR_RANK.MOVIE_BUFF) {
     rank = RANKS.MOVIE_BUFF;
 
   } else {
@@ -20,9 +21,9 @@ const createRank = (filmCount) => {
   return rank;
 };
 
-const createProfileRankAndAvatar = () => (
+const createProfileRankAndAvatar = (filmsCount) => (
   `<section class="header__profile profile">
-    <p class="profile__rating">${createRank(GENERATED_FILMS_COUNT)}</p>
+    <p class="profile__rating">${createRank(filmsCount)}</p>
     <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
   </section>`
 );
@@ -30,6 +31,6 @@ const createProfileRankAndAvatar = () => (
 export default class ProfileRankAndAvatarView extends AbstractView {
 
   get template() {
-    return createProfileRankAndAvatar();
+    return createProfileRankAndAvatar(films.length);
   }
 }
