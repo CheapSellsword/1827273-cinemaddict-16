@@ -1,5 +1,4 @@
 import { RANKS, FILMS_COUNT_FOR_RANK } from '../consts';
-import { films } from '../main';
 import AbstractView from './abstract-view';
 
 const createRank = (filmsCount) => {
@@ -29,8 +28,14 @@ const createProfileRankAndAvatar = (filmsCount) => (
 );
 
 export default class ProfileRankAndAvatarView extends AbstractView {
+  #films = null;
+
+  constructor(films) {
+    super();
+    this.#films = films;
+  }
 
   get template() {
-    return createProfileRankAndAvatar(films.length);
+    return createProfileRankAndAvatar(this.#films.length);
   }
 }

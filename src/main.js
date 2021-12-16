@@ -13,7 +13,7 @@ import ShowMoreButtonView from './view/show-more-button-view';
 import FilmPopupView from './view/film-popup-view';
 import NoFilmView from './view/no-film-view';
 
-export const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
+const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
 const filters = generateFilter(films);
 
 const headerElement = document.querySelector('.header');
@@ -51,7 +51,7 @@ const renderFilm = (filmListElement, film) => {
   render(filmListElement, filmComponent, RenderPosition.BEFORE_END);
 };
 
-render(headerElement, new ProfileRankAndAvatarView(), RenderPosition.BEFORE_END);
+render(headerElement, new ProfileRankAndAvatarView(films), RenderPosition.BEFORE_END);
 
 const filtersAndStatsComponent =  new FiltersAndStatsView(filters);
 render(mainElement, filtersAndStatsComponent, RenderPosition.AFTER_BEGIN);
