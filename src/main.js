@@ -80,7 +80,7 @@ if (films.length === 0) {
     createTopRatedFilmList(films).forEach((film) => renderFilm(topRatedFilmContainer, film));
   }
 
-  const mostCommentedSection = filmsSectionComponent.element.querySelector('.films-list--extra:last-child');//!
+  const mostCommentedSection = filmsSectionComponent.element.querySelector('.films-list--extra:last-child');
   const mostCommentedFilmContainer = mostCommentedSection.querySelector('.films-list__container');
 
   if (createMostCommentedFilmList(films) === null) {
