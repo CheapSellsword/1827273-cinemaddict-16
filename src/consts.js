@@ -110,6 +110,8 @@ export const RANKS = {
   MOVIE_BUFF: 'Movie buff',
 };
 
-export const NOVICE_FILM_COUNT = 0;
-export const FAN_FILM_COUNT = 11;
-export const MOVIE_BUFF_FILM_COUNT = 21;
+export const FILMS_COUNT_FOR_RANK = {
+  NOVICE: 0,
+  FAN: 11,
+  MOVIE_BUFF: 21,
+};
