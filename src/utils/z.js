@@ -9,7 +9,7 @@ import ShowMoreButtonView from '../view/show-more-button-view';
 import FilmPopupView from '../view/film-popup-view';
 import NoFilmView from '../view/no-film-view';
 import { FILMS_COUNT_PER_STEP } from '../consts';
-//import { createTopRatedFilmList, createMostCommentedFilmList } from '../mock/extra-films';
+import { createTopRatedFilmList, createMostCommentedFilmList } from '../mock/extra-films';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -17,7 +17,7 @@ export default class BoardPresenter {
   #filmSectionComponent = new FilmsSectionView();
   #showMoreButtonComponent = new ShowMoreButtonView();
   #noFilmComponent = new NoFilmView();
-  #sortCompenent = new SortView();
+  #sortComponent = new SortView();
 
   #boardFilms = [];
   #sectionFilms = [];
@@ -82,6 +82,10 @@ export default class BoardPresenter {
     }
   }
 
+  // #renderMostCommentedFilms = () => {
+    // this.#mostComment
+  // }
+
   #renderNoFilm = () => {
 
   }
@@ -92,11 +96,15 @@ export default class BoardPresenter {
 
   #renderFilmsSection = () => {
     if (this.#boardFilms.length) {
-      render(this.#boardContainer, this.#sortCompenent, RenderPosition.BEFORE_BEGIN);
+      render(this.#boardContainer, this.#sortComponent, RenderPosition.BEFORE_END);
+      render(this.#boardContainer, this.#filmSectionComponent, RenderPosition.BEFORE_END);
       this.#renderFilmList();
+
+      render(this.#topRatedFilmContainer, createTopRatedFilmList(this.#boardFilms), RenderPosition.BEFORE_END);
     } else {
       this.#renderNoFilm();
     }
+
     //this.#renderTopRatedFilms();
     //this.#renderMostCommentedFilms();
   }
@@ -105,4 +113,3 @@ export default class BoardPresenter {
 
   }
 }
-

@@ -7,12 +7,12 @@ import FilmCountView from './view/film-count-view';
 import FiltersAndStatsView from './view/filters-and-stats-view.js';
 import SortView from './view/sort-view';
 import ProfileRankAndAvatarView from './view/profile-and-rank-avatar-view';
-import FilmsSectionView from './view/films-section-view';
+import FilmSectionView from './view/film-section-view';
 import FilmCardView from './view/film-card-view';
 import ShowMoreButtonView from './view/show-more-button-view';
 import FilmPopupView from './view/film-popup-view';
 import NoFilmView from './view/no-film-view';
-import BoardPresenter from './presenter/board-presenter';
+import CollectionPresenter from './presenter/collection-presenter';
 
 
 const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
@@ -26,7 +26,8 @@ const footerStatsElement = footerElement.querySelector('.footer__statistics');
 render(headerElement, new ProfileRankAndAvatarView(filters), RenderPosition.BEFORE_END);
 const filtersAndStatsComponent =  new FiltersAndStatsView(filters);
 render(mainElement, filtersAndStatsComponent, RenderPosition.AFTER_BEGIN);
-const boardPresenter = new BoardPresenter(mainElement);
-boardPresenter.init(films);
+
+const collectionPresenter = new CollectionPresenter(mainElement);
+collectionPresenter.init(films);
 
 render(footerStatsElement, new FilmCountView(films), RenderPosition.BEFORE_END);

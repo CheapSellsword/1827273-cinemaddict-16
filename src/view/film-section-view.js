@@ -1,6 +1,6 @@
 import AbstractView from './abstract-view';
 
-const createFilmsSection = () => (
+const createFilmSection = () => (
   `<section class="films">
     <section class="films-list">
       <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
@@ -19,9 +19,9 @@ const createFilmsSection = () => (
   </section>`
 );
 
-export default class FilmsSectionView extends AbstractView {
+export default class FilmSectionView extends AbstractView {
 
   get template() {
-    return createFilmsSection();
+    return createFilmSection();
   }
 }

@@ -16,10 +16,10 @@ import NoFilmView from './view/no-film-view';
 const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
 const filters = generateFilter(films);
 
-const headerElement = document.querySelector('.header');
+// const headerElement = document.querySelector('.header');
 const mainElement = document.querySelector('.main');
-const footerElement = document.querySelector('.footer');
-const footerStatsElement = footerElement.querySelector('.footer__statistics');
+// const footerElement = document.querySelector('.footer');
+// const footerStatsElement = footerElement.querySelector('.footer__statistics');
 
 const renderFilm = (filmListElement, film) => {
   const filmComponent = new FilmCardView(film);
@@ -51,7 +51,7 @@ const renderFilm = (filmListElement, film) => {
   render(filmListElement, filmComponent, RenderPosition.BEFORE_END);
 };
 
-render(headerElement, new ProfileRankAndAvatarView(films), RenderPosition.BEFORE_END);
+//render(headerElement, new ProfileRankAndAvatarView(films), RenderPosition.BEFORE_END);
 
 const filtersAndStatsComponent =  new FiltersAndStatsView(filters);
 render(mainElement, filtersAndStatsComponent, RenderPosition.AFTER_BEGIN);
@@ -110,4 +110,4 @@ if (films.length === 0) {
   }
 }
 
-render(footerStatsElement, new FilmCountView(films), RenderPosition.BEFORE_END);
+//render(footerStatsElement, new FilmCountView(films), RenderPosition.BEFORE_END);

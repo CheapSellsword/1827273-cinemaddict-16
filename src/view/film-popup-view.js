@@ -149,7 +149,7 @@ const createFilmPopup = (film) => {
           </section>`;
 };
 
-export default class FilmCardView extends AbstractView {
+export default class FilmPopupView extends AbstractView {
   #film = null;
 
   constructor(film) {
