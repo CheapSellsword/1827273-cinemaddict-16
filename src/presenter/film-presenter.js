@@ -51,6 +51,10 @@ export default class FilmPresenter {
       replace(this.#filmComponent, prevFilmComponent);
     }
 
+    if (this.#body.contains(prevPopupComponent)) {
+      replace(this.#filmPopupComponent, prevPopupComponent);
+    }
+
     remove(prevFilmComponent);
     remove(prevPopupComponent);
   }

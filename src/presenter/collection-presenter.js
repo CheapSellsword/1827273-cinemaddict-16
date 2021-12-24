@@ -1,5 +1,5 @@
 import { FILMS_COUNT_PER_STEP } from '../consts';
-import { render, RenderPosition, appendChild, remove } from '../utils/render';
+import { render, RenderPosition, remove } from '../utils/render';
 import { createTopRatedFilmList, createMostCommentedFilmList } from '../mock/extra-films';
 import SortView from '../view/sort-view';
 import FilmSectionView from '../view/film-section-view';
@@ -7,7 +7,6 @@ import ShowMoreButtonView from '../view/show-more-button-view';
 import NoFilmView from '../view/no-film-view';
 import FilmPresenter from './film-presenter';
 import { updateItem } from '../utils/common';
-
 
 export default class CollectionPresenter {
   #collectionContainer = null;
@@ -18,6 +17,8 @@ export default class CollectionPresenter {
   #noFilmComponent = new NoFilmView();
 
   #collectionFilms = [];
+  #filmPresenter = new Map();
+  #body = document.querySelector('body');
   #renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
   #filmContainer = this.#filmSectionComponent.element.querySelector('.films-list__container');
   #topRatedSection = this.#filmSectionComponent.element.querySelector('.films-list--extra');
@@ -34,7 +35,22 @@ export default class CollectionPresenter {
     this.#renderCollection(collectionFilms);
   }
 
+  #handleFilmChange = (updatedFilm) => {
+    this.#collectionFilms = updateItem(this.#collectionFilms, updatedFilm);
+    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
+  }
 
+  #renderFilm = (filmContainer, film) => {
+    const filmPresenter = new FilmPresenter(filmContainer, this.#handleFilmChange);
+    filmPresenter.init(film, this.#closePrevPopup);
+    this.#filmPresenter.set(film.id, filmPresenter);
+  }
+
+  #closePrevPopup = (prevPopup) => {
+    if(this.#body.contains(prevPopup)) {
+      remove(prevPopup);
+    }
+  }
 
   #renderFilms = (from, to) => {
     this.#collectionFilms
@@ -57,19 +73,17 @@ export default class CollectionPresenter {
     render(this.#collectionContainer, this.#filmSectionComponent, RenderPosition.BEFORE_END);
   }
 
+  #handleShowMoreButtonClick = () => {
+    this.#renderFilms(this.#renderedFilmCardsCount, this.#renderedFilmCardsCount + FILMS_COUNT_PER_STEP);
+    this.#renderedFilmCardsCount += FILMS_COUNT_PER_STEP;
+    if (this.#renderedFilmCardsCount >= this.#collectionFilms.length) {
+      remove(this.#showMoreButtonComponent);
+    }
+  }
+
   #renderShowMoreButton = () => {
     render(this.#filmContainer, this.#showMoreButtonComponent, RenderPosition.AFTER_END);
-    this.#showMoreButtonComponent.setShowMoreButtonClickHandler(() => {
-      this.#collectionFilms
-        .slice(this.#renderedFilmCardsCount, this.#renderedFilmCardsCount + FILMS_COUNT_PER_STEP)
-        .forEach((film) => this.#renderFilm(this.#filmContainer, film));
-
-      this.#renderedFilmCardsCount += FILMS_COUNT_PER_STEP;
-
-      if (this.#renderedFilmCardsCount >= this.#collectionFilms.length) {
-        remove(this.#showMoreButtonComponent);
-      }
-    });
+    this.#showMoreButtonComponent.setShowMoreButtonClickHandler(this.#handleShowMoreButtonClick);
   }
 
   #renderTopRatedFilms = (collectionFilms) => {
@@ -92,22 +106,29 @@ export default class CollectionPresenter {
     render(this.#collectionContainer, this.#noFilmComponent);
   }
 
-  #renderCollection = () => {
-    if (this.#collectionFilms.length) {
+  #clearFilmSection = () => {
+    this.#filmPresenter.forEach((presenter) => presenter.destroy());
+    this.#filmPresenter.clear();
+    this.#renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
+    remove(this.#showMoreButtonComponent);
+  }
+
+  #clearFilmCollection = () => {
+    remove(this.#sortComponent);
+    remove(this.#filmSectionComponent);
+    remove(this.#showMoreButtonComponent);
+    this.#renderedFilmCardsCount = 0;
+  }
+
+  #renderCollection = (collectionFilms) => {
+    if (collectionFilms.length) {
       this.#renderSort();
       this.#renderFilmSection();
       this.#renderFilmList();
-      this.#renderTopRatedFilms(this.#collectionFilms);
-      this.#renderMostCommentedFilms(this.#collectionFilms);
+      this.#renderTopRatedFilms(collectionFilms);
+      this.#renderMostCommentedFilms(collectionFilms);
     } else {
       this.#renderNoFilm();
     }
   }
-
-  #removePopup = () => {
-  }
-
-  #clearFilmList = () => {
-  }
-
 }

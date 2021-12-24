@@ -104,6 +104,12 @@ export const SORT_TYPES = [
   'default',
 ];
 
+export const FILM_SECTION_TYPES = [
+  'All movies. Upcoming',
+  'Top rated',
+  'Most commented'
+];
+
 export const RANKS = {
   NOVICE: 'Novice',
   FAN: 'Fan',
