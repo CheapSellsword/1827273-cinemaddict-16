@@ -5,8 +5,8 @@ import SortView from '../view/sort-view';
 import FilmSectionView from '../view/film-section-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import NoFilmView from '../view/no-film-view';
-import FilmCardView from '../view/film-card-view';
-import FilmPopupView from '../view/film-popup-view';
+import FilmPresenter from './film-presenter';
+import { updateItem } from '../utils/common';
 
 
 export default class CollectionPresenter {
@@ -34,35 +34,7 @@ export default class CollectionPresenter {
     this.#renderCollection(collectionFilms);
   }
 
-  #renderFilm = (filmContainer, film) => {
-    const filmComponent = new FilmCardView(film);
-    const filmPopupComponent = new FilmPopupView(film);
-    const body = document.querySelector('body');
 
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        body.classList.remove('hide-overflow');
-        remove(filmPopupComponent);
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const closePopupClickHandler = () => {
-      body.classList.remove('hide-overflow');
-      remove(filmPopupComponent);
-      document.removeEventListener('keydown', escKeyDownHandler);
-    };
-
-    filmComponent.setCardClickHandler(() => {
-      appendChild(body, filmPopupComponent);
-      body.classList.add('hide-overflow');
-      document.addEventListener('keydown', escKeyDownHandler);
-      filmPopupComponent.setClosePopupClickHandler(closePopupClickHandler);
-    });
-
-    render(filmContainer, filmComponent, RenderPosition.BEFORE_END);
-  };
 
   #renderFilms = (from, to) => {
     this.#collectionFilms
@@ -133,8 +105,9 @@ export default class CollectionPresenter {
   }
 
   #removePopup = () => {
-
   }
+
+  #clearFilmList = () => {
+  }
+
 }
-
-
