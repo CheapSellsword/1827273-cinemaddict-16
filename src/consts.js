@@ -1,4 +1,4 @@
-export const GENERATED_FILMS_COUNT = 0;
+export const GENERATED_FILMS_COUNT = 7;
 export const FILMS_COUNT_PER_STEP = 5;
 export const DATE_GAP = 100;
 export const TIME_GAP = 10;

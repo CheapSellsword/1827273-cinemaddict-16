@@ -31,7 +31,7 @@ export default class CollectionPresenter {
 
   init = (collectionFilms) => {
     this.#collectionFilms = [...collectionFilms];
-    this.#renderFilmSection(collectionFilms);
+    this.#renderCollection(collectionFilms);
   }
 
   #renderFilm = (filmContainer, film) => {
@@ -77,6 +77,14 @@ export default class CollectionPresenter {
     }
   }
 
+  #renderSort = () => {
+    render(this.#collectionContainer, this.#sortComponent, RenderPosition.BEFORE_END);
+  }
+
+  #renderFilmSection = () => {
+    render(this.#collectionContainer, this.#filmSectionComponent, RenderPosition.BEFORE_END);
+  }
+
   #renderShowMoreButton = () => {
     render(this.#filmContainer, this.#showMoreButtonComponent, RenderPosition.AFTER_END);
     this.#showMoreButtonComponent.setShowMoreButtonClickHandler(() => {
@@ -92,22 +100,41 @@ export default class CollectionPresenter {
     });
   }
 
+  #renderTopRatedFilms = (collectionFilms) => {
+    if (createTopRatedFilmList(collectionFilms)) {
+      createTopRatedFilmList(collectionFilms).forEach((film) => this.#renderFilm(this.#topRatedFilmContainer, film));
+    } else {
+      this.#topRatedSection.remove();
+    }
+  }
+
+  #renderMostCommentedFilms = (collectionFilms) => {
+    if (createMostCommentedFilmList(collectionFilms)) {
+      createMostCommentedFilmList(collectionFilms).forEach((film) => this.#renderFilm(this.#mostCommentedFilmsContainer, film));
+    } else {
+      this.#mostCommentedSection.remove();
+    }
+  }
+
   #renderNoFilm = () => {
     render(this.#collectionContainer, this.#noFilmComponent);
   }
 
-  #renderFilmSection = () => {
+  #renderCollection = () => {
     if (this.#collectionFilms.length) {
-      render(this.#collectionContainer, this.#sortComponent, RenderPosition.BEFORE_END);
-      render(this.#collectionContainer, this.#filmSectionComponent, RenderPosition.BEFORE_END);
+      this.#renderSort();
+      this.#renderFilmSection();
       this.#renderFilmList();
+      this.#renderTopRatedFilms(this.#collectionFilms);
+      this.#renderMostCommentedFilms(this.#collectionFilms);
     } else {
       this.#renderNoFilm();
     }
   }
 
-  #renderTopRatedFilms = () => {
+  #removePopup = () => {
 
   }
-
 }
+
+

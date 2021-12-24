@@ -3,7 +3,7 @@ import { render, RenderPosition, appendChild, remove } from '../utils/render';
 //import FiltersAndStatsView from './view/filters-and-stats-view.js';
 import SortView from '../view/sort-view';
 //import ProfileRankAndAvatarView from './view/profile-and-rank-avatar-view';
-import FilmsSectionView from '../view/films-section-view';
+import FilmSectionView from '../view/film-section-view';
 import FilmCardView from '../view/film-card-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import FilmPopupView from '../view/film-popup-view';
@@ -14,7 +14,7 @@ import { createTopRatedFilmList, createMostCommentedFilmList } from '../mock/ext
 export default class BoardPresenter {
   #boardContainer = null;
 
-  #filmSectionComponent = new FilmsSectionView();
+  #filmSectionComponent = new FilmSectionView();
   #showMoreButtonComponent = new ShowMoreButtonView();
   #noFilmComponent = new NoFilmView();
   #sortComponent = new SortView();
