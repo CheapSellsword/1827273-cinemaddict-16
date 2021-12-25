@@ -48,6 +48,7 @@ export default class FilmPresenter {
     }
 
     if (this.#filmContainer.contains(prevFilmComponent)) {
+      // Пытаюсь сделать проверку на подобие проверки в лайве: this.#filmContainer.contains(prevFilmComponent), но выдаётся ошибка "Cannot read properties of null"?
       replace(this.#filmComponent, prevFilmComponent);
     }
 
@@ -57,6 +58,7 @@ export default class FilmPresenter {
 
     remove(prevFilmComponent);
     remove(prevPopupComponent);
+    // В какой момент эти функции будут задействованы?
   }
 
 
@@ -91,5 +93,5 @@ export default class FilmPresenter {
 
   #handleFavoriteClick = () => {
     this.#changeData({...this.#film, isFavorite: !this.#film.isFavorite});
-  }
+  }// Не понятен синтаксис этой функции
 }

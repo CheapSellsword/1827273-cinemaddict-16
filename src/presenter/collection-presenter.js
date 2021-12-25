@@ -18,6 +18,7 @@ export default class CollectionPresenter {
 
   #collectionFilms = [];
   #filmPresenter = new Map();
+
   #body = document.querySelector('body');
   #renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
   #filmContainer = this.#filmSectionComponent.element.querySelector('.films-list__container');
@@ -25,6 +26,7 @@ export default class CollectionPresenter {
   #topRatedFilmContainer = this.#topRatedSection.querySelector('.films-list__container');
   #mostCommentedSection = this.#filmSectionComponent.element.querySelector('.films-list--extra:last-child');
   #mostCommentedFilmsContainer = this.#mostCommentedSection.querySelector('.films-list__container');
+  // Как обойтись без поиска секций для отрисовки в них фильмов?
 
   constructor(collectionContainer) {
     this.#collectionContainer = collectionContainer;
@@ -47,6 +49,10 @@ export default class CollectionPresenter {
   }
 
   #closePrevPopup = (prevPopup) => {
+    // Не понятна схема с закрытием попапа:
+    // Как должна выглядеть эта функция?
+    // Почему она должна создаваться в главном презентере, где нет FilmPopupView, и передаваться в меньший презентер?
+    // Пункт задания "В презентере списка фильмов реализуйте метод для этого колбэка, который скроет попап, если таковой уже открыт." - как это реализовать и для какой ситуации?
     if(this.#body.contains(prevPopup)) {
       remove(prevPopup);
     }
