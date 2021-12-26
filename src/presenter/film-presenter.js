@@ -16,7 +16,6 @@ export default class FilmPresenter {
 
   #body = document.querySelector('body');
 
-
   constructor(filmContainer, changeData, changeMode) {
     this.#filmContainer = filmContainer;
     this.#changeData = changeData;
@@ -36,14 +35,10 @@ export default class FilmPresenter {
       appendChild(this.#body, this.#filmPopupComponent);
       this.#body.classList.add('hide-overflow');
       document.addEventListener('keydown', this.#escKeyDownHandler);
-      // this.#filmPopupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
-      // this.#filmPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
-      // this.#filmPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-      this.#filmPopupComponent.setClosePopupClickHandler(this.#closePopupClickHandler);
+      this.#addPopupListeners();
       this.#changeMode();
       this.#mode = MODE.POPUP;
     });
-
 
     this.#filmComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
     this.#filmComponent.setWatchedClickHandler(this.#handleWatchedClick);
@@ -55,14 +50,19 @@ export default class FilmPresenter {
 
     if (this.#mode === MODE.DEFAULT && prevFilmComponent !== null) {
       replace(this.#filmComponent, prevFilmComponent);
+      remove(prevFilmComponent);
     }
 
-    if (this.#mode === MODE.POPUP && prevPopupComponent !== null) {
+    if (this.#mode !== MODE.DEFAULT && prevFilmComponent !== null) {
+      replace(this.#filmComponent, prevFilmComponent);
+      remove(prevFilmComponent);
+    }
+
+    if (this.#mode !== MODE.DEFAULT && prevPopupComponent !== null) {
       replace(this.#filmPopupComponent, prevPopupComponent);
+      this.#addPopupListeners();
+      remove(prevPopupComponent);
     }
-
-    remove(prevFilmComponent);
-    remove(prevPopupComponent);
   }
 
   closePopup = () => {
@@ -98,6 +98,12 @@ export default class FilmPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = MODE.DEFAULT;
   };
+
+  #addPopupListeners = () => {
+    this.#filmPopupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
+    this.#filmPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
+    this.#filmPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#filmPopupComponent.setClosePopupClickHandler(this.#closePopupClickHandler);  }
 
   #handleWatchlistClick = () => {
     this.#changeData({...this.#film, isOnWatchlist: !this.#film.isOnWatchlist});
