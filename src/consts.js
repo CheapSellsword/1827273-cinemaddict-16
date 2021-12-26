@@ -126,3 +126,5 @@ export const MODE = {
   DEFAULT: 'DEFAULT',
   POPUP: 'POPUP',
 };
+
+export const EXTRA_FILMS_COUNT = 2;
