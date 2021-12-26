@@ -1,4 +1,4 @@
-import { FILMS_COUNT_PER_STEP, SortTypes } from '../consts';
+import { FILMS_COUNT_PER_STEP/*, SortTypes */} from '../consts';
 import { render, RenderPosition, remove } from '../utils/render';
 import { createTopRatedFilmList, createMostCommentedFilmList } from '../mock/extra-films';
 import SortView from '../view/sort-view';
@@ -7,6 +7,7 @@ import ShowMoreButtonView from '../view/show-more-button-view';
 import NoFilmView from '../view/no-film-view';
 import FilmPresenter from './film-presenter';
 import { updateItem } from '../utils/common';
+//import { sortByDate, sortByRating, compareByField } from '../utils/film-sort';
 
 export default class CollectionPresenter {
   #collectionContainer = null;
@@ -18,8 +19,8 @@ export default class CollectionPresenter {
 
   #collectionFilms = [];
   #filmPresenter = new Map();
-  #currentSortType = SortTypes.DEFAULT;
-  #sourcedCollectionFilms = [];
+  //#currentSortType = SortTypes.DEFAULT;
+  //#sourcedCollectionFilms = [];
 
   #renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
   #filmContainer = this.#filmSectionComponent.filmContainer;
@@ -34,12 +35,14 @@ export default class CollectionPresenter {
 
   init = (collectionFilms) => {
     this.#collectionFilms = [...collectionFilms];
+    //this.#sourcedCollectionFilms = [...collectionFilms];
     this.#renderCollection(this.#collectionFilms);
+    //console.log(this.#collectionFilms);
   }
 
   #handleFilmChange = (updatedFilm) => {
     this.#collectionFilms = updateItem(this.#collectionFilms, updatedFilm);
-    this.#sourcedCollectionFilms = updateItem(this.#sourcedCollectionFilms, updatedFilm);
+    //this.#sourcedCollectionFilms = updateItem(this.#sourcedCollectionFilms, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
   }
 
@@ -62,12 +65,34 @@ export default class CollectionPresenter {
     }
   }
 
-  #handleSortTypeChange = (sortType) => {
-  }
+  // #sortFilms = (sortType) => {
+  //   switch (sortType) {
+  //     case SortTypes.DATE:
+  //       this.#collectionFilms.sort(compareByField('releaseYear'));
+  //       break;
+  //     case SortTypes.RATING:
+  //       this.#collectionFilms.sort(compareByField('rating'));
+  //       break;
+  //     default:
+  //       this.#collectionFilms = [...this.#sourcedCollectionFilms];
+  //   }
+
+  //   this.#currentSortType = sortType;
+  // }
+
+  // #handleSortTypeChange = (sortType) => {
+  //   if (this.#currentSortType === sortType) {
+  //     return;
+  //   }
+
+  //   this.#sortFilms(sortType);
+  //   this.#clearFilmSection();
+  //   this.#renderFilmSection();
+  // }
 
   #renderSort = () => {
     render(this.#collectionContainer, this.#sortComponent, RenderPosition.BEFORE_END);
-    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
+  // this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   }
 
   #renderFilmSection = () => {

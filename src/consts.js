@@ -99,9 +99,9 @@ export const YESTERDAY_LIMIT = 1;
 export const TODAY_LIMIT = 0;
 
 export const SortTypes = {
+  DEFAULT: 'default',
   DATE: 'date',
   RATING: 'rating',
-  DEFAULT: 'default',
 };
 
 export const FILM_SECTION_TYPES = [
