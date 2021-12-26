@@ -1,3 +1,4 @@
+import { MODE } from '../consts';
 import FilmCardView from '../view/film-card-view';
 import FilmPopupView from '../view/film-popup-view';
 import { render, RenderPosition, appendChild, remove, replace } from '../utils/render';
@@ -5,21 +6,24 @@ import { render, RenderPosition, appendChild, remove, replace } from '../utils/r
 export default class FilmPresenter {
   #filmContainer = null;
   #changeData = null;
+  #changeMode = null;
 
   #filmComponent = null;
   #filmPopupComponent = null;
 
   #film = null;
+  #mode = MODE.DEFAULT;
 
   #body = document.querySelector('body');
 
 
-  constructor(filmContainer, changeData) {
+  constructor(filmContainer, changeData, changeMode) {
     this.#filmContainer = filmContainer;
     this.#changeData = changeData;
+    this.#changeMode = changeMode;
   }
 
-  init = (film, closePopup) => {
+  init = (film) => {
     this.#film = film;
 
     const prevFilmComponent = this.#filmComponent;
@@ -29,36 +33,49 @@ export default class FilmPresenter {
     this.#filmPopupComponent = new FilmPopupView(film);
 
     this.#filmComponent.setFilmCardClickHandler(() => {
-      closePopup(prevPopupComponent);
       appendChild(this.#body, this.#filmPopupComponent);
       this.#body.classList.add('hide-overflow');
       document.addEventListener('keydown', this.#escKeyDownHandler);
-      this.#filmPopupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
-      this.#filmPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
-      this.#filmPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-      this.#filmPopupComponent.setCloseButtonClickHandler(this.#closePopupClickHandler);
+      // this.#filmPopupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
+      // this.#filmPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
+      // this.#filmPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+      this.#filmPopupComponent.setClosePopupClickHandler(this.#closePopupClickHandler);
+      this.#changeMode();
+      this.#mode = MODE.POPUP;
     });
 
-    this.#filmComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
-    this.#filmComponent.setWatchedClickHandler(this.#handleWatchedClick);
-    this.#filmComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+
+    // this.#filmComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
+    // this.#filmComponent.setWatchedClickHandler(this.#handleWatchedClick);
+    // this.#filmComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
 
     if (prevFilmComponent === null) {
       render(this.#filmContainer, this.#filmComponent, RenderPosition.BEFORE_END);
     }
 
-    if (this.#filmContainer.contains(prevFilmComponent)) {
+    if (this.#mode === MODE.DEFAULT && prevFilmComponent !== null) {
       // Пытаюсь сделать проверку на подобие проверки в лайве: this.#filmContainer.contains(prevFilmComponent), но выдаётся ошибка "Cannot read properties of null"?
       replace(this.#filmComponent, prevFilmComponent);
     }
 
-    if (this.#body.contains(prevPopupComponent)) {
+    if (this.#mode === MODE.POPUP && prevPopupComponent !== null) {
       replace(this.#filmPopupComponent, prevPopupComponent);
     }
 
     remove(prevFilmComponent);
     remove(prevPopupComponent);
     // В какой момент эти функции будут задействованы?
+  }
+
+  closePopup = () => {
+    // Проблема:
+    // если в разных секциях отрисована одна и та же карточка фильма,
+    // то попап этого фильма не скрывается при клике на другую карточку
+    // и дублируется при клике на такую же карточку
+    if (this.#mode !== MODE.DEFAULT) {
+      remove(this.#filmPopupComponent);
+      this.#mode = MODE.DEFAULT;
+    }
   }
 
   destroy = () => {
@@ -73,6 +90,7 @@ export default class FilmPresenter {
       this.#body.classList.remove('hide-overflow');
       remove(this.#filmPopupComponent);
       document.removeEventListener('keydown', this.#escKeyDownHandler);
+      this.#mode = MODE.DEFAULT;
     }
   };
 
@@ -80,17 +98,19 @@ export default class FilmPresenter {
     this.#body.classList.remove('hide-overflow');
     remove(this.#filmPopupComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = MODE.DEFAULT;
   };
 
-  #handleWatchlistClick = () => {
-    this.#changeData({...this.#film, isOnWatchlist: !this.#film.isOnWatchlist});
-  }
+  // #handleWatchlistClick = () => {
+  //   this.#changeData({...this.#film, isOnWatchlist: !this.#film.isOnWatchlist});
+  // }
 
-  #handleWatchedClick = () => {
-    this.#changeData({...this.#film, isWatched: !this.#film.isWatched});
-  }
+  // #handleWatchedClick = () => {
+  //   this.#changeData({...this.#film, isWatched: !this.#film.isWatched});
+  // }
 
-  #handleFavoriteClick = () => {
-    this.#changeData({...this.#film, isFavorite: !this.#film.isFavorite});
-  }// Не понятен синтаксис этой функции
+  // #handleFavoriteClick = () => {
+  //   this.#changeData({...this.#film, isFavorite: !this.#film.isFavorite});
+  //}
+  // Не понятен синтаксис этой функции
 }

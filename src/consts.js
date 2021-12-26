@@ -121,3 +121,8 @@ export const FILMS_COUNT_FOR_RANK = {
   FAN: 11,
   MOVIE_BUFF: 21,
 };
+
+export const MODE = {
+  DEFAULT: 'DEFAULT',
+  POPUP: 'POPUP',
+};

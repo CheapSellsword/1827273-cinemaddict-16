@@ -19,7 +19,6 @@ export default class CollectionPresenter {
   #collectionFilms = [];
   #filmPresenter = new Map();
 
-  #body = document.querySelector('body');
   #renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
   #filmContainer = this.#filmSectionComponent.filmContainer;
   #topRatedSection = this.#filmSectionComponent.topRatedSection;
@@ -43,19 +42,9 @@ export default class CollectionPresenter {
   }
 
   #renderFilm = (filmContainer, film) => {
-    const filmPresenter = new FilmPresenter(filmContainer, this.#handleFilmChange);
-    filmPresenter.init(film, this.#closePrevPopup);
+    const filmPresenter = new FilmPresenter(filmContainer, this.#handleFilmChange, this.#handleModeChange);
+    filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
-  }
-
-  #closePrevPopup = (prevPopup) => {
-    // Не понятна схема с закрытием попапа:
-    // Как должна выглядеть эта функция?
-    // Почему она должна создаваться в главном презентере, где нет FilmPopupView, и передаваться в меньший презентер?
-    // Пункт задания "В презентере списка фильмов реализуйте метод для этого колбэка, который скроет попап, если таковой уже открыт." - как это реализовать и для какой ситуации?
-    if(this.#body.contains(prevPopup)) {
-      remove(prevPopup);
-    }
   }
 
   #renderFilms = (from, to) => {
@@ -116,6 +105,10 @@ export default class CollectionPresenter {
     remove(this.#filmSectionComponent);
     remove(this.#showMoreButtonComponent);
     this.#renderedFilmCardsCount = 0;
+  }
+
+  #handleModeChange = () => {
+    this.#filmPresenter.forEach((presenter) => presenter.closePopup());
   }
 
   #renderCollection = (collectionFilms) => {
