@@ -1,5 +1,5 @@
 import AbstractView from './abstract-view';
-import { SORT_TYPES } from '../consts';
+import { SortTypes } from '../consts';
 
 const createSortItemTemplate = (type, isActive) => {
   const activeClass = isActive ? 'sort__button--active' : '';
@@ -12,7 +12,7 @@ const createSortItemTemplate = (type, isActive) => {
 };
 
 const createSortTemplate = () => {
-  const createSortList = SORT_TYPES.map((sortElement, index) => createSortItemTemplate(sortElement, index === 0)).join('');
+  const createSortList = Object.values(SortTypes).map((sortElement, index) => createSortItemTemplate(sortElement, index === 0)).join('');
   return (
     `<ul class ="sort">
       ${createSortList}

@@ -1,4 +1,4 @@
-import { FILMS_COUNT_PER_STEP } from '../consts';
+import { FILMS_COUNT_PER_STEP, SortTypes } from '../consts';
 import { render, RenderPosition, remove } from '../utils/render';
 import { createTopRatedFilmList, createMostCommentedFilmList } from '../mock/extra-films';
 import SortView from '../view/sort-view';
@@ -18,6 +18,8 @@ export default class CollectionPresenter {
 
   #collectionFilms = [];
   #filmPresenter = new Map();
+  #currentSortType = SortTypes.DEFAULT;
+  #sourcedCollectionFilms = [];
 
   #renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
   #filmContainer = this.#filmSectionComponent.filmContainer;
@@ -37,6 +39,7 @@ export default class CollectionPresenter {
 
   #handleFilmChange = (updatedFilm) => {
     this.#collectionFilms = updateItem(this.#collectionFilms, updatedFilm);
+    this.#sourcedCollectionFilms = updateItem(this.#sourcedCollectionFilms, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
   }
 
