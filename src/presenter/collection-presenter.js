@@ -59,8 +59,12 @@ export default class CollectionPresenter {
     }
   }
 
+  #handleSortTypeChange = (sortType) => {
+  }
+
   #renderSort = () => {
     render(this.#collectionContainer, this.#sortComponent, RenderPosition.BEFORE_END);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   }
 
   #renderFilmSection = () => {
