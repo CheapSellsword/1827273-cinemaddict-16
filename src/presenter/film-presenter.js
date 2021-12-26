@@ -61,7 +61,6 @@ export default class FilmPresenter {
     // В какой момент эти функции будут задействованы?
   }
 
-
   destroy = () => {
     remove(this.#filmComponent);
     remove(this.#filmPopupComponent);

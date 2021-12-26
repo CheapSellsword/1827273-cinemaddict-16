@@ -34,7 +34,7 @@ export default class CollectionPresenter {
 
   init = (collectionFilms) => {
     this.#collectionFilms = [...collectionFilms];
-    this.#renderCollection(collectionFilms);
+    this.#renderCollection(this.#collectionFilms);
   }
 
   #handleFilmChange = (updatedFilm) => {
@@ -92,19 +92,11 @@ export default class CollectionPresenter {
     this.#showMoreButtonComponent.setShowMoreButtonClickHandler(this.#handleShowMoreButtonClick);
   }
 
-  #renderTopRatedFilms = (collectionFilms) => {
-    if (createTopRatedFilmList(collectionFilms)) {
-      createTopRatedFilmList(collectionFilms).forEach((film) => this.#renderFilm(this.#topRatedFilmContainer, film));
+  #renderExtraFilms = (extraContainer, extraFilms, extraSection) => {
+    if (extraFilms) {
+      extraFilms.forEach((film) => this.#renderFilm(extraContainer, film));
     } else {
-      this.#topRatedSection.remove();
-    }
-  }
-
-  #renderMostCommentedFilms = (collectionFilms) => {
-    if (createMostCommentedFilmList(collectionFilms)) {
-      createMostCommentedFilmList(collectionFilms).forEach((film) => this.#renderFilm(this.#mostCommentedFilmContainer, film));
-    } else {
-      this.#mostCommentedSection.remove();
+      extraSection.remove();
     }
   }
 
@@ -131,8 +123,8 @@ export default class CollectionPresenter {
       this.#renderSort();
       this.#renderFilmSection();
       this.#renderFilmList();
-      this.#renderTopRatedFilms(collectionFilms);
-      this.#renderMostCommentedFilms(collectionFilms);
+      this.#renderExtraFilms(this.#topRatedFilmContainer, createTopRatedFilmList(collectionFilms), this.#topRatedSection);
+      this.#renderExtraFilms(this.#mostCommentedFilmContainer, createMostCommentedFilmList(collectionFilms), this.#mostCommentedSection);
     } else {
       this.#renderNoFilm();
     }
