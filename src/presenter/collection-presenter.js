@@ -21,11 +21,11 @@ export default class CollectionPresenter {
 
   #body = document.querySelector('body');
   #renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
-  #filmContainer = this.#filmSectionComponent.element.querySelector('.films-list__container');
-  #topRatedSection = this.#filmSectionComponent.element.querySelector('.films-list--extra');
-  #topRatedFilmContainer = this.#topRatedSection.querySelector('.films-list__container');
-  #mostCommentedSection = this.#filmSectionComponent.element.querySelector('.films-list--extra:last-child');
-  #mostCommentedFilmsContainer = this.#mostCommentedSection.querySelector('.films-list__container');
+  #filmContainer = this.#filmSectionComponent.filmContainer;
+  #topRatedSection = this.#filmSectionComponent.topRatedSection;
+  #topRatedFilmContainer = this.#filmSectionComponent.topRatedFilmContainer;
+  #mostCommentedSection = this.#filmSectionComponent.mostCommentedSection;
+  #mostCommentedFilmContainer = this.#filmSectionComponent.mostCommentedFilmContainer;
   // Как обойтись без поиска секций для отрисовки в них фильмов?
 
   constructor(collectionContainer) {
@@ -102,7 +102,7 @@ export default class CollectionPresenter {
 
   #renderMostCommentedFilms = (collectionFilms) => {
     if (createMostCommentedFilmList(collectionFilms)) {
-      createMostCommentedFilmList(collectionFilms).forEach((film) => this.#renderFilm(this.#mostCommentedFilmsContainer, film));
+      createMostCommentedFilmList(collectionFilms).forEach((film) => this.#renderFilm(this.#mostCommentedFilmContainer, film));
     } else {
       this.#mostCommentedSection.remove();
     }

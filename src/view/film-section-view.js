@@ -22,4 +22,29 @@ export default class FilmsSectionView extends AbstractView {
   get template() {
     return createFilmSection();
   }
+
+  get filmContainer() {
+    const filmContainer = this.element.querySelector('.films-list__container');
+    return filmContainer;
+  }
+
+  get topRatedSection() {
+    const topRatedFilmSection = this.element.querySelector('.films-list--extra');
+    return topRatedFilmSection;
+  }
+
+  get topRatedFilmContainer() {
+    const topRatedFilmContainer = this.topRatedSection.querySelector('.films-list__container');
+    return topRatedFilmContainer;
+  }
+
+  get mostCommentedSection() {
+    const mostCommentedSection = this.element.querySelector('.films-list--extra:last-child');
+    return mostCommentedSection;
+  }
+
+  get mostCommentedFilmContainer() {
+    const mostCommentedFilmsContainer = this.mostCommentedSection.querySelector('.films-list__container');
+    return mostCommentedFilmsContainer;
+  }
 }
