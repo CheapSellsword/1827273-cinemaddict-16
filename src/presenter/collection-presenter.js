@@ -25,7 +25,6 @@ export default class CollectionPresenter {
   #topRatedFilmContainer = this.#filmSectionComponent.topRatedFilmContainer;
   #mostCommentedSection = this.#filmSectionComponent.mostCommentedSection;
   #mostCommentedFilmContainer = this.#filmSectionComponent.mostCommentedFilmContainer;
-  // Как обойтись без поиска секций для отрисовки в них фильмов?
 
   constructor(collectionContainer) {
     this.#collectionContainer = collectionContainer;
