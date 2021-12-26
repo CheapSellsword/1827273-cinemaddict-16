@@ -45,9 +45,9 @@ export default class FilmPresenter {
     });
 
 
-    // this.#filmComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
-    // this.#filmComponent.setWatchedClickHandler(this.#handleWatchedClick);
-    // this.#filmComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#filmComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
+    this.#filmComponent.setWatchedClickHandler(this.#handleWatchedClick);
+    this.#filmComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
 
     if (prevFilmComponent === null) {
       render(this.#filmContainer, this.#filmComponent, RenderPosition.BEFORE_END);
@@ -99,15 +99,17 @@ export default class FilmPresenter {
     this.#mode = MODE.DEFAULT;
   };
 
-  // #handleWatchlistClick = () => {
-  //   this.#changeData({...this.#film, isOnWatchlist: !this.#film.isOnWatchlist});
-  // }
+  #handleWatchlistClick = () => {
+    this.#changeData({...this.#film, isOnWatchlist: !this.#film.isOnWatchlist});
+  }
 
-  // #handleWatchedClick = () => {
-  //   this.#changeData({...this.#film, isWatched: !this.#film.isWatched});
-  // }
+  #handleWatchedClick = () => {
+    this.#changeData({...this.#film, isWatched: !this.#film.isWatched});
+  }
 
-  // #handleFavoriteClick = () => {
-  //   this.#changeData({...this.#film, isFavorite: !this.#film.isFavorite});
-  //}
+  #handleFavoriteClick = () => {
+    this.#changeData({...this.#film, isFavorite: !this.#film.isFavorite});
+  } // Проблема:
+  // Кнопки повторяющейся карточки работают корректно только в последней секции, где отрисована эта карточка.
+  // Состояния кнопок повторяющейся карточки не синхронизированы.
 }
