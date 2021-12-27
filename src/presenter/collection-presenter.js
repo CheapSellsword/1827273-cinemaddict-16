@@ -22,7 +22,6 @@ export default class CollectionPresenter {
   #collectionFilms = [];
   #topRatedFilms = [];
   #mostCommentedFilms = [];
-  #filmPresenter = new Map();
   //#currentSortType = SortTypes.DEFAULT;
   //#sourcedCollectionFilms = [];
 
@@ -46,11 +45,11 @@ export default class CollectionPresenter {
     this.#renderCollection(/*this.#collectionFilms*/);
   }
 
-  #handleFilmChange = (updatedFilm) => {
-    this.#collectionFilms = updateItem(this.#collectionFilms, updatedFilm);
-    //this.#sourcedCollectionFilms = updateItem(this.#sourcedCollectionFilms, updatedFilm);
-    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
-  }
+  // #handleFilmChange = (updatedFilm) => {
+  //   this.#collectionFilms = updateItem(this.#collectionFilms, updatedFilm);
+  //   //this.#sourcedCollectionFilms = updateItem(this.#sourcedCollectionFilms, updatedFilm);
+  //   this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
+  // }
 
   #renderFilm = (filmContainer, film) => {
     const filmComponent = new FilmCardView(film);
@@ -157,23 +156,23 @@ export default class CollectionPresenter {
     render(this.#collectionContainer, this.#noFilmComponent);
   }
 
-  #clearFilmSection = () => {
-    this.#filmPresenter.forEach((presenter) => presenter.destroy());
-    this.#filmPresenter.clear();
-    this.#renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
-    remove(this.#showMoreButtonComponent);
-  }
+  // #clearFilmSection = () => {
+  //   this.#filmPresenter.forEach((presenter) => presenter.destroy());
+  //   this.#filmPresenter.clear();
+  //   this.#renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
+  //   remove(this.#showMoreButtonComponent);
+  // }
 
-  #clearFilmCollection = () => {
-    remove(this.#sortComponent);
-    remove(this.#filmSectionComponent);
-    remove(this.#showMoreButtonComponent);
-    this.#renderedFilmCardsCount = 0;
-  }
+  // #clearFilmCollection = () => {
+  //   remove(this.#sortComponent);
+  //   remove(this.#filmSectionComponent);
+  //   remove(this.#showMoreButtonComponent);
+  //   this.#renderedFilmCardsCount = 0;
+  // }
 
-  #handleModeChange = () => {
-    this.#filmPresenter.forEach((presenter) => presenter.closePopup());
-  }
+  // #handleModeChange = () => {
+  //   this.#filmPresenter.forEach((presenter) => presenter.closePopup());
+  // }
 
   #renderCollection = () => {
     if (this.#collectionFilms.length) {
