@@ -31,14 +31,7 @@ export default class FilmPresenter {
     this.#filmComponent = new FilmCardView(film);
     this.#filmPopupComponent = new FilmPopupView(film);
 
-    this.#filmComponent.setFilmCardClickHandler(() => {
-      appendChild(this.#body, this.#filmPopupComponent);
-      this.#body.classList.add('hide-overflow');
-      document.addEventListener('keydown', this.#escKeyDownHandler);
-      this.#addPopupListeners();
-      this.#changeMode();
-      this.#mode = MODE.POPUP;
-    });
+    this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
 
     this.#filmComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
     this.#filmComponent.setWatchedClickHandler(this.#handleWatchedClick);
@@ -98,6 +91,15 @@ export default class FilmPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = MODE.DEFAULT;
   };
+
+  #filmCardClickHandler = () => {
+    appendChild(this.#body, this.#filmPopupComponent);
+    this.#body.classList.add('hide-overflow');
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#addPopupListeners();
+    this.#changeMode();
+    this.#mode = MODE.POPUP;
+  }
 
   #addPopupListeners = () => {
     this.#filmPopupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
