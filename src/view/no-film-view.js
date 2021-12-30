@@ -8,7 +8,7 @@ const createEmptySectionTemplate = () => (
   </section>`
 );
 
-export default class NoFilmView extends AbstractView {
+export default class FilmCardView extends AbstractView {
 
   get template() {
     return createEmptySectionTemplate();

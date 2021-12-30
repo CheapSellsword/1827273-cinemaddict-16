@@ -1,15 +1,14 @@
-import { FILMS_COUNT_PER_STEP } from '../consts';
-import { render, RenderPosition, remove, appendChild } from '../utils/render';
+import { FILMS_COUNT_PER_STEP} from '../consts';
+import { render, RenderPosition, remove } from '../utils/render';
 import SortView from '../view/sort-view';
 import FilmSectionView from '../view/film-section-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import NoFilmView from '../view/no-film-view';
-import FilmCardView from '../view/film-card-view';
-import FilmPopupView from '../view/film-popup-view';
+import FilmPresenter from './film-presenter';
+import { updateItem } from '../utils/common';
 
 export default class CollectionPresenter {
   #collectionContainer = null;
-  #popupComponent = null;
 
   #sortComponent = new SortView();
   #filmSectionComponent = new FilmSectionView();
@@ -17,8 +16,8 @@ export default class CollectionPresenter {
   #noFilmComponent = new NoFilmView();
 
   #collectionFilms = [];
+  #filmPresenter = new Map();
 
-  #body = document.querySelector('body');
   #renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
   #filmContainer = this.#filmSectionComponent.filmContainer;
 
@@ -28,39 +27,18 @@ export default class CollectionPresenter {
 
   init = (collectionFilms) => {
     this.#collectionFilms = [...collectionFilms];
-    this.#renderCollection();
+    this.#renderCollection(this.#collectionFilms);
+  }
+
+  #handleFilmChange = (updatedFilm) => {
+    this.#collectionFilms = updateItem(this.#collectionFilms, updatedFilm);
+    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
   }
 
   #renderFilm = (filmContainer, film) => {
-    const filmComponent = new FilmCardView(film);
-
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        this.#body.classList.remove('hide-overflow');
-        remove(this.#popupComponent);
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const closePopupClickHandler = () => {
-      this.#body.classList.remove('hide-overflow');
-      remove(this.#popupComponent);
-      document.removeEventListener('keydown', escKeyDownHandler);
-    };
-
-    filmComponent.setFilmCardClickHandler(() => {
-      if(this.#popupComponent !== null) {
-        remove(this.#popupComponent);
-      }
-      this.#popupComponent = new FilmPopupView(film);
-      appendChild(this.#body, this.#popupComponent);
-      this.#body.classList.add('hide-overflow');
-      document.addEventListener('keydown', escKeyDownHandler);
-      this.#popupComponent.setClosePopupClickHandler(closePopupClickHandler);
-    });
-
-    render(filmContainer, filmComponent, RenderPosition.BEFORE_END);
+    const filmPresenter = new FilmPresenter(filmContainer, this.#handleFilmChange, this.#handleModeChange);
+    filmPresenter.init(film);
+    this.#filmPresenter.set(film.id, filmPresenter);
   }
 
   #renderFilms = (films, from, to, filmContainer) => {
@@ -101,8 +79,26 @@ export default class CollectionPresenter {
     render(this.#collectionContainer, this.#noFilmComponent);
   }
 
-  #renderCollection = () => {
-    if (this.#collectionFilms.length) {
+  #clearFilmSection = () => {
+    this.#filmPresenter.forEach((presenter) => presenter.destroy());
+    this.#filmPresenter.clear();
+    this.#renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
+    remove(this.#showMoreButtonComponent);
+  }
+
+  #clearFilmCollection = () => {
+    remove(this.#sortComponent);
+    remove(this.#filmSectionComponent);
+    remove(this.#showMoreButtonComponent);
+    this.#renderedFilmCardsCount = 0;
+  }
+
+  #handleModeChange = () => {
+    this.#filmPresenter.forEach((presenter) => presenter.closePopup());
+  }
+
+  #renderCollection = (collectionFilms) => {
+    if (collectionFilms.length) {
       this.#renderSort();
       this.#renderFilmSection();
       this.#renderFilmList();
