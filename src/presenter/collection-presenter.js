@@ -1,252 +1,163 @@
-<<<<<<< HEAD
-import { FILMS_COUNT_PER_STEP, EXTRA_FILMS_COUNT, SortTypes } from '../consts';
-import { render, RenderPosition, remove } from '../utils/render';
-=======
-import { FILMS_COUNT_PER_STEP, EXTRA_FILMS_COUNT/*, SortTypes */} from '../consts';
-import { render, RenderPosition, remove, appendChild, replace } from '../utils/render';
->>>>>>> parent of 7fd5f89 (-)
+import { FILMS_COUNT_PER_STEP, EXTRA_FILMS_COUNT, SORT_TYPES } from '../consts';
 import { createTopRatedFilmList, createMostCommentedFilmList } from '../mock/extra-films';
-import SortView from '../view/sort-view';
-import FilmSectionView from '../view/film-section-view';
+import { render, RenderPosition, remove } from '../utils/render';
+import { updateItem, compareByField } from '../utils/common';
 import ShowMoreButtonView from '../view/show-more-button-view';
-import NoFilmView from '../view/no-film-view';
-<<<<<<< HEAD
+import FilmSectionView from '../view/film-section-view';
 import FilmPresenter from './film-presenter';
-import { updateItem, compareByField  } from '../utils/common';
-=======
-import FilmCardView from '../view/film-card-view';
-import FilmPopupView from '../view/film-popup-view';
-import { updateItem } from '../utils/common';
-//import { sortByDate, sortByRating, compareByField } from '../utils/film-sort';
->>>>>>> parent of 7fd5f89 (-)
+import NoFilmView from '../view/no-film-view';
+import SortView from '../view/sort-view';
 
 export default class CollectionPresenter {
-  #collectionContainer = null;
+    #filmListContainer = null;
 
-  #sortComponent = new SortView();
-  #filmSectionComponent = new FilmSectionView();
-  #showMoreButtonComponent = new ShowMoreButtonView();
-  #noFilmComponent = new NoFilmView();
+    #sortComponent = new SortView();
+    #noFilmComponent = new NoFilmView();
+    #filmSectionComponent = new FilmSectionView();
+    #showMoreButtonComponent = new ShowMoreButtonView();
 
-  #collectionFilms = [];
-  #topRatedFilms = [];
-  #mostCommentedFilms = [];
-<<<<<<< HEAD
-  #filmPresenter = new Map();
-  #currentSortType = SortTypes.DEFAULT;
-  #sourcedCollectionFilms = [];
-=======
-  //#currentSortType = SortTypes.DEFAULT;
-  //#sourcedCollectionFilms = [];
->>>>>>> parent of 7fd5f89 (-)
+    #presenters = [];
+    #topRatedFilms = [];
+    #collectionFilms = [];
+    #mostCommentedFilms = [];
+    #sourcedCollectionFilms = [];
+    #currentSortType = SORT_TYPES.DEFAULT;
+    #renderedFilmsCount = FILMS_COUNT_PER_STEP;
+    #filmContainer = this.#filmSectionComponent.filmContainer;
+    #topRatedSection = this.#filmSectionComponent.topRatedSection;
+    #mostCommentedSection = this.#filmSectionComponent.mostCommentedSection;
+    #topRatedFilmContainer = this.#filmSectionComponent.topRatedFilmContainer;
+    #mostCommentedFilmContainer = this.#filmSectionComponent.mostCommentedFilmContainer;
 
-  #renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
-  #filmContainer = this.#filmSectionComponent.filmContainer;
-  #topRatedSection = this.#filmSectionComponent.topRatedSection;
-  #topRatedFilmContainer = this.#filmSectionComponent.topRatedFilmContainer;
-  #mostCommentedSection = this.#filmSectionComponent.mostCommentedSection;
-  #mostCommentedFilmContainer = this.#filmSectionComponent.mostCommentedFilmContainer;
-
-  constructor(collectionContainer) {
-    this.#collectionContainer = collectionContainer;
-  }
-
-  init = (collectionFilms) => {
-    this.#collectionFilms = [...collectionFilms];
-<<<<<<< HEAD
-    this.#sourcedCollectionFilms = [...collectionFilms];
-    this.#topRatedFilms = [...createTopRatedFilmList(this.#collectionFilms)];
-    this.#mostCommentedFilms = [...createMostCommentedFilmList(this.#collectionFilms)];
-    this.#renderCollection(this.#collectionFilms);
-  }
-
-  #handleFilmChange = (updatedFilm) => {
-    this.#collectionFilms = updateItem(this.#collectionFilms, updatedFilm);
-    this.#sourcedCollectionFilms = updateItem(this.#sourcedCollectionFilms, updatedFilm);
-    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
-=======
-    //this.#sourcedCollectionFilms = [...collectionFilms];
-    this.#topRatedFilms = [...createTopRatedFilmList(this.#collectionFilms)];
-    this.#mostCommentedFilms = [...createMostCommentedFilmList(this.#collectionFilms)];
-    this.#renderCollection(/*this.#collectionFilms*/);
->>>>>>> parent of 7fd5f89 (-)
-  }
-
-  // #handleFilmChange = (updatedFilm) => {
-  //   this.#collectionFilms = updateItem(this.#collectionFilms, updatedFilm);
-  //   //this.#sourcedCollectionFilms = updateItem(this.#sourcedCollectionFilms, updatedFilm);
-  //   this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
-  // }
-
-  #renderFilm = (filmContainer, film) => {
-    const filmPresenter = new FilmPresenter(filmContainer, this.#handleFilmChange, this.#handleModeChange);
-    filmPresenter.init(film);
-    this.#filmPresenter.set(film.id, filmPresenter);
-  }
-
-  #renderFilms = (films, from, to, filmContainer) => {
-    films
-      .slice(from, to)
-      .forEach((film) => this.#renderFilm(filmContainer, film));
-  }
-
-  #renderFilmList = () => {
-    this.#renderFilms(this.#collectionFilms, 0, Math.min(this.#collectionFilms.length, this.#renderedFilmCardsCount), this.#filmContainer);
-    if (this.#collectionFilms.length > FILMS_COUNT_PER_STEP) {
-      this.#renderShowMoreButton();
-    }
-  }
-
-<<<<<<< HEAD
-  #sortFilms = (sortType) => {
-    switch (sortType) {
-      case SortTypes.DATE:
-        this.#collectionFilms.sort(compareByField('releaseYear'));
-        break;
-      case SortTypes.RATING:
-        this.#collectionFilms.sort(compareByField('rating'));
-        break;
-      default:
-        this.#collectionFilms = [...this.#sourcedCollectionFilms];
+    constructor(filmCollectionContainer) {
+      this.#filmListContainer = filmCollectionContainer;
     }
 
-    this.#currentSortType = sortType;
-  }
-
-  #handleSortTypeChange = (sortType) => {
-    if (this.#currentSortType === sortType) {
-      return;
+    init = (collectionFilms) => {
+      this.#collectionFilms = [...collectionFilms];
+      this.#topRatedFilms = [...createTopRatedFilmList(this.#collectionFilms)];
+      this.#mostCommentedFilms = [...createMostCommentedFilmList(this.#collectionFilms)];
+      this.#sourcedCollectionFilms = [...collectionFilms];
+      this.#renderFilmCollection();
     }
 
-    this.#sortFilms(sortType);
-    this.#clearFilmSection();
-    this.#renderFilmSection();
-  }
-
-  #renderSort = () => {
-    render(this.#collectionContainer, this.#sortComponent, RenderPosition.BEFORE_END);
-    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
-=======
-  // #sortFilms = (sortType) => {
-  //   switch (sortType) {
-  //     case SortTypes.DATE:
-  //       this.#collectionFilms.sort(compareByField('releaseYear'));
-  //       break;
-  //     case SortTypes.RATING:
-  //       this.#collectionFilms.sort(compareByField('rating'));
-  //       break;
-  //     default:
-  //       this.#collectionFilms = [...this.#sourcedCollectionFilms];
-  //   }
-
-  //   this.#currentSortType = sortType;
-  // }
-
-  // #handleSortTypeChange = (sortType) => {
-  //   if (this.#currentSortType === sortType) {
-  //     return;
-  //   }
-
-  //   this.#sortFilms(sortType);
-  //   this.#clearFilmSection();
-  //   this.#renderFilmSection();
-  // }
-
-  #renderSort = () => {
-    render(this.#collectionContainer, this.#sortComponent, RenderPosition.BEFORE_END);
-  // this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
->>>>>>> parent of 7fd5f89 (-)
-  }
-
-  #renderFilmSection = () => {
-    render(this.#collectionContainer, this.#filmSectionComponent, RenderPosition.BEFORE_END);
-  }
-
-  #handleShowMoreButtonClick = () => {
-    this.#renderFilms(this.#collectionFilms, this.#renderedFilmCardsCount, this.#renderedFilmCardsCount + FILMS_COUNT_PER_STEP, this.#filmContainer);
-    this.#renderedFilmCardsCount += FILMS_COUNT_PER_STEP;
-    if (this.#renderedFilmCardsCount >= this.#collectionFilms.length) {
-      remove(this.#showMoreButtonComponent);
+    #handleFilmChange = (updatedFilm) => {
+      this.#collectionFilms = updateItem(this.#collectionFilms, updatedFilm);
+      this.#sourcedCollectionFilms = updateItem(this.#sourcedCollectionFilms, updatedFilm);
+      this.#presenters.forEach((presenter) => {
+        if (presenter.id === updatedFilm.id) {
+          presenter.init(updatedFilm);
+        }
+      });
     }
-  }
 
-  #renderShowMoreButton = () => {
-    render(this.#filmContainer, this.#showMoreButtonComponent, RenderPosition.AFTER_END);
-    this.#showMoreButtonComponent.setShowMoreButtonClickHandler(this.#handleShowMoreButtonClick);
-  }
-
-  #renderExtraFilms = (extraContainer, extraFilms, extraSection) => {
-    if (extraFilms) {
-      this.#renderFilms(extraFilms, 0, EXTRA_FILMS_COUNT, extraContainer);
-<<<<<<< HEAD
-      extraFilms.forEach((film) => this.#renderFilm(extraContainer, film));
-=======
-      // extraFilms.forEach((film) => this.#renderFilm(extraContainer, film));
->>>>>>> parent of 7fd5f89 (-)
-    } else {
-      extraSection.remove();
+    #handleShowMoreButtonClick = () => {
+      this.#renderFilms(this.#collectionFilms, this.#renderedFilmsCount, this.#renderedFilmsCount + FILMS_COUNT_PER_STEP, this.#filmContainer);
+      this.#renderedFilmsCount += FILMS_COUNT_PER_STEP;
+      if (this.#renderedFilmsCount >= this.#collectionFilms.length) {
+        remove(this.#showMoreButtonComponent);
+      }
     }
-  }
 
-  #renderNoFilm = () => {
-    render(this.#collectionContainer, this.#noFilmComponent);
-  }
+    #handleModeChange = () => {
+      this.#presenters.forEach((presenter) => presenter.closePopup());
+    }
 
-<<<<<<< HEAD
-  #clearFilmSection = () => {
-    this.#filmPresenter.forEach((presenter) => presenter.destroy());
-    this.#filmPresenter.clear();
-    this.#renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
-    remove(this.#showMoreButtonComponent);
-  }
+      #sortFilms = (sortType) => {
+        switch (sortType) {
+          case SORT_TYPES.DATE:
+            this.#collectionFilms.sort(compareByField('releaseYear'));
+            break;
+          case SORT_TYPES.RATING:
+            this.#collectionFilms.sort(compareByField('rating'));
+            break;
+          default:
+            this.#collectionFilms = [...this.#sourcedCollectionFilms];
+        }
+        this.#currentSortType = sortType;
+      }
 
-  #clearFilmCollection = () => {
-    remove(this.#sortComponent);
-    remove(this.#filmSectionComponent);
-    remove(this.#showMoreButtonComponent);
-    this.#renderedFilmCardsCount = 0;
-  }
-
-  #handleModeChange = () => {
-    this.#filmPresenter.forEach((presenter) => presenter.closePopup());
-  }
-
-  #renderCollection = (collectionFilms) => {
-    if (collectionFilms.length) {
-      this.#renderSort();
-      this.#renderFilmSection();
-      this.#renderFilmList();
-      // this.#renderExtraFilms(this.#topRatedFilmContainer, this.#topRatedFilms, this.#topRatedSection);
-      // this.#renderExtraFilms(this.#mostCommentedFilmContainer, this.#mostCommentedFilms, this.#mostCommentedSection);
-=======
-  // #clearFilmSection = () => {
-  //   this.#filmPresenter.forEach((presenter) => presenter.destroy());
-  //   this.#filmPresenter.clear();
-  //   this.#renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
-  //   remove(this.#showMoreButtonComponent);
-  // }
-
-  // #clearFilmCollection = () => {
-  //   remove(this.#sortComponent);
-  //   remove(this.#filmSectionComponent);
-  //   remove(this.#showMoreButtonComponent);
-  //   this.#renderedFilmCardsCount = 0;
-  // }
-
-  // #handleModeChange = () => {
-  //   this.#filmPresenter.forEach((presenter) => presenter.closePopup());
-  // }
-
-  #renderCollection = () => {
-    if (this.#collectionFilms.length) {
-      this.#renderSort();
+    #handleSortTypeChange = (sortType) => {
+      if (this.#currentSortType === sortType) {
+        return;
+      }
+      this.#sortFilms(sortType);
+      this.#clearFilmSection();
       this.#renderFilmSection();
       this.#renderFilmList();
       this.#renderExtraFilms(this.#topRatedFilmContainer, this.#topRatedFilms, this.#topRatedSection);
       this.#renderExtraFilms(this.#mostCommentedFilmContainer, this.#mostCommentedFilms, this.#mostCommentedSection);
->>>>>>> parent of 7fd5f89 (-)
-    } else {
-      this.#renderNoFilm();
     }
-  }
+
+
+    #clearFilmSection = () => {
+      this.#presenters.forEach((presenter) => presenter.destroy());
+      this.#presenters = [];
+      this.#renderedFilmsCount = FILMS_COUNT_PER_STEP;
+      remove(this.#showMoreButtonComponent);
+    }
+
+    #clearFilmCollection = () => {
+      remove(this.#sortComponent);
+      remove(this.#filmSectionComponent);
+      remove(this.#showMoreButtonComponent);
+      this.#renderedFilmsCount = 0;
+    }
+
+    #renderFilmSort = () => {
+      render(this.#filmListContainer, this.#sortComponent, RenderPosition.BEFORE_END);
+      this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
+    }
+
+    #renderFilmSection = () => {
+      render(this.#sortComponent, this.#filmSectionComponent, RenderPosition.AFTER_END);
+    }
+
+    #renderFilm = (filmContainer, film) => {
+      const filmPresenter = new FilmPresenter(filmContainer, this.#handleFilmChange, this.#handleModeChange);
+      filmPresenter.init(film);
+      this.#presenters.push(filmPresenter);
+    }
+
+    #renderFilms = (sectionFilms, from, to, filmContainer) => {
+      sectionFilms
+        .slice(from, to)
+        .forEach((sectionFilm) => this.#renderFilm(filmContainer, sectionFilm));
+    }
+
+    #renderFilmList = () => {
+      this.#renderFilms(this.#collectionFilms, 0, Math.min(this.#collectionFilms.length, FILMS_COUNT_PER_STEP), this.#filmContainer);
+      if (this.#collectionFilms.length > FILMS_COUNT_PER_STEP) {
+        this.#renderShowMoreButton();
+      }
+    }
+
+    #renderShowMoreButton = () => {
+      render(this.#filmContainer, this.#showMoreButtonComponent, RenderPosition.AFTER_END);
+      this.#showMoreButtonComponent.setShowMoreButtonClickHandler(this.#handleShowMoreButtonClick);
+    }
+
+    #renderExtraFilms = (extraContainer, extraFilms, extraSection) => {
+      if (extraFilms) {
+        this.#renderFilms(extraFilms, 0, EXTRA_FILMS_COUNT, extraContainer);
+      } else {
+        extraSection.remove();
+      }
+    }
+
+    #renderNoFilm = () => {
+      render(this.#filmListContainer, this.#noFilmComponent, RenderPosition.BEFORE_END);
+    }
+
+    #renderFilmCollection = () => {
+      if (this.#collectionFilms.length) {
+        this.#renderFilmSort();
+        this.#renderFilmSection();
+        this.#renderFilmList();
+        this.#renderExtraFilms(this.#topRatedFilmContainer, this.#topRatedFilms, this.#topRatedSection);
+        this.#renderExtraFilms(this.#mostCommentedFilmContainer, this.#mostCommentedFilms, this.#mostCommentedSection);
+      } else {
+        this.#renderNoFilm();
+      }
+    }
 }

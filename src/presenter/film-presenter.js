@@ -1,7 +1,7 @@
 import { MODE } from '../consts';
-import FilmCardView from '../view/film-card-view';
-import FilmPopupView from '../view/film-popup-view';
 import { render, RenderPosition, appendChild, remove, replace } from '../utils/render';
+import FilmPopupView from '../view/film-popup-view';
+import FilmCardView from '../view/film-card-view';
 
 export default class FilmPresenter {
   #filmContainer = null;
@@ -15,6 +15,8 @@ export default class FilmPresenter {
   #mode = MODE.DEFAULT;
 
   #body = document.querySelector('body');
+
+  #id = null;
 
   constructor(filmContainer, changeData, changeMode) {
     this.#filmContainer = filmContainer;
@@ -55,6 +57,11 @@ export default class FilmPresenter {
       this.#addPopupListeners();
       remove(prevPopupComponent);
     }
+  }
+
+  get id() {
+    this.#id = this.#film.id;
+    return this.#id;
   }
 
   closePopup = () => {
@@ -100,7 +107,8 @@ export default class FilmPresenter {
     this.#filmPopupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
     this.#filmPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
     this.#filmPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.#filmPopupComponent.setClosePopupClickHandler(this.#closePopupClickHandler);  }
+    this.#filmPopupComponent.setClosePopupClickHandler(this.#closePopupClickHandler);
+  }
 
   #handleWatchlistClick = () => {
     this.#changeData({...this.#film, isOnWatchlist: !this.#film.isOnWatchlist});
