@@ -1,9 +1,4 @@
-const compareByField = (field) => {
-  if (Array.isArray(field)) {
-    return (a,b) => a[field].length < b[field].length ? 1 : -1;
-  }
-  return (a,b) => a[field] < b[field] ? 1 : -1;
-};
+import { compareByField } from '../utils/common';
 
 export const createTopRatedFilmList = (films) => {
   const topRatedFilmList = films.slice().sort(compareByField('rating'));
