@@ -16,7 +16,7 @@ export default class FilmPresenter {
 
   #body = document.querySelector('body');
 
-  #id = null;
+  //#id = null;
 
   constructor(filmContainer, changeData, changeMode) {
     this.#filmContainer = filmContainer;
@@ -59,10 +59,10 @@ export default class FilmPresenter {
     }
   }
 
-  get id() {
-    this.#id = this.#film.id;
-    return this.#id;
-  }
+  // get id() {
+  //   this.#id = this.#film.id;
+  //   return this.#id;
+  // }
 
   closePopup = () => {
     if (this.#mode !== MODE.DEFAULT) {
