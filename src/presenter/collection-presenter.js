@@ -1,11 +1,12 @@
-import { FILMS_COUNT_PER_STEP} from '../consts';
+import { FILMS_COUNT_PER_STEP, EXTRA_FILMS_COUNT, SortTypes } from '../consts';
 import { render, RenderPosition, remove } from '../utils/render';
+import { createTopRatedFilmList, createMostCommentedFilmList } from '../mock/extra-films';
 import SortView from '../view/sort-view';
 import FilmSectionView from '../view/film-section-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import NoFilmView from '../view/no-film-view';
 import FilmPresenter from './film-presenter';
-import { updateItem } from '../utils/common';
+import { updateItem, compareByField  } from '../utils/common';
 
 export default class CollectionPresenter {
   #collectionContainer = null;
@@ -16,10 +17,18 @@ export default class CollectionPresenter {
   #noFilmComponent = new NoFilmView();
 
   #collectionFilms = [];
+  #topRatedFilms = [];
+  #mostCommentedFilms = [];
   #filmPresenter = new Map();
+  #currentSortType = SortTypes.DEFAULT;
+  #sourcedCollectionFilms = [];
 
   #renderedFilmCardsCount = FILMS_COUNT_PER_STEP;
   #filmContainer = this.#filmSectionComponent.filmContainer;
+  #topRatedSection = this.#filmSectionComponent.topRatedSection;
+  #topRatedFilmContainer = this.#filmSectionComponent.topRatedFilmContainer;
+  #mostCommentedSection = this.#filmSectionComponent.mostCommentedSection;
+  #mostCommentedFilmContainer = this.#filmSectionComponent.mostCommentedFilmContainer;
 
   constructor(collectionContainer) {
     this.#collectionContainer = collectionContainer;
@@ -27,11 +36,15 @@ export default class CollectionPresenter {
 
   init = (collectionFilms) => {
     this.#collectionFilms = [...collectionFilms];
+    this.#sourcedCollectionFilms = [...collectionFilms];
+    this.#topRatedFilms = [...createTopRatedFilmList(this.#collectionFilms)];
+    this.#mostCommentedFilms = [...createMostCommentedFilmList(this.#collectionFilms)];
     this.#renderCollection(this.#collectionFilms);
   }
 
   #handleFilmChange = (updatedFilm) => {
     this.#collectionFilms = updateItem(this.#collectionFilms, updatedFilm);
+    this.#sourcedCollectionFilms = updateItem(this.#sourcedCollectionFilms, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
   }
 
@@ -54,8 +67,34 @@ export default class CollectionPresenter {
     }
   }
 
+  #sortFilms = (sortType) => {
+    switch (sortType) {
+      case SortTypes.DATE:
+        this.#collectionFilms.sort(compareByField('releaseYear'));
+        break;
+      case SortTypes.RATING:
+        this.#collectionFilms.sort(compareByField('rating'));
+        break;
+      default:
+        this.#collectionFilms = [...this.#sourcedCollectionFilms];
+    }
+
+    this.#currentSortType = sortType;
+  }
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortFilms(sortType);
+    this.#clearFilmSection();
+    this.#renderFilmSection();
+  }
+
   #renderSort = () => {
     render(this.#collectionContainer, this.#sortComponent, RenderPosition.BEFORE_END);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   }
 
   #renderFilmSection = () => {
@@ -73,6 +112,15 @@ export default class CollectionPresenter {
   #renderShowMoreButton = () => {
     render(this.#filmContainer, this.#showMoreButtonComponent, RenderPosition.AFTER_END);
     this.#showMoreButtonComponent.setShowMoreButtonClickHandler(this.#handleShowMoreButtonClick);
+  }
+
+  #renderExtraFilms = (extraContainer, extraFilms, extraSection) => {
+    if (extraFilms) {
+      this.#renderFilms(extraFilms, 0, EXTRA_FILMS_COUNT, extraContainer);
+      extraFilms.forEach((film) => this.#renderFilm(extraContainer, film));
+    } else {
+      extraSection.remove();
+    }
   }
 
   #renderNoFilm = () => {
@@ -102,6 +150,8 @@ export default class CollectionPresenter {
       this.#renderSort();
       this.#renderFilmSection();
       this.#renderFilmList();
+      // this.#renderExtraFilms(this.#topRatedFilmContainer, this.#topRatedFilms, this.#topRatedSection);
+      // this.#renderExtraFilms(this.#mostCommentedFilmContainer, this.#mostCommentedFilms, this.#mostCommentedSection);
     } else {
       this.#renderNoFilm();
     }

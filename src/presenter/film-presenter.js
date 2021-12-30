@@ -32,7 +32,6 @@ export default class FilmPresenter {
     this.#filmPopupComponent = new FilmPopupView(film);
 
     this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
-
     this.#filmComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
     this.#filmComponent.setWatchedClickHandler(this.#handleWatchedClick);
     this.#filmComponent.setFavoriteClickHandler(this.#handleFavoriteClick);

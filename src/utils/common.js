@@ -19,7 +19,6 @@ export const updateItem = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);
 
   if (index === -1) {
-    // Для чего проверка на индекс '-1'?
     return items;
   }
 
@@ -27,6 +26,12 @@ export const updateItem = (items, update) => {
     ...items.slice(0, index),
     update,
     ...items.slice(index + 1),
-    // Зачем здесь нужен spread operator, если 'items' и так массив?
   ];
+};
+
+export const compareByField = (field) => {
+  if (Array.isArray(field)) {
+    return (a,b) => a[field].length < b[field].length ? 1 : -1;
+  }
+  return (a,b) => a[field] < b[field] ? 1 : -1;
 };
