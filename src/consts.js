@@ -1,4 +1,4 @@
-export const GENERATED_FILMS_COUNT = 6;
+export const GENERATED_FILMS_COUNT = 15;
 export const FILMS_COUNT_PER_STEP = 5;
 export const DATE_GAP = 100;
 export const TIME_GAP = 10;
@@ -98,10 +98,16 @@ export const DAYS_DIFFERENCE_LIMIT = 5;
 export const YESTERDAY_LIMIT = 1;
 export const TODAY_LIMIT = 0;
 
-export const SORT_TYPES = [
-  'date',
-  'rating',
-  'default',
+export const SORT_TYPES = {
+  DEFAULT: 'default',
+  DATE: 'date',
+  RATING: 'rating',
+};
+
+export const FILM_SECTION_TYPES = [
+  'All movies. Upcoming',
+  'Top rated',
+  'Most commented'
 ];
 
 export const RANKS = {
@@ -115,3 +121,10 @@ export const FILMS_COUNT_FOR_RANK = {
   FAN: 11,
   MOVIE_BUFF: 21,
 };
+
+export const MODE = {
+  DEFAULT: 'DEFAULT',
+  POPUP: 'POPUP',
+};
+
+export const EXTRA_FILMS_COUNT = 2;

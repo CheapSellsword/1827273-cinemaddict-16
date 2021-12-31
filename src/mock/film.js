@@ -1,6 +1,7 @@
 import { MIN_ITEMS_COUNT, MIN_NUMBER, MAX_NUMBER, TITLES, POSTERS, DESCRIPTIONS, MAX_DESCRIPTIONS_COUNT, MAX_FILM_HOURS, MAX_FILM_MINUTES, GENRES, MAX_GENRES_COUNT, COUNTRIES, AGE_RESTRICTIONS, EMOJIS, NAMES, SURNAMES, MAX_NAMES_COUNT, PIECES_OF_COMMENTS, MAX_PIECES_OF_COMMENTS, MAX_COMMENTS } from '../consts';
 import { generateDataArray, generateRandomBoolean, getRandomPositiveFloat, getRandomItemFromArray, getRandomInteger } from '../utils/common';
 import { generateFullReleaseDate, getFormattedTimeOfComment, generateYearOnly } from '../utils/dates-and-time';
+import { nanoid } from 'nanoid';
 
 const generateTitle = () => getRandomItemFromArray(TITLES);
 const generatePoster = () => getRandomItemFromArray(POSTERS);
@@ -56,6 +57,7 @@ const generateComments = () => generateDataArray(getRandomInteger(MIN_NUMBER, MA
 
 export const generateFilm = () => (
   {
+    id: nanoid(),
     title: generateTitle(),
     alternativeTitle: generateTitle(),
     poster: generatePoster(),
