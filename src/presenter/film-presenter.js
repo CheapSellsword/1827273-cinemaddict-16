@@ -56,6 +56,7 @@ export default class FilmPresenter {
       replace(this.#filmPopupComponent, prevPopupComponent);
       this.#addPopupListeners();
       remove(prevPopupComponent);
+      this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
     }
   }
 
@@ -68,6 +69,8 @@ export default class FilmPresenter {
     if (this.#mode !== MODE.DEFAULT) {
       remove(this.#filmPopupComponent);
       this.#mode = MODE.DEFAULT;
+      this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
+      this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
     }
   }
 
@@ -84,6 +87,7 @@ export default class FilmPresenter {
       remove(this.#filmPopupComponent);
       document.removeEventListener('keydown', this.#escKeyDownHandler);
       this.#mode = MODE.DEFAULT;
+      this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
     }
   };
 
@@ -92,6 +96,7 @@ export default class FilmPresenter {
     remove(this.#filmPopupComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = MODE.DEFAULT;
+    this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
   };
 
   #filmCardClickHandler = () => {
@@ -101,6 +106,7 @@ export default class FilmPresenter {
     this.#addPopupListeners();
     this.#changeMode();
     this.#mode = MODE.POPUP;
+    this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
   }
 
   #addPopupListeners = () => {
