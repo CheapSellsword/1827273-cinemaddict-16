@@ -1,7 +1,7 @@
-import AbstractView from './abstract-view';
+import SmartView from './smart-view';
 
 const createFilmPopup = (film) => {
-  const {title, poster, fullReleaseDate, rating, length, genres, director, writers, cast, country, description, ageRestriction, comments, isOnWatchlist, isWatched, isFavorite} = film;
+  const {title, poster, fullReleaseDate, rating, length, genres, director, writers, cast, country, description, ageRestriction, comments, isOnWatchlist, isWatched, isFavorite, isEmoji, isText} = film;
   const genreSuffix = genres.length > 1 ? 'Genres' : 'Genre';
 
   const createGenresTemplate = () => genres.map((genre) =>
@@ -115,10 +115,10 @@ const createFilmPopup = (film) => {
                   </ul>
 
                   <div class="film-details__new-comment">
-                    <div class="film-details__add-emoji-label"></div>
+                    <div class="film-details__add-emoji-label">${isEmoji ? film.emoji : ''}</div>
 
                     <label class="film-details__comment-label">
-                      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+                      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${isText ? film.text : ''}</textarea>
                     </label>
 
                     <div class="film-details__emoji-list">
@@ -149,21 +149,28 @@ const createFilmPopup = (film) => {
           </section>`;
 };
 
-export default class FilmPopupView extends AbstractView {
-  #film = null;
+export default class FilmPopupView extends SmartView {
+  #popupListeners = null;
 
-  constructor(film) {
+  constructor(film, addPopupListeners) {
     super();
-    this.#film = film;
+    this.#popupListeners = addPopupListeners;
+    this._data = FilmPopupView.parseFilmToData(film);
+    this.#setInnerHandlers();
   }
 
   get template() {
-    return createFilmPopup(this.#film);
+    return createFilmPopup(this._data);
   }
 
+  reset = (film) => {
+    this.updateData(
+      FilmPopupView.parseFilmToData(film),
+    );
+  }
 
   setClosePopupClickHandler = (callback) => {
-    this._callback.closeButtonClick = callback;
+    this._callback.closePopupClick = callback;
     this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closePopupClickHandler);
   }
 
@@ -182,9 +189,44 @@ export default class FilmPopupView extends AbstractView {
     this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#favoriteClickHandler);
   }
 
+  restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.#popupListeners();
+  }
+
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    document.addEventListener('keydown', this.#formSubmitHandler);
+  }
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.film-details__inner').addEventListener('change', this.#emojiChangeHandler);
+    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
+  }
+
+  #emojiChangeHandler = (evt) => {
+    //console.log('click!');
+    evt.preventDefault();
+    const image = this.element.querySelector(`label[for=${evt.target.id}]`).children[0];
+    image.width = '55';
+    image.height = '55';
+    this.updateData({
+      emoji: image,
+    });
+    //console.log(image);
+  }
+
+  #commentInputHandler = (evt) => {
+    evt.preventDefault();
+    this.updateTextData({
+      text: evt.target.value,
+    },true);
+  }
+
   #closePopupClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.closeButtonClick();
+    this._callback.closePopupClick();
   }
 
   #watchlistClickHandler = (evt) => {
@@ -200,5 +242,34 @@ export default class FilmPopupView extends AbstractView {
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.favoriteClick();
+  }
+
+  #formSubmitHandler = (evt) => {
+    if (evt.target === 'Cmd' && evt.target === 'Enter' || evt.target === 'Command' && evt.target === 'Enter' || evt.target === 'Ctrl' && evt.target === 'Enter') {
+      evt.preventDefault();
+      this._callback.formSubmit(FilmPopupView.parseDataToFilm(this._data));
+    }
+  };
+
+  static parseFilmToData = (film) => ({...film,
+    isEmoji: film.emoji !== null && film.emoji !== undefined,
+    isText: film.text !== null && film.text !== undefined
+  })
+
+  static parseDataToFilm = (data) => {
+    const film = {...data};
+
+    if (!film.isEmoji) {
+      film.emoji = '';
+    }
+
+    if (!film.isText) {
+      film.text = '';
+    }
+
+    delete film.isEmoji;
+    delete film.isText;
+
+    return film;
   }
 }

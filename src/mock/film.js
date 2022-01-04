@@ -76,5 +76,7 @@ export const generateFilm = () => (
     isOnWatchlist: generateRandomBoolean(),
     isWatched: generateRandomBoolean(),
     isFavorite: generateRandomBoolean(),
+    emoji: '',
+    text: '',
   }
 );
