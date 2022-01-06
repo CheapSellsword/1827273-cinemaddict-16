@@ -94,9 +94,13 @@ export const PIECES_OF_COMMENTS = [
 export const MAX_PIECES_OF_COMMENTS = 3;
 export const MAX_COMMENTS = 5;
 
-export const DAYS_DIFFERENCE_LIMIT = 5;
-export const YESTERDAY_LIMIT = 1;
 export const TODAY_LIMIT = 0;
+export const SINGLE_TIME_UNIT_LIMIT = 1;
+export const A_FEW_MINUTES_LIMIT = 5;
+export const MINUTE_DIFFERENCE_LIMIT = 59;
+export const HOURS_DIFFERENCE_LIMIT = 6;
+export const DAYS_DIFFERENCE_LIMIT = 29;
+export const MONTHS_DIFFERENCE_LIMIT = 11;
 
 export const SORT_TYPES = {
   DEFAULT: 'default',
