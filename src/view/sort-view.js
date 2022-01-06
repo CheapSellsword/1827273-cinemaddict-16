@@ -6,13 +6,14 @@ const createSortItemTemplate = (type, isActive) => {
 
   return (
     `<li>
-      <a href="${type}" class="sort__button ${activeClass}" data-sort-type="${type}">Sort by ${type}</a>
+    <a href="${type}" class="sort__button ${activeClass}" data-sort-type="${type}">Sort by ${type}</a>
     </li>`
   );
 };
 
-const createSortTemplate = () => {
-  const createSortList = Object.values(SORT_TYPES).map((sortElement, index) => createSortItemTemplate(sortElement, index === 0)).join('');
+const createSortTemplate = (activeSort) => {
+  const sortTypes = Object.values(SORT_TYPES);
+  const createSortList =  sortTypes.map((sortElement, index) => createSortItemTemplate(sortElement, index === sortTypes.indexOf(activeSort))).join('');
   return (
     `<ul class ="sort">
       ${createSortList}
@@ -21,8 +22,10 @@ const createSortTemplate = () => {
 };
 
 export default class SortView extends AbstractView {
+  #activeSort = 'default';
+
   get template() {
-    return createSortTemplate();
+    return createSortTemplate(this.#activeSort);
   }
 
   setSortTypeChangeHandler = (callback) => {
@@ -36,6 +39,7 @@ export default class SortView extends AbstractView {
     }
 
     evt.preventDefault();
+    this.#activeSort = evt.target.dataset.sortType;
     this._callback.sortTypeChange(evt.target.dataset.sortType);
   }
 }
