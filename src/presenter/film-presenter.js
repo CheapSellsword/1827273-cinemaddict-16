@@ -31,7 +31,7 @@ export default class FilmPresenter {
     const prevPopupComponent = this.#filmPopupComponent;
 
     this.#filmComponent = new FilmCardView(film);
-    this.#filmPopupComponent = new FilmPopupView(film);
+    this.#filmPopupComponent = new FilmPopupView(film, this.#addPopupListeners);
 
     this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
     this.#filmComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
