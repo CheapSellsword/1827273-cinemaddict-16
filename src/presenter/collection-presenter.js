@@ -28,6 +28,7 @@ export default class CollectionPresenter {
     #mostCommentedSection = this.#filmSectionComponent.mostCommentedSection;
     #topRatedFilmContainer = this.#filmSectionComponent.topRatedFilmContainer;
     #mostCommentedFilmContainer = this.#filmSectionComponent.mostCommentedFilmContainer;
+    #body = document.querySelector('body');
 
     constructor(filmCollectionContainer) {
       this.#filmListContainer = filmCollectionContainer;
@@ -81,6 +82,7 @@ export default class CollectionPresenter {
       if (this.#currentSortType === sortType) {
         return;
       }
+      this.#body.classList.remove('hide-overflow');
       this.#sortFilms(sortType);
       this.#clearFilmSection();
       this.#renderFilmSort();
