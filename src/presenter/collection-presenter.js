@@ -83,14 +83,15 @@ export default class CollectionPresenter {
       }
       this.#sortFilms(sortType);
       this.#clearFilmSection();
+      this.#renderFilmSort();
       this.#renderFilmSection();
       this.#renderFilmList();
       this.#renderExtraFilms(this.#topRatedFilmContainer, this.#topRatedFilms, this.#topRatedSection);
       this.#renderExtraFilms(this.#mostCommentedFilmContainer, this.#mostCommentedFilms, this.#mostCommentedSection);
     }
 
-
     #clearFilmSection = () => {
+      remove(this.#sortComponent);
       this.#presenters.forEach((presenter) => presenter.destroy());
       this.#presenters = [];
       this.#renderedFilmsCount = FILMS_COUNT_PER_STEP;
