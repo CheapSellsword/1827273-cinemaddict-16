@@ -19,7 +19,7 @@ export default class SmartView extends AbstractView {
 
     updateElement = () => {
       const prevElement = this.element;
-      const prevScrollPosition = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+      const prevScrollPosition = prevElement.scrollTop;
       const parent = prevElement.parentElement;
       this.removeElement();
 
@@ -29,7 +29,7 @@ export default class SmartView extends AbstractView {
 
       this.restoreHandlers();
 
-      newElement.scrollTo(0, prevScrollPosition);
+      newElement.scrollTop = prevScrollPosition;
     }
 
     restoreHandlers = () => {
