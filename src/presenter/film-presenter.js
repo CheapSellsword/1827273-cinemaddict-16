@@ -1,4 +1,4 @@
-import { MODE } from '../consts';
+import { Mode } from '../consts';
 import { render, RenderPosition, appendChild, remove, replace } from '../utils/render';
 import FilmPopupView from '../view/film-popup-view';
 import FilmCardView from '../view/film-card-view';
@@ -12,7 +12,7 @@ export default class FilmPresenter {
   #filmPopupComponent = null;
 
   #film = null;
-  #mode = MODE.DEFAULT;
+  #mode = Mode.DEFAULT;
 
   #body = document.querySelector('body');
 
@@ -42,17 +42,17 @@ export default class FilmPresenter {
       render(this.#filmContainer, this.#filmComponent, RenderPosition.BEFORE_END);
     }
 
-    if (this.#mode === MODE.DEFAULT && prevFilmComponent !== null) {
+    if (this.#mode === Mode.DEFAULT && prevFilmComponent !== null) {
       replace(this.#filmComponent, prevFilmComponent);
       remove(prevFilmComponent);
     }
 
-    if (this.#mode !== MODE.DEFAULT && prevFilmComponent !== null) {
+    if (this.#mode !== Mode.DEFAULT && prevFilmComponent !== null) {
       replace(this.#filmComponent, prevFilmComponent);
       remove(prevFilmComponent);
     }
 
-    if (this.#mode !== MODE.DEFAULT && prevPopupComponent !== null) {
+    if (this.#mode !== Mode.DEFAULT && prevPopupComponent !== null) {
       replace(this.#filmPopupComponent, prevPopupComponent);
       this.#addPopupListeners();
       remove(prevPopupComponent);
@@ -66,9 +66,9 @@ export default class FilmPresenter {
   }
 
   closePopup = () => {
-    if (this.#mode !== MODE.DEFAULT) {
+    if (this.#mode !== Mode.DEFAULT) {
       remove(this.#filmPopupComponent);
-      this.#mode = MODE.DEFAULT;
+      this.#mode = Mode.DEFAULT;
       this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
       this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
     }
@@ -86,7 +86,7 @@ export default class FilmPresenter {
       this.#body.classList.remove('hide-overflow');
       remove(this.#filmPopupComponent);
       document.removeEventListener('keydown', this.#escKeyDownHandler);
-      this.#mode = MODE.DEFAULT;
+      this.#mode = Mode.DEFAULT;
       this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
     }
   };
@@ -95,7 +95,7 @@ export default class FilmPresenter {
     this.#body.classList.remove('hide-overflow');
     remove(this.#filmPopupComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-    this.#mode = MODE.DEFAULT;
+    this.#mode = Mode.DEFAULT;
     this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
   };
 
@@ -105,7 +105,7 @@ export default class FilmPresenter {
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#addPopupListeners();
     this.#changeMode();
-    this.#mode = MODE.POPUP;
+    this.#mode = Mode.POPUP;
     this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
   }
 
