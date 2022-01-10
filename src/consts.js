@@ -128,3 +128,9 @@ export const MODE = {
 };
 
 export const EXTRA_FILMS_COUNT = 2;
+
+export const EvtKey = {
+  ESCAPE: 'Escape',
+  ESC: 'Esc',
+  ENTER: 'Enter',
+};

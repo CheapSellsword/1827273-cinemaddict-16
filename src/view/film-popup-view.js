@@ -1,4 +1,5 @@
 import SmartView from './smart-view';
+import { EvtKey } from '../consts';
 
 const createFilmPopup = (film) => {
   const {title, poster, fullReleaseDate, rating, length, genres, director, writers, cast, country, description, ageRestriction, comments, isOnWatchlist, isWatched, isFavorite, isEmoji, isText, isEmojiChecked} = film;
@@ -249,7 +250,7 @@ export default class FilmPopupView extends SmartView {
 
 
   #formSubmitHandler = (evt) => {
-    if (evt.key === 'Enter' && (evt.ctrlKey || evt.metaKey)){
+    if (evt.key === EvtKey.ENTER && (evt.ctrlKey || evt.metaKey)) {
       evt.preventDefault();
       this._callback.formSubmit = FilmPopupView.parseDataToFilm(this._data);
       const chosenEmoji = this.element.querySelector('.film-details__add-emoji-label');
@@ -267,11 +268,11 @@ export default class FilmPopupView extends SmartView {
   static parseDataToFilm = (data) => {
     const film = {...data};
 
-    if (!film.isEmoji) {
+    if (film.isEmoji) {
       film.emoji = '';
     }
 
-    if (!film.isText) {
+    if (film.isText) {
       film.text = '';
     }
 
@@ -280,6 +281,4 @@ export default class FilmPopupView extends SmartView {
 
     return film;
   }
-
 }
-
