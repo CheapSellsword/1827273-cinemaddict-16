@@ -107,6 +107,13 @@ export const FILM_SECTION_TYPES = [
   'Most commented'
 ];
 
+export const EMOJI_TYPES = [
+  'smile',
+  'sleeping',
+  'puke',
+  'angry',
+];
+
 export const SortType = {
   DEFAULT: 'default',
   DATE: 'date',

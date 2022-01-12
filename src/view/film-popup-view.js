@@ -1,5 +1,5 @@
 import SmartView from './smart-view';
-import { EvtKey } from '../consts';
+import { EvtKey, EMOJI_TYPES } from '../consts';
 
 const createFilmPopup = (film) => {
   const {title, poster, fullReleaseDate, rating, length, genres, director, writers, cast, country, description, ageRestriction, comments, isOnWatchlist, isWatched, isFavorite, isEmoji, isText, isEmojiChecked} = film;
@@ -37,7 +37,18 @@ const createFilmPopup = (film) => {
     ? 'film-details__control-button--active'
     : '';
 
-  const isChecked = isEmojiChecked ? 'checked' : '';
+  const createEmojiListItemTemplate = (emojiType) => `<input class="film-details__emoji-item visually-hidden" ${isEmojiChecked === emojiType ? 'checked' : ''} name="comment-emoji" type="radio" id="emoji-${emojiType}" value="${emojiType}">
+            <label class="film-details__emoji-label" for="emoji-${emojiType}">
+              <img src="./images/emoji/${emojiType}.png" width="30" height="30" alt="${emojiType}">
+            </label>`;
+
+  const createEmojiListTemplate = (checkedEmoji) => {
+    const createList = EMOJI_TYPES.map((emojiType, index) => createEmojiListItemTemplate(emojiType, index === EMOJI_TYPES.indexOf(checkedEmoji))).join('');
+
+    return `<div class="film-details__emoji-list">
+              ${createList}
+            </div>`;
+  };
 
   return `<section class="film-details">
             <form class="film-details__inner" action="" method="get">
@@ -123,28 +134,7 @@ const createFilmPopup = (film) => {
                     <label class="film-details__comment-label">
                       <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${isText ? film.text : ''}</textarea>
                     </label>
-
-                    <div class="film-details__emoji-list">
-                      <input class="film-details__emoji-item visually-hidden" ${isChecked} name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-                      <label class="film-details__emoji-label" for="emoji-smile">
-                        <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-                      </label>
-
-                      <input class="film-details__emoji-item visually-hidden" ${isChecked} name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-                      <label class="film-details__emoji-label" for="emoji-sleeping">
-                        <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-                      </label>
-
-                      <input class="film-details__emoji-item visually-hidden" ${isChecked} name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-                      <label class="film-details__emoji-label" for="emoji-puke">
-                        <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-                      </label>
-
-                      <input class="film-details__emoji-item visually-hidden" ${isChecked} name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-                      <label class="film-details__emoji-label" for="emoji-angry">
-                        <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-                      </label>
-                    </div>
+                    ${createEmojiListTemplate()}
                   </div>
                 </section>
               </div>
@@ -216,7 +206,7 @@ export default class FilmPopupView extends SmartView {
     evt.preventDefault();
     this.updateData({
       emoji: `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`,
-      // isEmojiChecked: evt.target.id,
+      isEmojiChecked: evt.target.value,
     });
 
   }
