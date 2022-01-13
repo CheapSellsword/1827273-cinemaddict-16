@@ -136,6 +136,7 @@ const createFilmPopup = (film) => {
                     </label>
                     ${createEmojiListTemplate()}
                   </div>
+                  </div>
                 </section>
               </div>
             </form>
@@ -144,8 +145,6 @@ const createFilmPopup = (film) => {
 
 export default class FilmPopupView extends SmartView {
   #popupListeners = null;
-  #emojis = null;
-
 
   constructor(film, addPopupListeners) {
     super();
@@ -197,8 +196,7 @@ export default class FilmPopupView extends SmartView {
   }
 
   #setInnerHandlers = () => {
-    this.#emojis = this.element.querySelectorAll('.film-details__emoji-item');
-    this.#emojis.forEach((emoji) => emoji.addEventListener('change', this.#emojiChangeHandler));
+    this.element.querySelectorAll('.film-details__emoji-item').forEach((emoji) => emoji.addEventListener('change', this.#emojiChangeHandler));
     this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
   }
 
@@ -208,7 +206,6 @@ export default class FilmPopupView extends SmartView {
       emoji: `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`,
       isEmojiChecked: evt.target.value,
     });
-
   }
 
   #commentInputHandler = (evt) => {
@@ -242,11 +239,7 @@ export default class FilmPopupView extends SmartView {
   #formSubmitHandler = (evt) => {
     if (evt.key === EvtKey.ENTER && (evt.ctrlKey || evt.metaKey)) {
       evt.preventDefault();
-      this._callback.formSubmit = FilmPopupView.parseDataToFilm(this._data);
-      const chosenEmoji = this.element.querySelector('.film-details__add-emoji-label');
-      chosenEmoji.removeChild(chosenEmoji.firstChild);
-      const text = this.element.querySelector('.film-details__comment-input');
-      text.value = '';
+      this._callback.formSubmit = this.updateData(FilmPopupView.parseDataToFilm(this._data));
     }
   };
 
