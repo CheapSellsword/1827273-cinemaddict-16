@@ -246,6 +246,7 @@ export default class FilmPopupView extends SmartView {
   static parseFilmToData = (film) => ({...film,
     isEmoji: film.emoji !== null && film.emoji !== undefined,
     isText: film.text !== null && film.text !== undefined,
+    isEmojiChecked: null,
   })
 
   static parseDataToFilm = (data) => {
@@ -258,6 +259,8 @@ export default class FilmPopupView extends SmartView {
     if (film.isText) {
       film.text = '';
     }
+
+    film.isEmojiChecked = null;
 
     delete film.isEmoji;
     delete film.isText;

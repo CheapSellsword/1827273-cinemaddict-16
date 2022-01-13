@@ -106,6 +106,7 @@ export default class FilmPresenter {
     this.#addPopupListeners();
     this.#changeMode();
     this.#mode = Mode.POPUP;
+    this.#filmPopupComponent.reset(this.#film);
     this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
   }
 
