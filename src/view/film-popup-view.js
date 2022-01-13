@@ -42,8 +42,8 @@ const createFilmPopup = (film) => {
               <img src="./images/emoji/${emojiType}.png" width="30" height="30" alt="${emojiType}">
             </label>`;
 
-  const createEmojiListTemplate = (checkedEmoji) => {
-    const createList = EMOJI_TYPES.map((emojiType, index) => createEmojiListItemTemplate(emojiType, index === EMOJI_TYPES.indexOf(checkedEmoji))).join('');
+  const createEmojiListTemplate = () => {
+    const createList = EMOJI_TYPES.map((emojiType) => createEmojiListItemTemplate(emojiType)).join('');
 
     return `<div class="film-details__emoji-list">
               ${createList}
