@@ -115,6 +115,7 @@ export default class FilmPresenter {
     this.#filmPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
     this.#filmPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmPopupComponent.setClosePopupClickHandler(this.#closePopupClickHandler);
+    this.#filmPopupComponent.setFormSubmitHandler(this.#handleNewCommentSubmit);
   }
 
   #handleWatchlistClick = () => {
@@ -127,5 +128,9 @@ export default class FilmPresenter {
 
   #handleFavoriteClick = () => {
     this.#changeData({...this.#film, isFavorite: !this.#film.isFavorite});
+  }
+
+  #handleNewCommentSubmit = (film) => {
+    this.#changeData(film);
   }
 }
