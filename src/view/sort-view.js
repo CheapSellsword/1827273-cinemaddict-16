@@ -13,6 +13,7 @@ const createSortItemTemplate = (type, isActive) => {
 
 const createSortTemplate = (activeSort) => {
   const sortTypes = Object.values(SortType);
+
   const createSortList =  sortTypes.map((sortElement, index) => createSortItemTemplate(sortElement, index === sortTypes.indexOf(activeSort))).join('');
   return (
     `<ul class ="sort">
