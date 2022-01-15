@@ -1,4 +1,4 @@
-export const GENERATED_FILMS_COUNT = 5;
+export const GENERATED_FILMS_COUNT = 6;
 export const FILMS_COUNT_PER_STEP = 5;
 export const DATE_GAP = 100;
 export const TIME_GAP = 10;
@@ -91,6 +91,9 @@ export const PIECES_OF_COMMENTS = [
   'Almost two hours? ',
   'Seriously? ',
 ];
+
+export const EXTRA_FILMS_COUNT = 2;
+
 export const MAX_PIECES_OF_COMMENTS = 3;
 export const MAX_COMMENTS = 5;
 
@@ -98,33 +101,44 @@ export const DAYS_DIFFERENCE_LIMIT = 5;
 export const YESTERDAY_LIMIT = 1;
 export const TODAY_LIMIT = 0;
 
-export const SORT_TYPES = {
-  DEFAULT: 'default',
-  DATE: 'date',
-  RATING: 'rating',
-};
-
 export const FILM_SECTION_TYPES = [
   'All movies. Upcoming',
   'Top rated',
   'Most commented'
 ];
 
-export const RANKS = {
+export const EMOJI_TYPES = [
+  'smile',
+  'sleeping',
+  'puke',
+  'angry',
+];
+
+export const SortType = {
+  DEFAULT: 'default',
+  DATE: 'date',
+  RATING: 'rating',
+};
+
+export const Ranks = {
   NOVICE: 'Novice',
   FAN: 'Fan',
   MOVIE_BUFF: 'Movie buff',
 };
 
-export const FILMS_COUNT_FOR_RANK = {
+export const FilmsCountForRank = {
   NOVICE: 0,
   FAN: 11,
   MOVIE_BUFF: 21,
 };
 
-export const MODE = {
+export const Mode = {
   DEFAULT: 'DEFAULT',
   POPUP: 'POPUP',
 };
 
-export const EXTRA_FILMS_COUNT = 2;
+export const EvtKey = {
+  ESCAPE: 'Escape',
+  ESC: 'Esc',
+  ENTER: 'Enter',
+};

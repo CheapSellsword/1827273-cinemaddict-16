@@ -1,17 +1,17 @@
-import { RANKS, FILMS_COUNT_FOR_RANK } from '../consts';
+import { Ranks, FilmsCountForRank } from '../consts';
 import AbstractView from './abstract-view';
 
 const createRank = (filmsCount) => {
   let rank = '';
 
-  if (filmsCount >= FILMS_COUNT_FOR_RANK.NOVICE && filmsCount < FILMS_COUNT_FOR_RANK.FAN) {
-    rank = RANKS.NOVICE;
+  if (filmsCount >= FilmsCountForRank.NOVICE && filmsCount < FilmsCountForRank.FAN) {
+    rank = Ranks.NOVICE;
 
-  } else if (filmsCount >= FILMS_COUNT_FOR_RANK.FAN && filmsCount < FILMS_COUNT_FOR_RANK.MOVIE_BUFF) {
-    rank = RANKS.FAN;
+  } else if (filmsCount >= FilmsCountForRank.FAN && filmsCount < FilmsCountForRank.MOVIE_BUFF) {
+    rank = Ranks.FAN;
 
-  } else if (filmsCount >= FILMS_COUNT_FOR_RANK.MOVIE_BUFF) {
-    rank = RANKS.MOVIE_BUFF;
+  } else if (filmsCount >= FilmsCountForRank.MOVIE_BUFF) {
+    rank = Ranks.MOVIE_BUFF;
 
   } else {
     rank = '';

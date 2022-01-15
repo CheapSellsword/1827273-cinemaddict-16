@@ -1,4 +1,4 @@
-import { FILMS_COUNT_PER_STEP, EXTRA_FILMS_COUNT, SORT_TYPES } from '../consts';
+import { FILMS_COUNT_PER_STEP, EXTRA_FILMS_COUNT, SortType } from '../consts';
 import { createTopRatedFilmList, createMostCommentedFilmList } from '../mock/extra-films';
 import { render, RenderPosition, remove } from '../utils/render';
 import { updateItem, compareByField } from '../utils/common';
@@ -21,13 +21,14 @@ export default class CollectionPresenter {
     #collectionFilms = [];
     #mostCommentedFilms = [];
     #sourcedCollectionFilms = [];
-    #currentSortType = SORT_TYPES.DEFAULT;
+    #currentSortType = SortType.DEFAULT;
     #renderedFilmsCount = FILMS_COUNT_PER_STEP;
     #filmContainer = this.#filmSectionComponent.filmContainer;
     #topRatedSection = this.#filmSectionComponent.topRatedSection;
     #mostCommentedSection = this.#filmSectionComponent.mostCommentedSection;
     #topRatedFilmContainer = this.#filmSectionComponent.topRatedFilmContainer;
     #mostCommentedFilmContainer = this.#filmSectionComponent.mostCommentedFilmContainer;
+    #body = document.querySelector('body');
 
     constructor(filmCollectionContainer) {
       this.#filmListContainer = filmCollectionContainer;
@@ -65,10 +66,10 @@ export default class CollectionPresenter {
 
       #sortFilms = (sortType) => {
         switch (sortType) {
-          case SORT_TYPES.DATE:
+          case SortType.DATE:
             this.#collectionFilms.sort(compareByField('releaseYear'));
             break;
-          case SORT_TYPES.RATING:
+          case SortType.RATING:
             this.#collectionFilms.sort(compareByField('rating'));
             break;
           default:
@@ -81,6 +82,7 @@ export default class CollectionPresenter {
       if (this.#currentSortType === sortType) {
         return;
       }
+      this.#body.classList.remove('hide-overflow');
       this.#sortFilms(sortType);
       this.#clearFilmSection();
       this.#renderFilmSort();
@@ -89,7 +91,6 @@ export default class CollectionPresenter {
       this.#renderExtraFilms(this.#topRatedFilmContainer, this.#topRatedFilms, this.#topRatedSection);
       this.#renderExtraFilms(this.#mostCommentedFilmContainer, this.#mostCommentedFilms, this.#mostCommentedSection);
     }
-
 
     #clearFilmSection = () => {
       remove(this.#sortComponent);
