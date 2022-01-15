@@ -40,8 +40,8 @@ export const MIN_ITEMS_COUNT = 1;
 
 export const MAX_DESCRIPTIONS_COUNT = 5;
 
-export const MAX_FILM_HOURS = 2;
-export const MAX_FILM_MINUTES = 59;
+export const MIN_FILM_LENGTH = 60;
+export const MAX_FILM_LENGTH = 200;
 
 export const GENRES = [
   'Musical',
@@ -97,9 +97,13 @@ export const EXTRA_FILMS_COUNT = 2;
 export const MAX_PIECES_OF_COMMENTS = 3;
 export const MAX_COMMENTS = 5;
 
-export const DAYS_DIFFERENCE_LIMIT = 5;
-export const YESTERDAY_LIMIT = 1;
 export const TODAY_LIMIT = 0;
+export const SINGLE_TIME_UNIT_LIMIT = 1;
+export const A_FEW_MINUTES_LIMIT = 5;
+export const MINUTE_DIFFERENCE_LIMIT = 60;
+export const HOURS_DIFFERENCE_LIMIT = 6;
+export const DAYS_DIFFERENCE_LIMIT = 30;
+export const MONTHS_DIFFERENCE_LIMIT = 12;
 
 export const FILM_SECTION_TYPES = [
   'All movies. Upcoming',
