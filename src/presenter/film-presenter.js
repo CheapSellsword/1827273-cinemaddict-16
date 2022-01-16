@@ -1,4 +1,4 @@
-import { Mode } from '../consts';
+import { Mode, UserAction, UpdateType } from '../consts';
 import { render, RenderPosition, appendChild, remove, replace } from '../utils/render';
 import FilmPopupView from '../view/film-popup-view';
 import FilmCardView from '../view/film-card-view';
@@ -119,15 +119,27 @@ export default class FilmPresenter {
   }
 
   #handleWatchlistClick = () => {
-    this.#changeData({...this.#film, isOnWatchlist: !this.#film.isOnWatchlist});
+    this.#changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.PATCH,
+      {...this.#film, isOnWatchlist: !this.#film.isOnWatchlist}
+    );
   }
 
   #handleWatchedClick = () => {
-    this.#changeData({...this.#film, isWatched: !this.#film.isWatched});
+    this.#changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.PATCH,
+      {...this.#film, isWatched: !this.#film.isWatched}
+    );
   }
 
   #handleFavoriteClick = () => {
-    this.#changeData({...this.#film, isFavorite: !this.#film.isFavorite});
+    this.#changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.PATCH,
+      {...this.#film, isFavorite: !this.#film.isFavorite}
+    );
   }
 
   #handleNewCommentSubmit = (film) => {

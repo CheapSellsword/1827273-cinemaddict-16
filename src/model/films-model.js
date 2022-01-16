@@ -21,4 +21,19 @@ export default class FilmsModel extends AbstractObservable {
     return createMostCommentedFilmList(this.#films).slice(0, EXTRA_FILMS_COUNT);
   }
 
+  updateFilm = (updateType, update) => {
+    const index = this.#films.findIndex((film) => film.id === update.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t update undexisting film');
+    }
+
+    this.#films = [
+      ...this.#films.slice(0, index),
+      update,
+      ...this.#films.slice(index + 1),
+    ];
+
+    this._notify(updateType, update);
+  }
 }

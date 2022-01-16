@@ -29,6 +29,8 @@ export default class FilmCollectionPresenter {
     constructor(filmCollectionContainer, filmsModel) {
       this.#filmListContainer = filmCollectionContainer;
       this.#filmsModel = filmsModel;
+
+      this.#filmsModel.addObserver(this.#handleModelEvent);
     }
 
     get films() {
@@ -55,14 +57,12 @@ export default class FilmCollectionPresenter {
       this.#renderFilmCollection();
     }
 
-    #handleFilmChange = (updatedFilm) => {
+    #handleViewAction = (actionType, updateType, update) => {
+      console.log(actionType, updateType, update);
+    }
 
-
-      this.#presenters.forEach((presenter) => {
-        if (presenter.id === updatedFilm.id) {
-          presenter.init(updatedFilm);
-        }
-      });
+    #handleModelEvent = (updateType, data) => {
+      console.log(updateType, data);
     }
 
     #handleShowMoreButtonClick = () => {
@@ -121,7 +121,7 @@ export default class FilmCollectionPresenter {
     }
 
     #renderFilm = (filmContainer, film) => {
-      const filmPresenter = new FilmPresenter(filmContainer, this.#handleFilmChange, this.#handleModeChange);
+      const filmPresenter = new FilmPresenter(filmContainer, this.#handleViewAction, this.#handleModeChange);
       filmPresenter.init(film);
       this.#presenters.push(filmPresenter);
     }
