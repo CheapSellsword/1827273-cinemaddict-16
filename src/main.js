@@ -5,7 +5,7 @@ import { generateFilter } from './mock/filter';
 import FilmCountView from './view/film-count-view';
 import FiltersAndStatsView from './view/filters-and-stats-view.js';
 import ProfileRankAndAvatarView from './view/profile-and-rank-avatar-view';
-import CollectionPresenter from './presenter/collection-presenter';
+import FilmCollectionPresenter from './presenter/collection-presenter';
 import FilmsModel from './model/films-model';
 
 const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
@@ -19,7 +19,7 @@ const mainElement = document.querySelector('.main');
 const footerElement = document.querySelector('.footer');
 const footerStatsElement = footerElement.querySelector('.footer__statistics');
 
-const collectionPresenter = new CollectionPresenter(mainElement, filmsModel);
+const collectionPresenter = new FilmCollectionPresenter(mainElement, filmsModel);
 
 render(headerElement, new ProfileRankAndAvatarView(filters), RenderPosition.BEFORE_END);
 const filtersAndStatsComponent =  new FiltersAndStatsView(filters);

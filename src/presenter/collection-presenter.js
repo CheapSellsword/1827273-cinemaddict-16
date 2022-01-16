@@ -8,10 +8,9 @@ import FilmPresenter from './film-presenter';
 import NoFilmView from '../view/no-film-view';
 import SortView from '../view/sort-view';
 
-export default class CollectionPresenter {
+export default class FilmCollectionPresenter {
     #filmListContainer = null;
     #filmsModel = null;
-
 
     #sortComponent = new SortView();
     #noFilmComponent = new NoFilmView();
