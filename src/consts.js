@@ -158,3 +158,10 @@ export const EvtKey = {
   ESC: 'Esc',
   ENTER: 'Enter',
 };
+
+export const FilterType = {
+  ALL: 'All movies',
+  WATCHLIST: 'Watchlist',
+  HISTORY: 'History',
+  FAVORITES: 'Favorites',
+};

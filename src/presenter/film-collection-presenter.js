@@ -151,17 +151,6 @@ export default class FilmCollectionPresenter {
       sectionFilms.forEach((sectionFilm) => this.#renderFilm(filmContainer, sectionFilm));
     }
 
-    #renderFilmList = () => {
-      const films = this.films;
-      const filmCount = this.films.length;
-
-      this.#renderFilms(films);
-
-      if (filmCount > FILMS_COUNT_PER_STEP) {
-        this.#renderShowMoreButton();
-      }
-    }
-
     #renderShowMoreButton = () => {
       this.#showMoreButtonComponent = new ShowMoreButtonView();
       this.#showMoreButtonComponent.setShowMoreButtonClickHandler(this.#handleShowMoreButtonClick);
