@@ -12,6 +12,7 @@ export default class FilmCollectionPresenter {
     #filmListContainer = null;
     #filmsModel = null;
     #filterModel = null;
+    #commentsModel = null;
 
     #noFilmComponent = null;
     #filmSectionComponent = new FilmSectionView();
@@ -29,10 +30,11 @@ export default class FilmCollectionPresenter {
     #mostCommentedFilmContainer = this.#filmSectionComponent.mostCommentedFilmContainer;
     #body = document.querySelector('body');
 
-    constructor(filmCollectionContainer, filmsModel, filterModel) {
+    constructor(filmCollectionContainer, filmsModel, filterModel, commentsModel) {
       this.#filmListContainer = filmCollectionContainer;
       this.#filmsModel = filmsModel;
       this.#filterModel = filterModel;
+      this.#commentsModel = commentsModel;
 
       this.#filmsModel.addObserver(this.#handleModelEvent);
       this.#filterModel.addObserver(this.#handleModelEvent);
@@ -64,10 +66,16 @@ export default class FilmCollectionPresenter {
       this.#renderFilmCollection();
     }
 
-    #handleViewAction = (actionType, updateType, update) => {
+    #handleViewAction = (actionType, updateType, update, film) => {
       switch (actionType) {
         case UserAction.UPDATE_FILM:
           this.#filmsModel.updateFilm(updateType, update);
+          break;
+        case UserAction.ADD_COMMENT:
+          this.#commentsModel.addComment(updateType, update, film);
+          break;
+        case UserAction.DELETE_COMMENT:
+          this.#commentsModel.deleteComment(updateType, update, film);
           break;
       }
     }
@@ -152,7 +160,7 @@ export default class FilmCollectionPresenter {
     }
 
     #renderFilm = (filmContainer, film) => {
-      const filmPresenter = new FilmPresenter(filmContainer, this.#handleViewAction, this.#handleModeChange);
+      const filmPresenter = new FilmPresenter(filmContainer, this.#handleViewAction, this.#handleModeChange, this.#commentsModel);
       filmPresenter.init(film);
       this.#presenters.push(filmPresenter);
     }

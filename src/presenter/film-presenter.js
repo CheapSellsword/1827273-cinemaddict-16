@@ -1,5 +1,6 @@
-import { Mode, UserAction, UpdateType } from '../consts';
 import { render, RenderPosition, appendChild, remove, replace } from '../utils/render';
+import { Mode, UserAction, UpdateType, EvtKey } from '../consts';
+import { nanoid } from 'nanoid';
 import FilmPopupView from '../view/film-popup-view';
 import FilmCardView from '../view/film-card-view';
 
@@ -7,21 +8,20 @@ export default class FilmPresenter {
   #filmContainer = null;
   #changeData = null;
   #changeMode = null;
-
   #filmComponent = null;
   #filmPopupComponent = null;
-
   #film = null;
-  #mode = Mode.DEFAULT;
-
-  #body = document.querySelector('body');
-
+  #commentsModel = null;
   #id = null;
 
-  constructor(filmContainer, changeData, changeMode) {
+  #mode = Mode.DEFAULT;
+  #body = document.querySelector('body');
+
+  constructor(filmContainer, changeData, changeMode, commentsModel) {
     this.#filmContainer = filmContainer;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
+    this.#commentsModel = commentsModel;
   }
 
   init = (film) => {
@@ -67,6 +67,7 @@ export default class FilmPresenter {
 
   closePopup = () => {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#filmPopupComponent.reset(this.#film);
       remove(this.#filmPopupComponent);
       this.#mode = Mode.DEFAULT;
       this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
@@ -81,12 +82,13 @@ export default class FilmPresenter {
 
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (evt.key === EvtKey.ESCAPE || evt.key === EvtKey.ESC) {
       evt.preventDefault();
       this.#body.classList.remove('hide-overflow');
       remove(this.#filmPopupComponent);
       document.removeEventListener('keydown', this.#escKeyDownHandler);
       this.#mode = Mode.DEFAULT;
+      this.#filmPopupComponent.reset(this.#film);
       this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
     }
   };
@@ -96,6 +98,7 @@ export default class FilmPresenter {
     remove(this.#filmPopupComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
+    this.#filmPopupComponent.reset(this.#film);
     this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
   };
 
@@ -115,13 +118,14 @@ export default class FilmPresenter {
     this.#filmPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
     this.#filmPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmPopupComponent.setClosePopupClickHandler(this.#closePopupClickHandler);
+    this.#filmPopupComponent.setCommentDeleteClickHandler(this.#handleCommentDeleteClick);
     this.#filmPopupComponent.setFormSubmitHandler(this.#handleNewCommentSubmit);
   }
 
   #handleWatchlistClick = () => {
     this.#changeData(
       UserAction.UPDATE_FILM,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       {...this.#film, isOnWatchlist: !this.#film.isOnWatchlist}
     );
   }
@@ -129,7 +133,7 @@ export default class FilmPresenter {
   #handleWatchedClick = () => {
     this.#changeData(
       UserAction.UPDATE_FILM,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       {...this.#film, isWatched: !this.#film.isWatched}
     );
   }
@@ -137,12 +141,28 @@ export default class FilmPresenter {
   #handleFavoriteClick = () => {
     this.#changeData(
       UserAction.UPDATE_FILM,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       {...this.#film, isFavorite: !this.#film.isFavorite}
     );
   }
 
-  #handleNewCommentSubmit = (film) => {
-    this.#changeData(film);
+  #handleNewCommentSubmit = (newComment) => {
+    this.#commentsModel.comments = this.#film.comments;
+    this.#changeData(
+      UserAction.ADD_COMMENT,
+      UpdateType.MINOR,
+      {...newComment, id: nanoid(), author: 'Cheap Sellsword', date: 'Now'},
+      this.#film,
+    );
+  }
+
+  #handleCommentDeleteClick = (update) => {
+    this.#commentsModel.comments = this.#film.comments;
+    this.#changeData(
+      UserAction.DELETE_COMMENT,
+      UpdateType.MINOR,
+      update,
+      this.#film,
+    );
   }
 }

@@ -3,7 +3,14 @@ import { createTopRatedFilmList, createMostCommentedFilmList } from '../mock/ext
 import { EXTRA_FILMS_COUNT } from '../consts';
 
 export default class FilmsModel extends AbstractObservable {
+  #commentsModel = null;
   #films = [];
+
+  constructor(commentsModel) {
+    super();
+    this.#commentsModel = commentsModel;
+    this.#commentsModel.addObserver(this.updateFilm);
+  }
 
   set films(films) {
     this.#films = [...films];
@@ -25,7 +32,7 @@ export default class FilmsModel extends AbstractObservable {
     const index = this.#films.findIndex((film) => film.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update undexisting film');
+      throw new Error('Can\'t update unexisting film');
     }
 
     this.#films = [
@@ -33,7 +40,6 @@ export default class FilmsModel extends AbstractObservable {
       update,
       ...this.#films.slice(index + 1),
     ];
-
     this._notify(updateType, update);
   }
 }
