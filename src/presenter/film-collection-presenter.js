@@ -1,4 +1,4 @@
-import { FILMS_COUNT_PER_STEP, EXTRA_FILMS_COUNT, SortType, UpdateType, UserAction } from '../consts';
+import { FILMS_COUNT_PER_STEP, EXTRA_FILMS_COUNT, SortType, UpdateType, UserAction, FilterType } from '../consts';
 import { render, RenderPosition, remove } from '../utils/render';
 import { compareByField } from '../utils/common';
 import { filter } from '../utils/filter';
@@ -13,13 +13,14 @@ export default class FilmCollectionPresenter {
     #filmsModel = null;
     #filterModel = null;
 
-    #noFilmComponent = new NoFilmView();
+    #noFilmComponent = null;
     #filmSectionComponent = new FilmSectionView();
     #sortComponent = null;
     #showMoreButtonComponent = null;
 
     #presenters = [];
     #currentSortType = SortType.DEFAULT;
+    #filterType = FilterType.ALL;
     #renderedFilmCount = FILMS_COUNT_PER_STEP;
     #filmContainer = this.#filmSectionComponent.filmContainer;
     #topRatedSection = this.#filmSectionComponent.topRatedSection;
@@ -38,9 +39,9 @@ export default class FilmCollectionPresenter {
     }
 
     get films() {
-      const filterType = this.#filterModel.filter;
+      this.#filterType = this.#filterModel.filter;
       const films = this.#filmsModel.films;
-      const filteredFilms = filter[filterType](films);
+      const filteredFilms = filter[this.#filterType](films);
 
       switch (this.#currentSortType) {
         case SortType.DATE:
@@ -125,8 +126,11 @@ export default class FilmCollectionPresenter {
       this.#presenters = [];
 
       remove(this.#sortComponent);
-      remove(this.#noFilmComponent);
       remove(this.#showMoreButtonComponent);
+
+      if (this.#noFilmComponent) {
+        remove(this.#noFilmComponent);
+      }
 
       if (resetRenderedFilmCount) {
         this.#renderedFilmCount = FILMS_COUNT_PER_STEP;
@@ -172,6 +176,10 @@ export default class FilmCollectionPresenter {
     }
 
     #renderNoFilm = () => {
+      if (this.#filmSectionComponent) {
+        remove(this.#filmSectionComponent);
+      }
+      this.#noFilmComponent = new NoFilmView(this.#filterType);
       render(this.#filmListContainer, this.#noFilmComponent, RenderPosition.BEFORE_END);
     }
 
