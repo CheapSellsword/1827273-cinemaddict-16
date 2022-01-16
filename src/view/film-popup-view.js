@@ -16,7 +16,7 @@ const createFilmPopup = (film) => {
         <img src="${comment.emoji}" width="55" height="55" alt="emoji-smile">
       </span>
       <div>
-        <p class="film-details__comment-text">${he.encode(comment.text)}</p>
+        <p class="film-details__comment-text">${comment.text}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${comment.author}</span>
           <span class="film-details__comment-day">${comment.date}</span>
@@ -146,7 +146,6 @@ const createFilmPopup = (film) => {
 
 export default class FilmPopupView extends SmartView {
   #popupListeners = null;
-
   #newComment = {};
 
   constructor(film, addPopupListeners) {
@@ -165,6 +164,7 @@ export default class FilmPopupView extends SmartView {
     this.updateData(
       FilmPopupView.parseFilmToData(film),
     );
+    this.#newComment = {};
   }
 
   setClosePopupClickHandler = (callback) => {
@@ -253,9 +253,10 @@ export default class FilmPopupView extends SmartView {
 
 
   #formSubmitHandler = (evt) => {
-    if (evt.key === EvtKey.ENTER && (evt.ctrlKey || evt.metaKey)) {
+    if (evt.key === EvtKey.ENTER && (evt.ctrlKey || evt.metaKey) && this.#newComment.emoji !== '' && this.#newComment.emoji !== null && this.#newComment.emoji !== undefined && this.#newComment.text !== '' && this.#newComment.text !== null && this.#newComment.text !== undefined) {
       evt.preventDefault();
       this._callback.formSubmit(this.#newComment);
+      this.#newComment = {};
     }
   };
 
