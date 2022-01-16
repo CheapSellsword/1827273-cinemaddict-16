@@ -1,29 +1,31 @@
 import { GENERATED_FILMS_COUNT } from './consts';
 import { RenderPosition, render } from './utils/render';
 import { generateFilm } from './mock/film';
-import { generateFilter } from './mock/filter';
 import FilmCountView from './view/film-count-view';
-import FiltersAndStatsView from './view/filters-and-stats-view.js';
 import ProfileRankAndAvatarView from './view/profile-and-rank-avatar-view';
 import FilmCollectionPresenter from './presenter/film-collection-presenter';
 import FilmsModel from './model/films-model';
+import FilterModel from './model/filter-model';
+import FilterPresenter from './presenter/filter-presenter';
 
 const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
-const filters = generateFilter(films);
 
 const filmsModel = new FilmsModel();
 filmsModel.films = films;
 
+const filterModel = new FilterModel();
+
 const headerElement = document.querySelector('.header');
-const mainElement = document.querySelector('.main');
+export const mainElement = document.querySelector('.main');
 const footerElement = document.querySelector('.footer');
 const footerStatsElement = footerElement.querySelector('.footer__statistics');
 
-const filmCollectionPresenter = new FilmCollectionPresenter(mainElement, filmsModel);
+const filmCollectionPresenter = new FilmCollectionPresenter(mainElement, filmsModel, filterModel);
+const filterPresenter = new FilterPresenter(mainElement, filterModel, filmsModel);
 
-render(headerElement, new ProfileRankAndAvatarView(filters), RenderPosition.BEFORE_END);
-const filtersAndStatsComponent =  new FiltersAndStatsView(filters);
-render(mainElement, filtersAndStatsComponent, RenderPosition.AFTER_BEGIN);
+filterPresenter.init();
+
+render(headerElement, new ProfileRankAndAvatarView(films), RenderPosition.BEFORE_END);
 
 filmCollectionPresenter.init();
 
