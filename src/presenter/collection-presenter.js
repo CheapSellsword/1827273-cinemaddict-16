@@ -10,6 +10,8 @@ import SortView from '../view/sort-view';
 
 export default class CollectionPresenter {
     #filmListContainer = null;
+    #filmsModel = null;
+
 
     #sortComponent = new SortView();
     #noFilmComponent = new NoFilmView();
@@ -30,8 +32,21 @@ export default class CollectionPresenter {
     #mostCommentedFilmContainer = this.#filmSectionComponent.mostCommentedFilmContainer;
     #body = document.querySelector('body');
 
-    constructor(filmCollectionContainer) {
+    constructor(filmCollectionContainer, filmsModel) {
       this.#filmListContainer = filmCollectionContainer;
+      this.#filmsModel = filmsModel;
+    }
+
+    get films() {
+      return this.#filmsModel.films;
+    }
+
+    get topRatedFilms() {
+      return this.#filmsModel.topRatedFilms;
+    }
+
+    get mostCommentedFilms() {
+      return this.#filmsModel.mostCommentedFilms;
     }
 
     init = (collectionFilms) => {
