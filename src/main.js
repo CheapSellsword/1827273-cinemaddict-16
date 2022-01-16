@@ -6,6 +6,7 @@ import FilmCountView from './view/film-count-view';
 import FiltersAndStatsView from './view/filters-and-stats-view.js';
 import ProfileRankAndAvatarView from './view/profile-and-rank-avatar-view';
 import CollectionPresenter from './presenter/collection-presenter';
+import FilmsModel from './model/films-model';
 
 const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
 const filters = generateFilter(films);
