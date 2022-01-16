@@ -1,4 +1,4 @@
-import { FILMS_COUNT_PER_STEP, EXTRA_FILMS_COUNT, SortType } from '../consts';
+import { FILMS_COUNT_PER_STEP, EXTRA_FILMS_COUNT, SortType, UpdateType, UserAction } from '../consts';
 import { render, RenderPosition, remove } from '../utils/render';
 import { compareByField } from '../utils/common';
 import ShowMoreButtonView from '../view/show-more-button-view';
@@ -58,11 +58,29 @@ export default class FilmCollectionPresenter {
     }
 
     #handleViewAction = (actionType, updateType, update) => {
-      console.log(actionType, updateType, update);
+      switch (actionType) {
+        case UserAction.UPDATE_FILM:
+          this.#filmsModel.updateFilm(updateType, update);
+          break;
+      }
     }
 
     #handleModelEvent = (updateType, data) => {
-      console.log(updateType, data);
+      switch (updateType) {
+        case UpdateType.PATCH:
+          this.#presenters.forEach((presenter) => {
+            if (presenter.id === data.id) {
+              presenter.init(data);
+            }
+          });
+          break;
+        case UpdateType.MINOR:
+
+          break;
+        case UpdateType.MAJOR:
+
+          break;
+      }
     }
 
     #handleShowMoreButtonClick = () => {
