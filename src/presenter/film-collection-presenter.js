@@ -1,6 +1,7 @@
 import { FILMS_COUNT_PER_STEP, EXTRA_FILMS_COUNT, SortType, UpdateType, UserAction } from '../consts';
 import { render, RenderPosition, remove } from '../utils/render';
 import { compareByField } from '../utils/common';
+import { filter } from '../utils/filter';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import FilmSectionView from '../view/film-section-view';
 import FilmPresenter from './film-presenter';
@@ -10,6 +11,7 @@ import SortView from '../view/sort-view';
 export default class FilmCollectionPresenter {
     #filmListContainer = null;
     #filmsModel = null;
+    #filterModel = null;
 
     #noFilmComponent = new NoFilmView();
     #filmSectionComponent = new FilmSectionView();
@@ -26,23 +28,27 @@ export default class FilmCollectionPresenter {
     #mostCommentedFilmContainer = this.#filmSectionComponent.mostCommentedFilmContainer;
     #body = document.querySelector('body');
 
-    constructor(filmCollectionContainer, filmsModel) {
+    constructor(filmCollectionContainer, filmsModel, filterModel) {
       this.#filmListContainer = filmCollectionContainer;
       this.#filmsModel = filmsModel;
+      this.#filterModel = filterModel;
 
       this.#filmsModel.addObserver(this.#handleModelEvent);
+      this.#filterModel.addObserver(this.#handleModelEvent);
     }
 
     get films() {
+      const filterType = this.#filterModel.filter;
       const films = this.#filmsModel.films;
+      const filteredFilms = filter[filterType](films);
 
       switch (this.#currentSortType) {
         case SortType.DATE:
-          return films.sort(compareByField('releaseYear'));
+          return filteredFilms.sort(compareByField('releaseYear'));
         case SortType.RATING:
-          return films.sort(compareByField('rating'));
+          return filteredFilms.sort(compareByField('rating'));
       }
-      return films;
+      return filteredFilms;
     }
 
     get topRatedFilms() {
