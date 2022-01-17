@@ -1,7 +1,7 @@
 export const GENERATED_FILMS_COUNT = 6;
 export const FILMS_COUNT_PER_STEP = 5;
 export const DATE_GAP = 100;
-export const TIME_GAP = 10;
+export const TIME_GAP = 100;
 export const MAX_DESCRIPTION_LENGTH = 140;
 export const TITLES = [
   'The Dance of Life',
@@ -42,6 +42,8 @@ export const MAX_DESCRIPTIONS_COUNT = 5;
 
 export const MIN_FILM_LENGTH = 60;
 export const MAX_FILM_LENGTH = 200;
+
+export const HOUR_IN_MINS = 60;
 
 export const GENRES = [
   'Musical',
@@ -96,14 +98,6 @@ export const EXTRA_FILMS_COUNT = 2;
 
 export const MAX_PIECES_OF_COMMENTS = 3;
 export const MAX_COMMENTS = 5;
-
-export const TODAY_LIMIT = 0;
-export const SINGLE_TIME_UNIT_LIMIT = 1;
-export const A_FEW_MINUTES_LIMIT = 5;
-export const MINUTE_DIFFERENCE_LIMIT = 60;
-export const HOURS_DIFFERENCE_LIMIT = 6;
-export const DAYS_DIFFERENCE_LIMIT = 30;
-export const MONTHS_DIFFERENCE_LIMIT = 12;
 
 export const FILM_SECTION_TYPES = [
   'All movies. Upcoming',

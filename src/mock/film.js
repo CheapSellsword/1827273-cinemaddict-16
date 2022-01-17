@@ -1,6 +1,6 @@
 import { MIN_ITEMS_COUNT, MIN_NUMBER, MAX_NUMBER, TITLES, POSTERS, DESCRIPTIONS, MAX_DESCRIPTIONS_COUNT, GENRES, MAX_GENRES_COUNT, COUNTRIES, AGE_RESTRICTIONS, EMOJIS, NAMES, SURNAMES, MAX_NAMES_COUNT, PIECES_OF_COMMENTS, MAX_PIECES_OF_COMMENTS, MAX_COMMENTS } from '../consts';
 import { generateDataArray, generateRandomBoolean, getRandomPositiveFloat, getRandomItemFromArray, getRandomInteger } from '../utils/common';
-import { generateFullReleaseDate, getFormattedTimeOfComment, generateYearOnly, generateFilmLength } from '../utils/dates-and-time';
+import { generateFullReleaseDate, getHumanizedTimeOfComment, generateYearOnly, generateFilmLength } from '../utils/dates-and-time';
 import { nanoid } from 'nanoid';
 
 const generateTitle = () => getRandomItemFromArray(TITLES);
@@ -48,7 +48,7 @@ const generateComment = () => (
     emoji: generateEmoji(),
     author: generateName(),
     text: generateCommentText(),
-    date: getFormattedTimeOfComment(),
+    date: getHumanizedTimeOfComment(),
   }
 );
 
