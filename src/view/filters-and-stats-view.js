@@ -43,7 +43,7 @@ export default class FiltersAndStatsView extends AbstractView {
 
   #filterTypeChangeHandler = (evt) => {
     evt.preventDefault();
-    this._callback.filterTypeChange(evt.target.dataset.filterType);
+    this._callback.filterTypeChange(evt.target.closest('[data-filter-type]').dataset.filterType);
   }
 }
 

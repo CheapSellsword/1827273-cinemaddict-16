@@ -65,6 +65,17 @@ export default class FilmPresenter {
     return this.#id;
   }
 
+  openPopup = () => {
+    appendChild(this.#body, this.#filmPopupComponent);
+    this.#body.classList.add('hide-overflow');
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#addPopupListeners();
+    this.#changeMode();
+    this.#mode = Mode.POPUP;
+    this.#filmPopupComponent.reset(this.#film);
+    this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
+  }
+
   closePopup = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#filmPopupComponent.reset(this.#film);
@@ -103,14 +114,7 @@ export default class FilmPresenter {
   };
 
   #filmCardClickHandler = () => {
-    appendChild(this.#body, this.#filmPopupComponent);
-    this.#body.classList.add('hide-overflow');
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#addPopupListeners();
-    this.#changeMode();
-    this.#mode = Mode.POPUP;
-    this.#filmPopupComponent.reset(this.#film);
-    this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
+    this.openPopup();
   }
 
   #addPopupListeners = () => {
@@ -126,6 +130,7 @@ export default class FilmPresenter {
     this.#changeData(
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
+      this.#mode,
       {...this.#film, isOnWatchlist: !this.#film.isOnWatchlist}
     );
   }
@@ -134,6 +139,7 @@ export default class FilmPresenter {
     this.#changeData(
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
+      this.#mode,
       {...this.#film, isWatched: !this.#film.isWatched}
     );
   }
@@ -142,6 +148,7 @@ export default class FilmPresenter {
     this.#changeData(
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
+      this.#mode,
       {...this.#film, isFavorite: !this.#film.isFavorite}
     );
   }
@@ -151,6 +158,7 @@ export default class FilmPresenter {
     this.#changeData(
       UserAction.ADD_COMMENT,
       UpdateType.MINOR,
+      this.#mode,
       {...newComment, id: nanoid(), author: 'Cheap Sellsword', date: 'Now'},
       this.#film,
     );
@@ -161,6 +169,7 @@ export default class FilmPresenter {
     this.#changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
+      this.#mode,
       update,
       this.#film,
     );

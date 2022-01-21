@@ -1,4 +1,4 @@
-import { FILMS_COUNT_PER_STEP, SortType, UpdateType, UserAction, FilterType } from '../consts';
+import { FILMS_COUNT_PER_STEP, SortType, UpdateType, UserAction, FilterType, Mode } from '../consts';
 import { render, RenderPosition, remove } from '../utils/render';
 import { compareByField } from '../utils/common';
 import { filter } from '../utils/filter';
@@ -86,25 +86,28 @@ export default class FilmCollectionPresenter {
       }
     }
 
-    #handleViewAction = (actionType, updateType, update, film) => {
+    #handleViewAction = (actionType, updateType, mode, update, film) => {
       switch (actionType) {
         case UserAction.UPDATE_FILM:
-          this.#filmsModel.updateFilm(updateType, update);
+          this.#filmsModel.updateFilm(updateType, mode, update);
           break;
         case UserAction.ADD_COMMENT:
-          this.#commentsModel.addComment(updateType, update, film);
+          this.#commentsModel.addComment(updateType, update, mode, film);
           break;
         case UserAction.DELETE_COMMENT:
-          this.#commentsModel.deleteComment(updateType, update, film);
+          this.#commentsModel.deleteComment(updateType, update, mode, film);
           break;
       }
     }
 
-    #handleModelEvent = (updateType) => {
+    #handleModelEvent = (updateType, mode, update) => {
       switch (updateType) {
         case UpdateType.MINOR:
           this.#clearFilmCollection();
           this.#renderFilmCollection();
+          if (mode === Mode.POPUP) {
+            this.#presenters.find((presenter) => presenter.id === update.id).openPopup();
+          }
           break;
         case UpdateType.MAJOR:
           this.#clearFilmCollection({resetRenderedFilmCount: true, resetSortType: true});
