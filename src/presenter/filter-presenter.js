@@ -56,6 +56,7 @@ export default class FilterPresenter {
 
     this.#filtersAndStatsComponent = new FiltersAndStatsView(filters, this.#filterModel.filter);
     this.#filtersAndStatsComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
+    this.#filtersAndStatsComponent.setStatsClickHandler(this.#handleStatsClick);
 
     if (prevFilterComponent === null) {
       render(this.#filterContainer, this.#filtersAndStatsComponent, RenderPosition.BEFORE_END);
@@ -74,7 +75,10 @@ export default class FilterPresenter {
     if (this.#filterModel.filter === filterType) {
       return;
     }
-
     this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+  }
+
+  #handleStatsClick = () => {
+    this.#filterModel.showStats(UpdateType.STATS);
   }
 }

@@ -10,6 +10,10 @@ export default class FilterModel extends AbstractObservable {
 
     setFilter = (updateType, filter) => {
       this.#filter = filter;
-      this._notify(updateType, filter);
+      this._notify(updateType);
+    }
+
+    showStats = (updateType) => {
+      this._notify(updateType);
     }
 }

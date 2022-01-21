@@ -110,6 +110,8 @@ export default class FilmCollectionPresenter {
           this.#clearFilmCollection({resetRenderedFilmCount: true, resetSortType: true});
           this.#renderFilmCollection();
           break;
+        case UpdateType.STATS:
+          this.#clearFilmCollection();
       }
     }
 
