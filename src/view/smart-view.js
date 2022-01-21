@@ -11,7 +11,7 @@ export default class SmartView extends AbstractView {
       }
     }
 
-    updateTextData = (update, justDataUpdating) => {
+    updateDataOnly = (update, justDataUpdating) => {
       if (justDataUpdating) {
         this._data = {...this._data, ...update};
       }

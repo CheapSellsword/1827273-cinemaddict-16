@@ -205,7 +205,6 @@ export default class FilmPopupView extends SmartView {
   #setInnerHandlers = () => {
     this.element.querySelectorAll('.film-details__emoji-item').forEach((emoji) => emoji.addEventListener('change', this.#emojiChangeHandler));
     this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
-    this.setCommentDeleteClickHandler(this._callback.commentDelete);
   }
 
   #emojiChangeHandler = (evt) => {
@@ -219,7 +218,7 @@ export default class FilmPopupView extends SmartView {
 
   #commentInputHandler = (evt) => {
     evt.preventDefault();
-    this.updateTextData({
+    this.updateDataOnly({
       text: evt.target.value,
     },true);
     this.#newComment.text = evt.target.value;
