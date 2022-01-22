@@ -44,6 +44,7 @@ export default class FiltersAndStatsView extends AbstractView {
   #filterTypeChangeHandler = (evt) => {
     evt.preventDefault();
     this._callback.filterTypeChange(evt.target.closest('[data-filter-type]').dataset.filterType);
+    this.element.querySelector('.main-navigation__additional').classList.remove('main-navigation__item--active');
   }
 
   setStatsClickHandler = (callback) => {
@@ -53,7 +54,12 @@ export default class FiltersAndStatsView extends AbstractView {
 
   #statsClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.statsClick();
+    const stats = this.element.querySelector('.main-navigation__additional');
+    if (!stats.classList.contains('main-navigation__item--active')) {
+      this.#currentFilter = null;
+      this._callback.statsClick();
+      stats.classList.add('main-navigation__item--active'); //?
+    }
   }
 }
 

@@ -7,6 +7,7 @@ import FilmSectionView from '../view/film-section-view';
 import FilmPresenter from './film-presenter';
 import NoFilmView from '../view/no-film-view';
 import SortView from '../view/sort-view';
+import StatsView from '../view/stats-view';
 
 export default class FilmCollectionPresenter {
     #mostCommentedFilmContainer = null;
@@ -18,8 +19,9 @@ export default class FilmCollectionPresenter {
     #filmSortComponent = null;
     #noFilmComponent = null;
     #topRatedSection = null;
-    #filmContainer = null;
+    #statsComponent = null;
     #commentsModel = null;
+    #filmContainer = null;
     #filterModel = null;
     #filmsModel = null;
 
@@ -86,6 +88,10 @@ export default class FilmCollectionPresenter {
       }
     }
 
+    #clearStats = () => {
+      remove(this.#statsComponent);
+    }
+
     #handleViewAction = (actionType, updateType, update, film) => {
       switch (actionType) {
         case UserAction.UPDATE_FILM:
@@ -103,14 +109,24 @@ export default class FilmCollectionPresenter {
     #handleModelEvent = (updateType) => {
       switch (updateType) {
         case UpdateType.MINOR:
+          if (this.#statsComponent) {
+            this.#clearStats();
+          }
           this.#clearFilmCollection();
           this.#renderFilmCollection();
           break;
         case UpdateType.MAJOR:
+          if (this.#statsComponent) {
+            this.#clearStats();
+          }
           this.#clearFilmCollection({resetRenderedFilmCount: true, resetSortType: true});
           this.#renderFilmCollection();
           break;
         case UpdateType.STATS:
+          if (this.#statsComponent) {
+            return;
+          }
+          this.#renderStats();
           this.#clearFilmCollection();
       }
     }
@@ -153,6 +169,11 @@ export default class FilmCollectionPresenter {
       this.#filmSortComponent = new SortView(this.#currentSortType);
       this.#filmSortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
       render(this.#filmListContainer, this.#filmSortComponent, RenderPosition.BEFORE_END);
+    }
+
+    #renderStats = () => {
+      this.#statsComponent = new StatsView();
+      render(this.#filmSortComponent, this.#statsComponent, RenderPosition.BEFORE_BEGIN);
     }
 
     #renderFilmSection = () => {
