@@ -103,6 +103,9 @@ export default class FilmCollectionPresenter {
     #handleModelEvent = (updateType, mode, update) => {
       switch (updateType) {
         case UpdateType.MINOR:
+          if (mode === Mode.POPUP) {
+            this.#presenters.find((presenter) => presenter.id === update.id).removeDocumentEventListeners();
+          }
           this.#clearFilmCollection();
           this.#renderFilmCollection();
           if (mode === Mode.POPUP) {
@@ -184,13 +187,13 @@ export default class FilmCollectionPresenter {
       render(this.#filmContainer, this.#showMoreButtonComponent, RenderPosition.AFTER_END);
     }
 
-    #renderExtraFilms = (extraContainer, extraFilms, extraSection) => {
-      if (extraFilms) {
-        this.#renderFilms(extraFilms, extraContainer);
-      } else {
-        extraSection.remove();
-      }
+  #renderExtraFilms = (extraContainer, extraFilms, extraSection) => {
+    if (extraFilms) {
+      this.#renderFilms(extraFilms, extraContainer);
+    } else {
+      extraSection.remove();
     }
+  }
 
     #renderFilmCollection = () => {
       const films = this.films;

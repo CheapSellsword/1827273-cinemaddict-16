@@ -56,7 +56,6 @@ export default class FilmPresenter {
       replace(this.#filmPopupComponent, prevPopupComponent);
       this.#addPopupListeners();
       remove(prevPopupComponent);
-      this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
     }
   }
 
@@ -73,16 +72,14 @@ export default class FilmPresenter {
     this.#changeMode();
     this.#mode = Mode.POPUP;
     this.#filmPopupComponent.reset(this.#film);
-    this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
   }
 
   closePopup = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#filmPopupComponent.reset(this.#film);
       remove(this.#filmPopupComponent);
+      this.removeDocumentEventListeners();
       this.#mode = Mode.DEFAULT;
-      this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
-      this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
     }
   }
 
@@ -91,26 +88,28 @@ export default class FilmPresenter {
     remove(this.#filmPopupComponent);
   }
 
+  removeDocumentEventListeners = () => {
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#filmPopupComponent.removeFormSubmitHandler();
+  }
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === EvtKey.ESCAPE || evt.key === EvtKey.ESC) {
       evt.preventDefault();
       this.#body.classList.remove('hide-overflow');
       remove(this.#filmPopupComponent);
-      document.removeEventListener('keydown', this.#escKeyDownHandler);
       this.#mode = Mode.DEFAULT;
       this.#filmPopupComponent.reset(this.#film);
-      this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
+      this.removeDocumentEventListeners();
     }
   };
 
   #closePopupClickHandler = () => {
     this.#body.classList.remove('hide-overflow');
     remove(this.#filmPopupComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
     this.#filmPopupComponent.reset(this.#film);
-    this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
+    this.removeDocumentEventListeners();
   };
 
   #filmCardClickHandler = () => {

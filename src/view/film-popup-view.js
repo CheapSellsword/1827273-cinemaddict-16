@@ -1,5 +1,6 @@
-import SmartView from './smart-view';
 import { EvtKey, EMOJI_TYPES } from '../consts';
+import { isBlank } from '../utils/common';
+import SmartView from './smart-view';
 import he from 'he';
 
 const createFilmPopup = (film) => {
@@ -202,9 +203,15 @@ export default class FilmPopupView extends SmartView {
     this.element.querySelectorAll('.film-details__comment-delete').forEach((button) => button.addEventListener('click', this.#commentDeleteClickHandler));
   }
 
+  removeFormSubmitHandler = () => {
+    document.removeEventListener('keydown', this._callback.formSubmit);
+    document.removeEventListener('keydown',  this.#formSubmitHandler);
+  }
+
   #setInnerHandlers = () => {
     this.element.querySelectorAll('.film-details__emoji-item').forEach((emoji) => emoji.addEventListener('change', this.#emojiChangeHandler));
     this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
+    this.setCommentDeleteClickHandler(this._callback.commentDelete);
   }
 
   #emojiChangeHandler = (evt) => {
@@ -252,10 +259,14 @@ export default class FilmPopupView extends SmartView {
 
 
   #formSubmitHandler = (evt) => {
-    if (evt.key === EvtKey.ENTER && (evt.ctrlKey || evt.metaKey) && this.#newComment.emoji !== '' && this.#newComment.emoji !== null && this.#newComment.emoji !== undefined && this.#newComment.text !== '' && this.#newComment.text !== null && this.#newComment.text !== undefined) {
+    if (evt.key === EvtKey.ENTER && (evt.ctrlKey || evt.metaKey)) {
       evt.preventDefault();
+      if (isBlank(this.#newComment.emoji) || isBlank(this.#newComment.text)) {
+        return;
+      }
       this._callback.formSubmit(this.#newComment);
       this.#newComment = {};
+      this.removeFormSubmitHandler();
     }
   };
 
