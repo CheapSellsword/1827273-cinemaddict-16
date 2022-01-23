@@ -40,11 +40,9 @@ const generateCommentText = () => {
   return fullComment;
 };
 
-const generateRandomId = () => getRandomInteger(MIN_NUMBER, MAX_NUMBER);
-
 const generateComment = () => (
   {
-    id: generateRandomId(),
+    id: nanoid(),
     emoji: generateEmoji(),
     author: generateName(),
     text: generateCommentText(),

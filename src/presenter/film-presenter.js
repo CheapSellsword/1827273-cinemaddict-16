@@ -1,5 +1,6 @@
-import { Mode } from '../consts';
 import { render, RenderPosition, appendChild, remove, replace } from '../utils/render';
+import { Mode, UserAction, UpdateType, EvtKey } from '../consts';
+import { nanoid } from 'nanoid';
 import FilmPopupView from '../view/film-popup-view';
 import FilmCardView from '../view/film-card-view';
 
@@ -7,21 +8,20 @@ export default class FilmPresenter {
   #filmContainer = null;
   #changeData = null;
   #changeMode = null;
-
   #filmComponent = null;
   #filmPopupComponent = null;
-
   #film = null;
-  #mode = Mode.DEFAULT;
-
-  #body = document.querySelector('body');
-
+  #commentsModel = null;
   #id = null;
 
-  constructor(filmContainer, changeData, changeMode) {
+  #mode = Mode.DEFAULT;
+  #body = document.querySelector('body');
+
+  constructor(filmContainer, changeData, changeMode, commentsModel) {
     this.#filmContainer = filmContainer;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
+    this.#commentsModel = commentsModel;
   }
 
   init = (film) => {
@@ -56,7 +56,6 @@ export default class FilmPresenter {
       replace(this.#filmPopupComponent, prevPopupComponent);
       this.#addPopupListeners();
       remove(prevPopupComponent);
-      this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
     }
   }
 
@@ -65,12 +64,27 @@ export default class FilmPresenter {
     return this.#id;
   }
 
+  get popupScrollPosition() {
+    return this.#filmPopupComponent.scrollPosition;
+  }
+
+  openPopup = (scrollPosition) => {
+    appendChild(this.#body, this.#filmPopupComponent);
+    this.#body.classList.add('hide-overflow');
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#addPopupListeners();
+    this.#changeMode();
+    this.#mode = Mode.POPUP;
+    this.#filmPopupComponent.reset(this.#film);
+    this.#filmPopupComponent.scrollPosition = scrollPosition;
+  }
+
   closePopup = () => {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#filmPopupComponent.reset(this.#film);
       remove(this.#filmPopupComponent);
+      this.removeDocumentEventListeners();
       this.#mode = Mode.DEFAULT;
-      this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
-      this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
     }
   }
 
@@ -79,35 +93,32 @@ export default class FilmPresenter {
     remove(this.#filmPopupComponent);
   }
 
+  removeDocumentEventListeners = () => {
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#filmPopupComponent.removeFormSubmitHandler();
+  }
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (evt.key === EvtKey.ESCAPE || evt.key === EvtKey.ESC) {
       evt.preventDefault();
       this.#body.classList.remove('hide-overflow');
       remove(this.#filmPopupComponent);
-      document.removeEventListener('keydown', this.#escKeyDownHandler);
       this.#mode = Mode.DEFAULT;
-      this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
+      this.#filmPopupComponent.reset(this.#film);
+      this.removeDocumentEventListeners();
     }
   };
 
   #closePopupClickHandler = () => {
     this.#body.classList.remove('hide-overflow');
     remove(this.#filmPopupComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
-    this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
+    this.#filmPopupComponent.reset(this.#film);
+    this.removeDocumentEventListeners();
   };
 
   #filmCardClickHandler = () => {
-    appendChild(this.#body, this.#filmPopupComponent);
-    this.#body.classList.add('hide-overflow');
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#addPopupListeners();
-    this.#changeMode();
-    this.#mode = Mode.POPUP;
-    this.#filmPopupComponent.reset(this.#film);
-    this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
+    this.openPopup();
   }
 
   #addPopupListeners = () => {
@@ -115,22 +126,56 @@ export default class FilmPresenter {
     this.#filmPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
     this.#filmPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmPopupComponent.setClosePopupClickHandler(this.#closePopupClickHandler);
+    this.#filmPopupComponent.setCommentDeleteClickHandler(this.#handleCommentDeleteClick);
     this.#filmPopupComponent.setFormSubmitHandler(this.#handleNewCommentSubmit);
   }
 
   #handleWatchlistClick = () => {
-    this.#changeData({...this.#film, isOnWatchlist: !this.#film.isOnWatchlist});
+    this.#changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
+      this.#mode,
+      {...this.#film, isOnWatchlist: !this.#film.isOnWatchlist}
+    );
   }
 
   #handleWatchedClick = () => {
-    this.#changeData({...this.#film, isWatched: !this.#film.isWatched});
+    this.#changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
+      this.#mode,
+      {...this.#film, isWatched: !this.#film.isWatched}
+    );
   }
 
   #handleFavoriteClick = () => {
-    this.#changeData({...this.#film, isFavorite: !this.#film.isFavorite});
+    this.#changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
+      this.#mode,
+      {...this.#film, isFavorite: !this.#film.isFavorite}
+    );
   }
 
-  #handleNewCommentSubmit = (film) => {
-    this.#changeData(film);
+  #handleNewCommentSubmit = (newComment) => {
+    this.#commentsModel.comments = this.#film.comments;
+    this.#changeData(
+      UserAction.ADD_COMMENT,
+      UpdateType.MINOR,
+      this.#mode,
+      {...newComment, id: nanoid(), author: 'Cheap Sellsword', date: 'Now'},
+      this.#film,
+    );
+  }
+
+  #handleCommentDeleteClick = (update) => {
+    this.#commentsModel.comments = this.#film.comments;
+    this.#changeData(
+      UserAction.DELETE_COMMENT,
+      UpdateType.MINOR,
+      this.#mode,
+      update,
+      this.#film,
+    );
   }
 }
