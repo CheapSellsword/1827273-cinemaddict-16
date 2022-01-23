@@ -156,9 +156,16 @@ export default class FilmPopupView extends SmartView {
     this.#setInnerHandlers();
   }
 
-
   get template() {
     return createFilmPopup(this._data);
+  }
+
+  set scrollPosition(position) {
+    this.element.scrollTop = position;
+  }
+
+  get scrollPosition() {
+    return this.element.scrollTop;
   }
 
   reset = (film) => {

@@ -64,7 +64,11 @@ export default class FilmPresenter {
     return this.#id;
   }
 
-  openPopup = () => {
+  get popupScrollPosition() {
+    return this.#filmPopupComponent.scrollPosition;
+  }
+
+  openPopup = (scrollPosition) => {
     appendChild(this.#body, this.#filmPopupComponent);
     this.#body.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#escKeyDownHandler);
@@ -72,6 +76,7 @@ export default class FilmPresenter {
     this.#changeMode();
     this.#mode = Mode.POPUP;
     this.#filmPopupComponent.reset(this.#film);
+    this.#filmPopupComponent.scrollPosition = scrollPosition;
   }
 
   closePopup = () => {

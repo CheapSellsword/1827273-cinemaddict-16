@@ -14,6 +14,7 @@ export default class FilmCollectionPresenter {
     #topRatedFilmContainer = null;
     #filmSectionComponent = null;
     #mostCommentedSection = null;
+    #popupScrollPosition = null;
     #filmListContainer = null;
     #filmSortComponent = null;
     #noFilmComponent = null;
@@ -104,12 +105,15 @@ export default class FilmCollectionPresenter {
       switch (updateType) {
         case UpdateType.MINOR:
           if (mode === Mode.POPUP) {
-            this.#presenters.find((presenter) => presenter.id === update.id).removeDocumentEventListeners();
+            const prevPopupPresenter = this.#presenters.find((presenter) => presenter.id === update.id);
+            this.#popupScrollPosition = prevPopupPresenter.popupScrollPosition;
+            prevPopupPresenter.removeDocumentEventListeners();
           }
           this.#clearFilmCollection();
           this.#renderFilmCollection();
           if (mode === Mode.POPUP) {
-            this.#presenters.find((presenter) => presenter.id === update.id).openPopup();
+            const newPopupPresenter = this.#presenters.find((presenter) => presenter.id === update.id);
+            newPopupPresenter.openPopup(this.#popupScrollPosition);
           }
           break;
         case UpdateType.MAJOR:
