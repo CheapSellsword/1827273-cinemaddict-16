@@ -11,34 +11,43 @@ const createFilterItemTemplate = (filter, currentFilterType) =>  {
   return `<a href="#${href}" class="main-navigation__item ${activeClass}" data-filter-type="${type}">${name} <span class="main-navigation__item-count">${count}</span></a>`;
 };
 
-const createFiltersAndStatsTemplate = (filters, currentFilter) => {
+const createFiltersAndStatsTemplate = (filters, currentFilter, isStatsActive) => {
+  const isActive = isStatsActive ? 'main-navigation__item--active' : '';
+
   const createFilterList = filters.map((filter) => createFilterItemTemplate(filter, currentFilter)).join('');
 
   return `<nav class="main-navigation">
             <div class="main-navigation__items">
               ${createFilterList}
             </div>
-            <a href="#stats" class="main-navigation__additional">Stats</a>
+            <a href="#stats" class="main-navigation__additional ${isActive}">Stats</a>
           </nav>`;
 };
 
 export default class FiltersAndStatsView extends AbstractView {
   #filters = null;
+  #isStatsActive = null;
   #currentFilter = null;
 
-  constructor (filters, currentFilterType) {
+  constructor (filters, currentFilterType, isStatsActive) {
     super();
     this.#filters = filters;
+    this.#isStatsActive = isStatsActive;
     this.#currentFilter = currentFilterType;
   }
 
   get template() {
-    return createFiltersAndStatsTemplate(this.#filters, this.#currentFilter);
+    return createFiltersAndStatsTemplate(this.#filters, this.#currentFilter, this.#isStatsActive);
   }
 
   setFilterTypeChangeHandler = (callback) => {
     this._callback.filterTypeChange = callback;
     this.element.querySelectorAll('.main-navigation__item').forEach((filter) => filter.addEventListener('click', this.#filterTypeChangeHandler));
+  }
+
+  setStatsClickHandler = (callback) => {
+    this._callback.statsClick = callback;
+    this.element.querySelector('.main-navigation__additional').addEventListener('click', this.#statsClickHandler);
   }
 
   #filterTypeChangeHandler = (evt) => {
@@ -47,19 +56,9 @@ export default class FiltersAndStatsView extends AbstractView {
     this.element.querySelector('.main-navigation__additional').classList.remove('main-navigation__item--active');
   }
 
-  setStatsClickHandler = (callback) => {
-    this._callback.statsClick = callback;
-    this.element.querySelector('.main-navigation__additional').addEventListener('click', this.#statsClickHandler);
-  }
-
   #statsClickHandler = (evt) => {
     evt.preventDefault();
-    const stats = this.element.querySelector('.main-navigation__additional');
-    if (!stats.classList.contains('main-navigation__item--active')) {
-      this.#currentFilter = null;
-      this._callback.statsClick();
-      stats.classList.add('main-navigation__item--active'); //?
-    }
+    this._callback.statsClick();
   }
 }
 

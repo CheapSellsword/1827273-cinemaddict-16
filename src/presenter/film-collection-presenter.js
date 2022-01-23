@@ -90,6 +90,7 @@ export default class FilmCollectionPresenter {
 
     #clearStats = () => {
       remove(this.#statsComponent);
+      this.#statsComponent = null;
     }
 
     #handleViewAction = (actionType, updateType, update, film) => {
@@ -109,9 +110,6 @@ export default class FilmCollectionPresenter {
     #handleModelEvent = (updateType) => {
       switch (updateType) {
         case UpdateType.MINOR:
-          if (this.#statsComponent) {
-            this.#clearStats();
-          }
           this.#clearFilmCollection();
           this.#renderFilmCollection();
           break;

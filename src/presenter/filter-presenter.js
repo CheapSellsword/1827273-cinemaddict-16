@@ -5,6 +5,7 @@ import { FilterType, UpdateType } from '../consts.js';
 
 export default class FilterPresenter {
   #filterContainer = null;
+  #isStatsActive = null;
   #filterModel = null;
   #filmsModel = null;
 
@@ -50,11 +51,11 @@ export default class FilterPresenter {
     ];
   }
 
-  init = () => {
+  init = (isStatsActive) => {
     const filters = this.filters;
     const prevFilterComponent = this.#filtersAndStatsComponent;
 
-    this.#filtersAndStatsComponent = new FiltersAndStatsView(filters, this.#filterModel.filter);
+    this.#filtersAndStatsComponent = new FiltersAndStatsView(filters, this.#filterModel.filter, isStatsActive);
     this.#filtersAndStatsComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
     this.#filtersAndStatsComponent.setStatsClickHandler(this.#handleStatsClick);
 
@@ -68,17 +69,19 @@ export default class FilterPresenter {
   }
 
   #handleModelEvent = () => {
-    this.init();
+    this.init(this.#isStatsActive);
   }
 
   #handleFilterTypeChange = (filterType) => {
     if (this.#filterModel.filter === filterType) {
       return;
     }
+    this.#isStatsActive = false;
     this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
   }
 
   #handleStatsClick = () => {
+    this.#isStatsActive = true;
     this.#filterModel.showStats(UpdateType.STATS);
   }
 }
