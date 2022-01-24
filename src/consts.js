@@ -159,3 +159,8 @@ export const FilterType = {
   HISTORY: 'History',
   FAVORITES: 'Favorites',
 };
+
+export const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+};
