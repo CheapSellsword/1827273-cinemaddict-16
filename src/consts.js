@@ -164,3 +164,6 @@ export const Method = {
   GET: 'GET',
   PUT: 'PUT',
 };
+
+export const AUTHORIZATION = 'Basic lvldmkgldjpkvmjgmlgoigd';
+export const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';

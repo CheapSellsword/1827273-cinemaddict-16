@@ -7,6 +7,14 @@ import durationPlugin from 'dayjs/plugin/duration';
 dayjs.extend(durationPlugin);
 dayjs.extend(relativeTime);
 
+export const convertMinutes = (num) => {
+  const hours = Math.floor(num / HOUR_IN_MINS);
+  const minutes = num % HOUR_IN_MINS;
+  return `${hours  }h ${  minutes}m`;
+};
+
+export const getFilmLengthInMinutes = () => getRandomInteger(MIN_FILM_LENGTH, MAX_FILM_LENGTH);
+
 export const generateFilmLength = () => {
   const filmLengthInMinutes = getRandomInteger(MIN_FILM_LENGTH, MAX_FILM_LENGTH);
 

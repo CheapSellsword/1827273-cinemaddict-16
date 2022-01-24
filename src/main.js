@@ -1,4 +1,4 @@
-import { GENERATED_FILMS_COUNT } from './consts';
+import { GENERATED_FILMS_COUNT, AUTHORIZATION, END_POINT } from './consts';
 import { RenderPosition, render } from './utils/render';
 import { generateFilm } from './mock/film';
 import FilmCountView from './view/film-count-view';
@@ -8,11 +8,13 @@ import FilmsModel from './model/films-model';
 import FilterModel from './model/filter-model';
 import FilterPresenter from './presenter/filter-presenter';
 import CommentsModel from './model/comments-model';
+import ApiService from './api-service.js';
 
 const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
 
+const apiServiceComponent = new ApiService(END_POINT, AUTHORIZATION);
 const commentsModel = new CommentsModel();
-const filmsModel = new FilmsModel(commentsModel);
+const filmsModel = new FilmsModel(apiServiceComponent, commentsModel);
 filmsModel.films = films;
 
 const filterModel = new FilterModel();
