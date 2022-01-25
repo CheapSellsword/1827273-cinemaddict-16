@@ -3,6 +3,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import durationPlugin from 'dayjs/plugin/duration';
 import AbstractObservable from '../utils/abstract-observable';
 import { getHumanizedTimeOfComments } from '../utils/dates-and-time';
+import { adaptToClient } from './films-model';
 
 dayjs.extend(durationPlugin);
 dayjs.extend(relativeTime);
@@ -36,14 +37,15 @@ export default class CommentsModel extends AbstractObservable {
       callback(isError, this.#comments);
     }
 
-    addComment = (updateType, update, mode, film) => {
-      this.#comments = [
-        ...this.#comments,
-        update,
-      ];
-      const updatedFilm = {...film, comments: this.#comments};
-
-      this._notify(updateType, mode, updatedFilm);
+    addComment = async (updateType, mode, update) => {
+      try {
+        const response = await this.#apiService.addComment(update);
+        this.#comments = response.comments.map(this.#adaptCommentToClient);
+        const updatedFilm = adaptToClient(response.movie);
+        this._notify(updateType, mode, updatedFilm);
+      } catch (err) {
+        throw new Error('Can\'t add comment');
+      }
     }
 
     deleteComment = async (updateType, mode, update, film) => {

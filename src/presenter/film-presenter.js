@@ -1,6 +1,5 @@
 import { render, RenderPosition, appendChild, remove, replace } from '../utils/render';
 import { Mode, UserAction, UpdateType, EvtKey } from '../consts';
-import { nanoid } from 'nanoid';
 import FilmPopupView from '../view/film-popup-view';
 import FilmCardView from '../view/film-card-view';
 import NoCommentsView from '../view/no-comments-view';
@@ -156,12 +155,11 @@ export default class FilmPresenter {
   }
 
   #handleNewCommentSubmit = (newComment) => {
-    this.#commentsModel.comments = this.#film.comments;
     this.#changeData(
       UserAction.ADD_COMMENT,
       UpdateType.MINOR,
       this.#mode,
-      {...newComment, id: nanoid(), author: 'Cheap Sellsword', date: 'Now'},
+      newComment,
       this.#film,
     );
   }

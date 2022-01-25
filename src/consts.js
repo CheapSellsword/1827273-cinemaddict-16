@@ -68,6 +68,7 @@ export const Method = {
   GET: 'GET',
   PUT: 'PUT',
   DELETE: 'DELETE',
+  POST: 'POST',
 };
 
 export const AUTHORIZATION = 'Basic lvldmkgldjpkvmjgmlgoigd';

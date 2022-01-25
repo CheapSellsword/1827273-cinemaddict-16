@@ -98,7 +98,7 @@ export default class FilmCollectionPresenter {
           this.#filmsModel.updateFilm(updateType, mode, update);
           break;
         case UserAction.ADD_COMMENT:
-          this.#commentsModel.addComment(updateType, update, mode, film);
+          this.#commentsModel.addComment(updateType, mode, update, film);
           break;
         case UserAction.DELETE_COMMENT:
           this.#commentsModel.deleteComment(updateType, mode, update, film);
