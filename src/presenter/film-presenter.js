@@ -3,6 +3,7 @@ import { Mode, UserAction, UpdateType, EvtKey } from '../consts';
 import { nanoid } from 'nanoid';
 import FilmPopupView from '../view/film-popup-view';
 import FilmCardView from '../view/film-card-view';
+import NoCommentsView from '../view/no-comments-view';
 
 export default class FilmPresenter {
   #filmContainer = null;
@@ -176,8 +177,12 @@ export default class FilmPresenter {
     );
   }
 
-  #handleModelEvent = (comments) => {
-    this.#filmPopupComponent = new FilmPopupView(this.#film, comments, this.#addPopupListeners);
+  #handleModelEvent = (isError, comments) => {
+    if (isError) {
+      this.#filmPopupComponent = new NoCommentsView(this.#film);
+    } else {
+      this.#filmPopupComponent = new FilmPopupView(this.#film, comments, this.#addPopupListeners);
+    }
     appendChild(this.#body, this.#filmPopupComponent);
     this.#body.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#escKeyDownHandler);

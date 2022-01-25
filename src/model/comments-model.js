@@ -22,6 +22,7 @@ export default class CommentsModel extends AbstractObservable {
     }
 
     init = async (filmId, callback) => {
+      let isError = false;
       this.#filmId = filmId;
       this.#apiService.filmId = this.#filmId;
       try {
@@ -29,9 +30,10 @@ export default class CommentsModel extends AbstractObservable {
         this.#comments = comments.map(this.#adaptCommentToClient);
       } catch (err) {
         this.#comments = [];
+        isError = true;
       }
 
-      callback(this.#comments);
+      callback(isError, this.#comments);
     }
 
     addComment = (updateType, update, mode, film) => {
