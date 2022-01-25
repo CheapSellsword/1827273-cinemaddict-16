@@ -1,6 +1,6 @@
 import AbstractObservable from '../utils/abstract-observable';
 import { createTopRatedFilmList, createMostCommentedFilmList } from '../utils/common.js';
-import { EXTRA_FILMS_COUNT } from '../consts';
+import { EXTRA_FILMS_COUNT, UpdateType } from '../consts';
 import { convertMinutes } from '../utils/dates-and-time';
 import dayjs from 'dayjs';
 
@@ -32,7 +32,6 @@ export const adaptToClient = (film) => {
   return adaptedFilm;
 };
 
-
 export default class FilmsModel extends AbstractObservable {
   #apiService = null;
   #commentsModel = null;
@@ -41,15 +40,18 @@ export default class FilmsModel extends AbstractObservable {
   constructor(apiService, commentsModel) {
     super();
     this.#apiService = apiService;
-    this.#apiService.films.then((films) => {
-      console.log(films);
-    });
     this.#commentsModel = commentsModel;
     this.#commentsModel.addObserver(this.updateFilm);
   }
 
-  set films(films) {
-    this.#films = [...films];
+  init = async () => {
+    try {
+      const films = await this.#apiService.films;
+      this.#films = films.map(adaptToClient);
+    } catch(err) {
+      this.#films = [];
+    }
+    this._notify(UpdateType.INIT);
   }
 
   get films() {

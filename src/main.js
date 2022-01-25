@@ -15,7 +15,6 @@ const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
 const apiServiceComponent = new ApiService(END_POINT, AUTHORIZATION);
 const commentsModel = new CommentsModel();
 const filmsModel = new FilmsModel(apiServiceComponent, commentsModel);
-filmsModel.films = films;
 
 const filterModel = new FilterModel();
 
@@ -25,13 +24,11 @@ const footerElement = document.querySelector('.footer');
 const footerStatsElement = footerElement.querySelector('.footer__statistics');
 
 const filmCollectionPresenter = new FilmCollectionPresenter(mainElement, filmsModel, filterModel, commentsModel);
-
 const filterPresenter = new FilterPresenter(mainElement, filterModel, filmsModel);
 
 filterPresenter.init();
-
-render(headerElement, new ProfileRankAndAvatarView(films), RenderPosition.BEFORE_END);
-
 filmCollectionPresenter.init();
+filmsModel.init();
 
-render(footerStatsElement, new FilmCountView(films), RenderPosition.BEFORE_END);
+render(headerElement, new ProfileRankAndAvatarView(filmsModel.films), RenderPosition.BEFORE_END);
+render(footerStatsElement, new FilmCountView(filmsModel.films), RenderPosition.BEFORE_END);
