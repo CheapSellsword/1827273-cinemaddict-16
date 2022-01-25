@@ -4,8 +4,9 @@ import { compareByField } from '../utils/common';
 import { filter } from '../utils/filter';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import FilmSectionView from '../view/film-section-view';
-import FilmPresenter from './film-presenter';
+import LoadingView from '../view/loading-view';
 import NoFilmView from '../view/no-film-view';
+import FilmPresenter from './film-presenter';
 import SortView from '../view/sort-view';
 
 export default class FilmCollectionPresenter {
@@ -24,7 +25,10 @@ export default class FilmCollectionPresenter {
     #filterModel = null;
     #filmsModel = null;
 
+    #loadingComponent = new LoadingView();
+
     #presenters = [];
+    #isLoading = true;
     #filterType = FilterType.ALL;
     #currentSortType = SortType.DEFAULT;
     #renderedFilmCount = FILMS_COUNT_PER_STEP;
@@ -71,6 +75,7 @@ export default class FilmCollectionPresenter {
       this.#presenters = [];
 
       remove(this.#filmSortComponent);
+      remove(this.#loadingComponent);
       remove(this.#showMoreButtonComponent);
       remove(this.#filmSectionComponent);
 
@@ -120,6 +125,11 @@ export default class FilmCollectionPresenter {
           this.#clearFilmCollection({resetRenderedFilmCount: true, resetSortType: true});
           this.#renderFilmCollection();
           break;
+        case UpdateType.INIT:
+          this.#isLoading = false;
+          remove(this.#loadingComponent);
+          this.#renderFilmCollection();
+          break;
       }
     }
 
@@ -147,6 +157,10 @@ export default class FilmCollectionPresenter {
       if (this.#renderedFilmCount >= filmCount) {
         remove(this.#showMoreButtonComponent);
       }
+    }
+
+    #renderLoading = () => {
+      render(this.#filmListContainer, this.#loadingComponent, RenderPosition.BEFORE_END);
     }
 
     #renderNoFilm = () => {
@@ -202,6 +216,11 @@ export default class FilmCollectionPresenter {
     #renderFilmCollection = () => {
       const films = this.films;
       const filmCount = films.length;
+
+      if (this.#isLoading) {
+        this.#renderLoading();
+        return;
+      }
 
       if (filmCount === 0) {
         this.#renderNoFilm();
