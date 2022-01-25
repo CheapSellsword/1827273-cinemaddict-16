@@ -1,20 +1,30 @@
-import AbstractView from './abstract-view';
+import SmartView from './smart-view';
 
-const createFilmCount = (films) => (
+const createFilmCount = (filmsCount) => (
   `<p>
-    ${films.length} movies inside
+    ${filmsCount} movies inside
   </p>`
 );
 
-export default class FilmCountView extends AbstractView {
-  #films = null;
+export default class FilmCountView extends SmartView {
+  #filmsModel
+  #films = [];
 
-  constructor(films) {
+  constructor(filmsModel) {
     super();
-    this.#films = films;
+    this.#filmsModel = filmsModel;
+    this.#filmsModel.addObserver(this.#handleModelEvent);
   }
 
   get template() {
-    return createFilmCount(this.#films);
+    return createFilmCount(this.#films.length);
+  }
+
+  restoreHandlers = () => {};
+
+  #handleModelEvent = () => {
+    this.#films = this.#filmsModel.films;
+    this.updateElement();
+    this.#filmsModel.removeObserver(this.#handleModelEvent);
   }
 }

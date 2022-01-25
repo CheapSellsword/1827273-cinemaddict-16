@@ -1,5 +1,6 @@
-import { Ranks, FilmsCountForRank } from '../consts';
-import AbstractView from './abstract-view';
+import { Ranks, FilmsCountForRank, FilterType } from '../consts';
+import { filter } from '../utils/filter';
+import SmartView from './smart-view';
 
 const createRank = (filmsCount) => {
   let rank = '';
@@ -27,15 +28,24 @@ const createProfileRankAndAvatar = (filmsCount) => (
   </section>`
 );
 
-export default class ProfileRankAndAvatarView extends AbstractView {
-  #films = null;
+export default class ProfileRankAndAvatarView extends SmartView {
+  #filmsModel
+  #films = [];
 
-  constructor(films) {
+  constructor(filmsModel) {
     super();
-    this.#films = films;
+    this.#filmsModel = filmsModel;
+    this.#filmsModel.addObserver(this.#handleModelEvent);
   }
 
   get template() {
     return createProfileRankAndAvatar(this.#films.length);
+  }
+
+  restoreHandlers = () => {};
+
+  #handleModelEvent = () => {
+    this.#films = filter[FilterType.HISTORY](this.#filmsModel.films);
+    this.updateElement();
   }
 }

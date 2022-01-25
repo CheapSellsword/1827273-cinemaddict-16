@@ -26,5 +26,5 @@ filterPresenter.init();
 filmCollectionPresenter.init();
 filmsModel.init();
 
-render(headerElement, new ProfileRankAndAvatarView(filmsModel.films), RenderPosition.BEFORE_END);
-render(footerStatsElement, new FilmCountView(filmsModel.films), RenderPosition.BEFORE_END);
+render(headerElement, new ProfileRankAndAvatarView(filmsModel), RenderPosition.BEFORE_END);
+render(footerStatsElement, new FilmCountView(filmsModel), RenderPosition.BEFORE_END);

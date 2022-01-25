@@ -29,7 +29,7 @@ export const Ranks = {
 };
 
 export const FilmsCountForRank = {
-  NOVICE: 0,
+  NOVICE: 1,
   FAN: 11,
   MOVIE_BUFF: 21,
 };
