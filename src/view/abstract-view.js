@@ -1,3 +1,4 @@
+import { SHAKE_ANIMATION_TIMEOUT } from '../consts';
 import { createElement } from '../utils/render';
 
 export default class AbstractView {
@@ -6,7 +7,7 @@ export default class AbstractView {
 
   constructor() {
     if (new.target === AbstractView) {
-      throw new Error('Can\'t instantiate AbstractView, only concrete one');
+      throw new Error('Can\'t instantiate AbstractView, only concrete one.');
     }
   }
 
@@ -19,10 +20,19 @@ export default class AbstractView {
   }
 
   get template() {
-    throw new Error('Abstract method not implimented: get template');
+    throw new Error('Abstract method not implemented: get template');
   }
 
   removeElement() {
     this.#element = null;
   }
+
+  shake(callback) {
+    this.element.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this.element.style.animation = '';
+      callback();
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
 }
+

@@ -2,6 +2,7 @@ import { FILMS_COUNT_PER_STEP, SortType, UpdateType, UserAction, FilterType, Mod
 import { render, RenderPosition, remove } from '../utils/render';
 import { compareByField } from '../utils/common';
 import { filter } from '../utils/filter';
+import { State } from '../consts';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import FilmSectionView from '../view/film-section-view';
 import LoadingView from '../view/loading-view';
@@ -92,16 +93,31 @@ export default class FilmCollectionPresenter {
       }
     }
 
-    #handleViewAction = (actionType, updateType, mode, update, film) => {
+    #handleViewAction = async (actionType, updateType, mode, update, film) => {
       switch (actionType) {
         case UserAction.UPDATE_FILM:
-          this.#filmsModel.updateFilm(updateType, mode, update);
+          this.#presenters.find((presenter) => presenter.id === update.id).setViewState(State.SAVING);
+          try {
+            await this.#filmsModel.updateFilm(updateType, mode, update);
+          } catch (err) {
+            this.#presenters.find((presenter) => presenter.id === update.id).setViewState(State.ABORTING);
+          }
           break;
         case UserAction.ADD_COMMENT:
-          this.#commentsModel.addComment(updateType, mode, update, film);
+          this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.SAVING);
+          try {
+            await this.#commentsModel.addComment(updateType, mode, update);
+          } catch (err) {
+            this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.ABORTING);
+          }
           break;
         case UserAction.DELETE_COMMENT:
-          this.#commentsModel.deleteComment(updateType, mode, update, film);
+          this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.DELETING);
+          try {
+            await this.#commentsModel.deleteComment(updateType, mode, update, film);
+          } catch {
+            this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.ABORTING);
+          }
           break;
       }
     }

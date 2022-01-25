@@ -73,3 +73,11 @@ export const Method = {
 
 export const AUTHORIZATION = 'Basic lvldmkgldjpkvmjgmlgoigd';
 export const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';
+
+export const State = {
+  SAVING: 'SAVING',
+  DELETING: 'DELETING',
+  ABORTING: 'ABORTING',
+};
+
+export const SHAKE_ANIMATION_TIMEOUT = 600;

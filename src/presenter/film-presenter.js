@@ -1,5 +1,5 @@
 import { render, RenderPosition, appendChild, remove, replace } from '../utils/render';
-import { Mode, UserAction, UpdateType, EvtKey } from '../consts';
+import { Mode, UserAction, UpdateType, EvtKey, State } from '../consts';
 import FilmPopupView from '../view/film-popup-view';
 import FilmCardView from '../view/film-card-view';
 import NoCommentsView from '../view/no-comments-view';
@@ -72,7 +72,7 @@ export default class FilmPresenter {
       await this.#commentsModel.init(this.#film.id, this.#handleModelEvent);
       this.#filmPopupComponent.scrollPosition = scrollPosition;
     } catch (err){
-      console.log(err);
+      this.setViewState(State.ABORTING);
     }
   }
 
@@ -84,6 +84,36 @@ export default class FilmPresenter {
       this.#mode = Mode.DEFAULT;
     }
   }
+
+  setViewState = (state) => {
+    if (this.#mode === Mode.DEFAULT) {
+      return;
+    }
+    const resetFormState = () => {
+      this.#filmPopupComponent.updateData({
+        isDisabled: false,
+        isDeleting: false,
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this.#filmPopupComponent.updateData({
+          isDisabled: true,
+        });
+        break;
+      case State.DELETING:
+        this.#filmPopupComponent.updateData({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING:
+        this.#filmPopupComponent.shake(resetFormState);
+        break;
+    }
+  }
+
 
   destroy = () => {
     remove(this.#filmComponent);

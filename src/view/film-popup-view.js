@@ -23,6 +23,8 @@ const createFilmPopup = (data, comments) => {
     emoji,
     text,
     checkedEmoji,
+    isDisabled,
+    isDeleting,
   } = data;
   const genreSuffix = genres.length > 1 ? 'Genres' : 'Genre';
 
@@ -40,7 +42,7 @@ const createFilmPopup = (data, comments) => {
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${comment.author}</span>
           <span class="film-details__comment-day">${comment.date}</span>
-          <button class="film-details__comment-delete" id=${comment.id}>Delete</button>
+          <button class="film-details__comment-delete" ${isDisabled ? 'disabled' : ''} id=${comment.id}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
         </p>
       </div>
     </li>`
@@ -58,10 +60,10 @@ const createFilmPopup = (data, comments) => {
     ? 'film-details__control-button--active'
     : '';
 
-  const createEmojiListItemTemplate = (emojiType) => `<input class="film-details__emoji-item visually-hidden" ${checkedEmoji === emojiType ? 'checked' : ''} name="comment-emoji" type="radio" id="emoji-${emojiType}" value="${emojiType}">
-            <label class="film-details__emoji-label" for="emoji-${emojiType}">
-              <img src="./images/emoji/${emojiType}.png" width="30" height="30" alt="${emojiType}">
-            </label>`;
+  const createEmojiListItemTemplate = (emojiType) => `<input class="film-details__emoji-item visually-hidden" ${checkedEmoji === emojiType ? 'checked' : ''} name="comment-emoji" type="radio" id="emoji-${emojiType}" value="${emojiType}" ${isDisabled ? 'disabled' : ''}>
+    <label class="film-details__emoji-label" for="emoji-${emojiType}">
+      <img src="./images/emoji/${emojiType}.png" width="30" height="30" alt="${emojiType}">
+    </label>`;
 
   const createEmojiListTemplate = () => {
     const createList = EMOJI_TYPES.map((emojiType) => createEmojiListItemTemplate(emojiType)).join('');
@@ -153,7 +155,7 @@ const createFilmPopup = (data, comments) => {
                     <div class="film-details__add-emoji-label">${emoji}</div>
 
                     <label class="film-details__comment-label">
-                      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(text)}</textarea>
+                      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${isDisabled ? 'disabled' : ''}>${he.encode(text)}</textarea>
                     </label>
                     ${createEmojiListTemplate()}
                     </div>
@@ -302,6 +304,8 @@ export default class FilmPopupView extends SmartView {
     emoji: '',
     text: '',
     checkedEmoji: '',
+    isDisabled: false,
+    isDeleting: false,
   })
 
   static parseDataToFilm = (data) => {
@@ -314,6 +318,8 @@ export default class FilmPopupView extends SmartView {
     delete film.emoji;
     delete film.text;
     delete film.checkedEmoji;
+    delete film.isDisabled;
+    delete film.isDeleting;
 
     return film;
   }
