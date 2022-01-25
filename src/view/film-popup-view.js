@@ -261,7 +261,7 @@ export default class FilmPopupView extends SmartView {
 
   #commentDeleteClickHandler = (evt) => {
     evt.preventDefault();
-    const commentToDelete = FilmPopupView.parseDataToFilm(this._data).comments.find((comment) => comment.id === evt.target.id);
+    const commentToDelete = this.#comments.find((comment) => comment.id === evt.target.id);
     this._callback.commentDelete(commentToDelete);
   }
 

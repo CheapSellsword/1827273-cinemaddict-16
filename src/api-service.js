@@ -43,6 +43,15 @@ export default class ApiService {
       return parsedResponse;
     }
 
+    deleteComment = async (comment) => {
+      const response = await this.#load({
+        url: `/comments/${comment.id}`,
+        method: Method.DELETE,
+      });
+
+      return response;
+    }
+
   #load = async ({
     url,
     method = Method.GET,

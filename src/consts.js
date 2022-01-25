@@ -67,6 +67,7 @@ export const FilterType = {
 export const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  DELETE: 'DELETE',
 };
 
 export const AUTHORIZATION = 'Basic lvldmkgldjpkvmjgmlgoigd';

@@ -167,7 +167,6 @@ export default class FilmPresenter {
   }
 
   #handleCommentDeleteClick = (update) => {
-    this.#commentsModel.comments = this.#film.comments;
     this.#changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,

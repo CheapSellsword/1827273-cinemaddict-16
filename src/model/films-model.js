@@ -41,7 +41,7 @@ export default class FilmsModel extends AbstractObservable {
     super();
     this.#apiService = apiService;
     this.#commentsModel = commentsModel;
-    this.#commentsModel.addObserver(this.updateFilm);
+    this.#commentsModel.addObserver(this.#updateFilmComments);
   }
 
   init = async () => {
@@ -85,5 +85,18 @@ export default class FilmsModel extends AbstractObservable {
     } catch (err) {
       throw new Error('Can\'t update film');
     }
+  }
+
+  #updateFilmComments = (updateType, mode, update) => {
+    const index = this.#films.findIndex((film) => film.id === update.id);
+    if (index === -1) {
+      throw new Error('Can\'t update unexisting film');
+    }
+    this.#films = [
+      ...this.#films.slice(0, index),
+      update,
+      ...this.#films.slice(index + 1),
+    ];
+    this._notify(updateType, mode, update);
   }
 }
