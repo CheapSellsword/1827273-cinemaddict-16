@@ -31,7 +31,6 @@ export default class FilmPresenter {
     const prevPopupComponent = this.#filmPopupComponent;
 
     this.#filmComponent = new FilmCardView(film);
-    this.#filmPopupComponent = new FilmPopupView(film, this.#addPopupListeners);
 
     this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
     this.#filmComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
@@ -68,15 +67,13 @@ export default class FilmPresenter {
     return this.#filmPopupComponent.scrollPosition;
   }
 
-  openPopup = (scrollPosition) => {
-    appendChild(this.#body, this.#filmPopupComponent);
-    this.#body.classList.add('hide-overflow');
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#addPopupListeners();
-    this.#changeMode();
-    this.#mode = Mode.POPUP;
-    this.#filmPopupComponent.reset(this.#film);
-    this.#filmPopupComponent.scrollPosition = scrollPosition;
+  openPopup = async (scrollPosition) => {
+    try {
+      await this.#commentsModel.init(this.#film.id, this.#handleModelEvent);
+      this.#filmPopupComponent.scrollPosition = scrollPosition;
+    } catch (err){
+      console.log(err);
+    }
   }
 
   closePopup = () => {
@@ -177,5 +174,16 @@ export default class FilmPresenter {
       update,
       this.#film,
     );
+  }
+
+  #handleModelEvent = (comments) => {
+    this.#filmPopupComponent = new FilmPopupView(this.#film, comments, this.#addPopupListeners);
+    appendChild(this.#body, this.#filmPopupComponent);
+    this.#body.classList.add('hide-overflow');
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#addPopupListeners();
+    this.#changeMode();
+    this.#mode = Mode.POPUP;
+    this.#filmPopupComponent.reset(this.#film);
   }
 }

@@ -9,20 +9,29 @@ dayjs.extend(relativeTime);
 
 export default class CommentsModel extends AbstractObservable {
     #comments = [];
-    #filmId = 2;
+    #filmId = null;
     #apiService = null;
 
     constructor(apiService) {
       super();
       this.#apiService = apiService;
-      this.#apiService.filmId = this.#filmId;
-      this.#apiService.comments.then((comments) => {
-        console.log(comments);
-      });
     }
 
     get comments() {
       return this.#comments;
+    }
+
+    init = async (filmId, callback) => {
+      this.#filmId = filmId;
+      this.#apiService.filmId = this.#filmId;
+      try {
+        const comments = await this.#apiService.comments;
+        this.#comments = comments.map(this.#adaptCommentToClient);
+      } catch (err) {
+        this.#comments = [];
+      }
+
+      callback(this.#comments);
     }
 
     addComment = (updateType, update, mode, film) => {

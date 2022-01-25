@@ -3,8 +3,27 @@ import { isBlank } from '../utils/common';
 import SmartView from './smart-view';
 import he from 'he';
 
-const createFilmPopup = (film) => {
-  const {title, poster, fullReleaseDate, rating, length, genres, director, writers, cast, country, description, ageRestriction, comments, isOnWatchlist, isWatched, isFavorite, emoji, text, checkedEmoji} = film;
+const createFilmPopup = (data, comments) => {
+  const {
+    title,
+    poster,
+    fullReleaseDate,
+    rating,
+    length,
+    genres,
+    director,
+    writers,
+    cast,
+    country,
+    description,
+    ageRestriction,
+    isOnWatchlist,
+    isWatched,
+    isFavorite,
+    emoji,
+    text,
+    checkedEmoji,
+  } = data;
   const genreSuffix = genres.length > 1 ? 'Genres' : 'Genre';
 
   const createGenresTemplate = () => genres.map((genre) =>
@@ -147,17 +166,19 @@ const createFilmPopup = (film) => {
 
 export default class FilmPopupView extends SmartView {
   #popupListeners = null;
+  #comments = null;
   #newComment = {};
 
-  constructor(film, addPopupListeners) {
+  constructor(film, comments, addPopupListeners) {
     super();
     this.#popupListeners = addPopupListeners;
+    this.#comments = comments;
     this._data = FilmPopupView.parseFilmToData(film);
     this.#setInnerHandlers();
   }
 
   get template() {
-    return createFilmPopup(this._data);
+    return createFilmPopup(this._data, this.#comments);
   }
 
   set scrollPosition(position) {
@@ -227,7 +248,7 @@ export default class FilmPopupView extends SmartView {
       emoji: `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`,
       checkedEmoji: evt.target.value,
     });
-    this.#newComment.emoji = `./images/emoji/${evt.target.value}.png`;
+    this.#newComment.emoji = evt.target.value;
   }
 
   #commentInputHandler = (evt) => {
