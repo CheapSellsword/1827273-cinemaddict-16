@@ -3,6 +3,7 @@ import { getFilmLengthInMinutes } from './utils/dates-and-time';
 import dayjs from 'dayjs';
 
 export default class ApiService {
+    #filmId = null;
     #endPoint = null;
     #authorization = null;
 
@@ -13,6 +14,19 @@ export default class ApiService {
 
     get films() {
       return this.#load({url: 'movies'})
+        .then(ApiService.parseResponse);
+    }
+
+    set filmId(Id) {
+      this.#filmId = Id;
+    }
+
+    get filmId() {
+      return this.#filmId;
+    }
+
+    get comments() {
+      return this.#load({url: `comments/${this.filmId}`})
         .then(ApiService.parseResponse);
     }
 

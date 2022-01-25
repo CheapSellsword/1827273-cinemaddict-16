@@ -9,9 +9,16 @@ dayjs.extend(relativeTime);
 
 export default class CommentsModel extends AbstractObservable {
     #comments = [];
+    #filmId = 2;
+    #apiService = null;
 
-    set comments(comments) {
-      this.#comments = [...comments];
+    constructor(apiService) {
+      super();
+      this.#apiService = apiService;
+      this.#apiService.filmId = this.#filmId;
+      this.#apiService.comments.then((comments) => {
+        console.log(comments);
+      });
     }
 
     get comments() {

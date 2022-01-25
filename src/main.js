@@ -13,7 +13,7 @@ import ApiService from './api-service.js';
 const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
 
 const apiServiceComponent = new ApiService(END_POINT, AUTHORIZATION);
-const commentsModel = new CommentsModel();
+const commentsModel = new CommentsModel(apiServiceComponent);
 const filmsModel = new FilmsModel(apiServiceComponent, commentsModel);
 
 const filterModel = new FilterModel();
