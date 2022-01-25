@@ -34,7 +34,7 @@ export default class ApiService {
       const response = await this.#load({
         url: `movies/${film.id}`,
         method: Method.PUT,
-        body: JSON.stringify(film),
+        body: JSON.stringify(this.#adaptFilmToServer(film)),
         headers: new Headers({'Content-Type': 'application/json'}),
       });
 
