@@ -1,4 +1,11 @@
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import durationPlugin from 'dayjs/plugin/duration';
 import AbstractObservable from '../utils/abstract-observable';
+import { getHumanizedTimeOfComments } from '../utils/dates-and-time';
+
+dayjs.extend(durationPlugin);
+dayjs.extend(relativeTime);
 
 export default class CommentsModel extends AbstractObservable {
     #comments = [];
@@ -34,5 +41,18 @@ export default class CommentsModel extends AbstractObservable {
       const updatedFilm = {...film, comments: this.#comments};
 
       this._notify(updateType, mode, updatedFilm);
+    }
+
+    #adaptCommentToClient = (comment) => {
+      const adaptedComment = {...comment,
+        text: comment['comment'],
+        emoji: `./images/emoji/${comment['emotion']}.png`,
+        date: getHumanizedTimeOfComments(dayjs(comment['date'])),
+      };
+
+      delete adaptedComment.emotion;
+      delete adaptedComment.comment;
+
+      return adaptedComment;
     }
 }

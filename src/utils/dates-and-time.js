@@ -1,4 +1,4 @@
-import { MIN_FILM_LENGTH, MAX_FILM_LENGTH, MIN_NUMBER, DATE_GAP, TIME_GAP, HOUR_IN_MINS} from '../consts';
+import { MIN_FILM_LENGTH, MAX_FILM_LENGTH, MIN_NUMBER, DATE_GAP, HOUR_IN_MINS} from '../consts';
 import { getRandomInteger } from './common';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -41,15 +41,9 @@ export const generateYearOnly = () => {
   return randomDate.format('YYYY');
 };
 
-export const getHumanizedTimeOfComment = () => {
+export const getHumanizedTimeOfComments = (date) => {
   const currentTime = dayjs();
-  const timeOfComment = dayjs()
-    .subtract(getRandomInteger(MIN_NUMBER, TIME_GAP), 'month')
-    .subtract(getRandomInteger(MIN_NUMBER, TIME_GAP), 'day')
-    .subtract(getRandomInteger(MIN_NUMBER, TIME_GAP), 'hour')
-    .subtract(getRandomInteger(MIN_NUMBER, TIME_GAP), 'minute');
-
-  const minutesDifference = currentTime.diff(timeOfComment, 'minute');
+  const minutesDifference = currentTime.diff(date, 'minute');
 
   return dayjs.duration(-minutesDifference, 'minutes').humanize(true);
 };

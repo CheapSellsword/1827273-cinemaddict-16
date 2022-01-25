@@ -99,6 +99,18 @@ export default class ApiService {
     return adaptedFilm;
   }
 
+  #adaptCommentToServer = (newComment) => {
+    const adaptedComment = {...newComment,
+      comment: newComment.text,
+      emotion: newComment.emoji,
+    };
+
+    delete adaptedComment.text;
+    delete adaptedComment.emoji;
+
+    return adaptedComment;
+  };
+
   static parseResponse = (response) => response.json();
 
   static checkStatus = (response) => {
