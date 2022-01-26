@@ -53,7 +53,6 @@ export default class FiltersAndStatsView extends AbstractView {
   #filterTypeChangeHandler = (evt) => {
     evt.preventDefault();
     this._callback.filterTypeChange(evt.target.closest('[data-filter-type]').dataset.filterType);
-    this.element.querySelector('.main-navigation__additional').classList.remove('main-navigation__item--active');
   }
 
   #statsClickHandler = (evt) => {

@@ -1,7 +1,7 @@
 import { Ranks, FilmsCountForRank } from '../consts';
 import AbstractView from './abstract-view';
 
-const createRank = (filmsCount) => {
+export const createRank = (filmsCount) => {
   let rank = '';
 
   if (filmsCount >= FilmsCountForRank.NOVICE && filmsCount < FilmsCountForRank.FAN) {

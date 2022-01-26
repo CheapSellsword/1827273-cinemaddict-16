@@ -118,6 +118,29 @@ export const EMOJI_TYPES = [
   'angry',
 ];
 
+export const STATS_PERIODS = [
+  {
+    name: 'All time',
+    value: 'all-time',
+  },
+  {
+    name: 'Today',
+    value: 'today',
+  },
+  {
+    name: 'Week',
+    value: 'week',
+  },
+  {
+    name: 'Month',
+    value: 'month',
+  },
+  {
+    name: 'Year',
+    value: 'year',
+  },
+];
+
 export const SortType = {
   DEFAULT: 'default',
   DATE: 'date',

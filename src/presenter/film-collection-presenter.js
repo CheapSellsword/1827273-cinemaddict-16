@@ -37,7 +37,6 @@ export default class FilmCollectionPresenter {
       this.#filterModel = filterModel;
       this.#commentsModel = commentsModel;
 
-      this.#filmsModel.addObserver(this.#handleModelEvent);
       this.#filterModel.addObserver(this.#handleModelEvent);
     }
 
@@ -55,6 +54,10 @@ export default class FilmCollectionPresenter {
       return filteredFilms;
     }
 
+    get statsFilms() {
+      return this.#filmsModel.films;
+    }
+
     get topRatedFilms() {
       return this.#filmsModel.topRatedFilms;
     }
@@ -64,7 +67,15 @@ export default class FilmCollectionPresenter {
     }
 
     init = () => {
+      this.#filmsModel.addObserver(this.#handleModelEvent);
+
       this.#renderFilmCollection();
+    }
+
+    destroy = () => {
+      this.#clearFilmCollection({resetRenderedFilmCount: true, resetSortType: true});
+
+      this.#filmsModel.removeObserver(this.#handleModelEvent);
     }
 
     #clearFilmCollection = ({resetRenderedFilmCount = false, resetSortType = false} = {}) => {
@@ -128,14 +139,14 @@ export default class FilmCollectionPresenter {
             this.#clearStats();
           }
           this.#clearFilmCollection({resetRenderedFilmCount: true, resetSortType: true});
-          this.#renderFilmCollection();
+          this.init();
           break;
         case UpdateType.STATS:
           if (this.#statsComponent) {
             return;
           }
           this.#renderStats();
-          this.#clearFilmCollection();
+          this.destroy();
       }
     }
 
@@ -180,8 +191,8 @@ export default class FilmCollectionPresenter {
     }
 
     #renderStats = () => {
-      this.#statsComponent = new StatsView();
-      render(this.#filmSortComponent, this.#statsComponent, RenderPosition.BEFORE_BEGIN);
+      this.#statsComponent = new StatsView(this.statsFilms);
+      render(this.#filmListContainer, this.#statsComponent, RenderPosition.BEFORE_END);
     }
 
     #renderFilmSection = () => {

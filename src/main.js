@@ -9,6 +9,7 @@ import FilterModel from './model/filter-model';
 import FilterPresenter from './presenter/filter-presenter';
 import CommentsModel from './model/comments-model';
 
+
 const films = Array.from({length: GENERATED_FILMS_COUNT}, generateFilm);
 
 const commentsModel = new CommentsModel();
@@ -33,3 +34,4 @@ render(headerElement, new ProfileRankAndAvatarView(films), RenderPosition.BEFORE
 filmCollectionPresenter.init();
 
 render(footerStatsElement, new FilmCountView(films), RenderPosition.BEFORE_END);
+
