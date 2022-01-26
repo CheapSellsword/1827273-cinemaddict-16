@@ -56,7 +56,6 @@ export default class FilmPresenter {
       replace(this.#filmPopupComponent, prevPopupComponent);
       this.#addPopupListeners();
       remove(prevPopupComponent);
-      this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
     }
   }
 
@@ -65,13 +64,27 @@ export default class FilmPresenter {
     return this.#id;
   }
 
+  get popupScrollPosition() {
+    return this.#filmPopupComponent.scrollPosition;
+  }
+
+  openPopup = (scrollPosition) => {
+    appendChild(this.#body, this.#filmPopupComponent);
+    this.#body.classList.add('hide-overflow');
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#addPopupListeners();
+    this.#changeMode();
+    this.#mode = Mode.POPUP;
+    this.#filmPopupComponent.reset(this.#film);
+    this.#filmPopupComponent.scrollPosition = scrollPosition;
+  }
+
   closePopup = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#filmPopupComponent.reset(this.#film);
       remove(this.#filmPopupComponent);
+      this.removeDocumentEventListeners();
       this.#mode = Mode.DEFAULT;
-      this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
-      this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
     }
   }
 
@@ -80,37 +93,32 @@ export default class FilmPresenter {
     remove(this.#filmPopupComponent);
   }
 
+  removeDocumentEventListeners = () => {
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#filmPopupComponent.removeFormSubmitHandler();
+  }
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === EvtKey.ESCAPE || evt.key === EvtKey.ESC) {
       evt.preventDefault();
       this.#body.classList.remove('hide-overflow');
       remove(this.#filmPopupComponent);
-      document.removeEventListener('keydown', this.#escKeyDownHandler);
       this.#mode = Mode.DEFAULT;
       this.#filmPopupComponent.reset(this.#film);
-      this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
+      this.removeDocumentEventListeners();
     }
   };
 
   #closePopupClickHandler = () => {
     this.#body.classList.remove('hide-overflow');
     remove(this.#filmPopupComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
     this.#filmPopupComponent.reset(this.#film);
-    this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
+    this.removeDocumentEventListeners();
   };
 
   #filmCardClickHandler = () => {
-    appendChild(this.#body, this.#filmPopupComponent);
-    this.#body.classList.add('hide-overflow');
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#addPopupListeners();
-    this.#changeMode();
-    this.#mode = Mode.POPUP;
-    this.#filmPopupComponent.reset(this.#film);
-    this.#filmComponent.removeFilmCardClickHandler(this.#filmCardClickHandler);
+    this.openPopup();
   }
 
   #addPopupListeners = () => {
@@ -126,6 +134,7 @@ export default class FilmPresenter {
     this.#changeData(
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
+      this.#mode,
       {...this.#film, isOnWatchlist: !this.#film.isOnWatchlist}
     );
   }
@@ -134,6 +143,7 @@ export default class FilmPresenter {
     this.#changeData(
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
+      this.#mode,
       {...this.#film, isWatched: !this.#film.isWatched}
     );
   }
@@ -142,6 +152,7 @@ export default class FilmPresenter {
     this.#changeData(
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
+      this.#mode,
       {...this.#film, isFavorite: !this.#film.isFavorite}
     );
   }
@@ -151,6 +162,7 @@ export default class FilmPresenter {
     this.#changeData(
       UserAction.ADD_COMMENT,
       UpdateType.MINOR,
+      this.#mode,
       {...newComment, id: nanoid(), author: 'Cheap Sellsword', date: 'Now'},
       this.#film,
     );
@@ -161,6 +173,7 @@ export default class FilmPresenter {
     this.#changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
+      this.#mode,
       update,
       this.#film,
     );

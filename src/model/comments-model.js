@@ -11,17 +11,17 @@ export default class CommentsModel extends AbstractObservable {
       return this.#comments;
     }
 
-    addComment = (updateType, update, film) => {
+    addComment = (updateType, update, mode, film) => {
       this.#comments = [
         ...this.#comments,
         update,
       ];
       const updatedFilm = {...film, comments: this.#comments};
 
-      this._notify(updateType, updatedFilm);
+      this._notify(updateType, mode, updatedFilm);
     }
 
-    deleteComment = (updateType, update, film) => {
+    deleteComment = (updateType, update, mode, film) => {
       const index = this.#comments.findIndex((comment) => comment.id === update.id);
 
       if (index === -1) {
@@ -33,6 +33,6 @@ export default class CommentsModel extends AbstractObservable {
       ];
       const updatedFilm = {...film, comments: this.#comments};
 
-      this._notify(updateType, updatedFilm);
+      this._notify(updateType, mode, updatedFilm);
     }
 }

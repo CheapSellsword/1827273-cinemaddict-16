@@ -21,3 +21,5 @@ export const compareByField = (field) => {
   }
   return (a,b) => a[field] < b[field] ? 1 : -1;
 };
+
+export const isBlank = (str) => !str || str.trim().length === 0;

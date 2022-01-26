@@ -1,4 +1,4 @@
-import { FILMS_COUNT_PER_STEP, SortType, UpdateType, UserAction, FilterType } from '../consts';
+import { FILMS_COUNT_PER_STEP, SortType, UpdateType, UserAction, FilterType, Mode } from '../consts';
 import { render, RenderPosition, remove } from '../utils/render';
 import { compareByField } from '../utils/common';
 import { filter } from '../utils/filter';
@@ -15,6 +15,7 @@ export default class FilmCollectionPresenter {
     #topRatedFilmContainer = null;
     #filmSectionComponent = null;
     #mostCommentedSection = null;
+    #popupScrollPosition = null;
     #filmListContainer = null;
     #filmSortComponent = null;
     #noFilmComponent = null;
@@ -93,25 +94,34 @@ export default class FilmCollectionPresenter {
       this.#statsComponent = null;
     }
 
-    #handleViewAction = (actionType, updateType, update, film) => {
+    #handleViewAction = (actionType, updateType, mode, update, film) => {
       switch (actionType) {
         case UserAction.UPDATE_FILM:
-          this.#filmsModel.updateFilm(updateType, update);
+          this.#filmsModel.updateFilm(updateType, mode, update);
           break;
         case UserAction.ADD_COMMENT:
-          this.#commentsModel.addComment(updateType, update, film);
+          this.#commentsModel.addComment(updateType, update, mode, film);
           break;
         case UserAction.DELETE_COMMENT:
-          this.#commentsModel.deleteComment(updateType, update, film);
+          this.#commentsModel.deleteComment(updateType, update, mode, film);
           break;
       }
     }
 
-    #handleModelEvent = (updateType) => {
+    #handleModelEvent = (updateType, mode, update) => {
       switch (updateType) {
         case UpdateType.MINOR:
+          if (mode === Mode.POPUP) {
+            const prevPopupPresenter = this.#presenters.find((presenter) => presenter.id === update.id);
+            this.#popupScrollPosition = prevPopupPresenter.popupScrollPosition;
+            prevPopupPresenter.removeDocumentEventListeners();
+          }
           this.#clearFilmCollection();
           this.#renderFilmCollection();
+          if (mode === Mode.POPUP) {
+            const newPopupPresenter = this.#presenters.find((presenter) => presenter.id === update.id);
+            newPopupPresenter.openPopup(this.#popupScrollPosition);
+          }
           break;
         case UpdateType.MAJOR:
           if (this.#statsComponent) {
@@ -202,13 +212,13 @@ export default class FilmCollectionPresenter {
       render(this.#filmContainer, this.#showMoreButtonComponent, RenderPosition.AFTER_END);
     }
 
-    #renderExtraFilms = (extraContainer, extraFilms, extraSection) => {
-      if (extraFilms) {
-        this.#renderFilms(extraFilms, extraContainer);
-      } else {
-        extraSection.remove();
-      }
+  #renderExtraFilms = (extraContainer, extraFilms, extraSection) => {
+    if (extraFilms) {
+      this.#renderFilms(extraFilms, extraContainer);
+    } else {
+      extraSection.remove();
     }
+  }
 
     #renderFilmCollection = () => {
       const films = this.films;
