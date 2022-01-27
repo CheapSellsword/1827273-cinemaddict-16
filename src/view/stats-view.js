@@ -2,8 +2,23 @@ import { FilterType, STATS_PERIODS } from '../consts';
 import { createRank } from './profile-and-rank-avatar-view';
 import { filter } from '../utils/filter';
 import SmartView from './smart-view';
+import dayjs from 'dayjs';
+import isBetweenPlugin from 'dayjs/plugin/isBetween';
+
+dayjs.extend(isBetweenPlugin);
 // import ChartDataLabels from 'chartjs-plugin-datalabels';
 // import Chart from 'chart.js';
+
+const getWatchedPeriodFilms = (data) => {
+  if (!data.pastDate) {
+    return data.watchedFilms;
+  }
+
+  const filmsInRange = data.watchedFilms.filter((film) =>
+    dayjs(film.watchingDate).isBetween(data.pastDate, data.currentDate));
+
+  return filmsInRange;
+};
 
 const createPeriodItemTemplate = (period, isChecked) => (
   `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${period.value}" value="${period.value}" ${isChecked ? 'checked' : ''}>
@@ -15,26 +30,25 @@ const createPeriodListTemplate = (checkedPeriod) => {
   return createPeriodList;
 };
 
-const createStatsTemplate = (watchedFilms, checkedPeriod) => {
-  const rank = createRank(watchedFilms.length);
-  const periodList = createPeriodListTemplate(checkedPeriod);
+const createStatsTemplate = (data, checkedPeriod) => {
+  const watchedFilms = getWatchedPeriodFilms(data);
 
   return `<section class="statistic">
             <p class="statistic__rank">
                 Your rank
                 <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-                <span class="statistic__rank-label">${rank}</span>
+                <span class="statistic__rank-label">${createRank(data.watchedFilms.length)}</span>
             </p>
 
             <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
                 <p class="statistic__filters-description">Show stats:</p>
-                ${periodList}
+                ${createPeriodListTemplate(checkedPeriod)}
             </form>
 
             <ul class="statistic__text-list">
                 <li class="statistic__text-item">
                 <h4 class="statistic__item-title">You watched</h4>
-                <p class="statistic__item-text">28 <span class="statistic__item-description">movies</span></p>
+                <p class="statistic__item-text">${watchedFilms.length} <span class="statistic__item-description">movies</span></p>
                 </li>
                 <li class="statistic__text-item">
                 <h4 class="statistic__item-title">Total duration</h4>
@@ -59,7 +73,12 @@ export default class StatsView extends SmartView {
   constructor(films) {
     super();
 
-    this._data = filter[FilterType.HISTORY](films);
+    this._data = {
+      watchedFilms: filter[FilterType.HISTORY](films),
+      currentDate: dayjs(),
+    };
+
+    this.#setStatsPeriodListeners();
   }
 
   get template() {
@@ -75,11 +94,6 @@ export default class StatsView extends SmartView {
     this.#setStatsPeriodListeners();
   }
 
-  #periodChangeHandler = (evt) => {
-    evt.preventDefault();
-
-  }
-
   #setStatsPeriodListeners = () => {
     this.element.querySelectorAll('.statistic__filters-input').forEach((period) => period.addEventListener('change', this.#periodChangeHandler));
   }
@@ -88,4 +102,32 @@ export default class StatsView extends SmartView {
 
   }
 
+  #periodChangeHandler = (evt) => {
+    evt.preventDefault();
+
+    if (this.#checkedPeriod === evt.target.value) {
+      return;
+    }
+
+    this.#checkedPeriod = evt.target.value;
+
+    switch (this.#checkedPeriod) {
+      case STATS_PERIODS[0].value:
+        delete this._data.pastDate;
+        break;
+      case STATS_PERIODS[1].value:
+        this._data.pastDate = this._data.currentDate.subtract(1, 'day');
+        break;
+      case STATS_PERIODS[2].value:
+        this._data.pastDate = this._data.currentDate.subtract(1, 'week');
+        break;
+      case STATS_PERIODS[3].value:
+        this._data.pastDate = this._data.currentDate.subtract(1, 'month');
+        break;
+      case STATS_PERIODS[4].value:
+        this._data.pastDate = this._data.currentDate.subtract(1, 'year');
+        break;
+    }
+    this.updateData(this._data);
+  }
 }

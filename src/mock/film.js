@@ -73,5 +73,6 @@ export const generateFilm = () => (
     isOnWatchlist: generateRandomBoolean(),
     isWatched: generateRandomBoolean(),
     isFavorite: generateRandomBoolean(),
+    watchingDate: generateFullReleaseDate(),
   }
 );

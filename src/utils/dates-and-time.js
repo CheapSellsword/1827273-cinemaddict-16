@@ -16,8 +16,8 @@ export const generateFilmLength = () => {
 
 export const generateFullReleaseDate = () => {
   const randomDate = dayjs()
-    .subtract(getRandomInteger(MIN_NUMBER, DATE_GAP), 'year')
-    .subtract(getRandomInteger(MIN_NUMBER, DATE_GAP), 'month')
+    // .subtract(getRandomInteger(MIN_NUMBER, DATE_GAP), 'year')
+    // .subtract(getRandomInteger(MIN_NUMBER, DATE_GAP), 'month')
     .subtract(getRandomInteger(MIN_NUMBER, DATE_GAP), 'day');
   return randomDate.format('DD MMMM YYYY');
 };
