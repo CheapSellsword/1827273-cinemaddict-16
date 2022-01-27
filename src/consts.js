@@ -143,6 +143,8 @@ export const STATS_PERIODS = [
   },
 ];
 
+export const BAR_HEIGHT = 50;
+
 export const SortType = {
   DEFAULT: 'default',
   DATE: 'date',
