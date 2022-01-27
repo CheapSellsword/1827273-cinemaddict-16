@@ -1,8 +1,8 @@
 import { render, RenderPosition, appendChild, remove, replace } from '../utils/render';
-import { Mode, UserAction, UpdateType, EvtKey } from '../consts';
-import { nanoid } from 'nanoid';
+import { Mode, UserAction, UpdateType, EvtKey, State } from '../consts';
 import FilmPopupView from '../view/film-popup-view';
 import FilmCardView from '../view/film-card-view';
+import NoCommentsView from '../view/no-comments-view';
 
 export default class FilmPresenter {
   #filmContainer = null;
@@ -31,7 +31,6 @@ export default class FilmPresenter {
     const prevPopupComponent = this.#filmPopupComponent;
 
     this.#filmComponent = new FilmCardView(film);
-    this.#filmPopupComponent = new FilmPopupView(film, this.#addPopupListeners);
 
     this.#filmComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
     this.#filmComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
@@ -68,15 +67,13 @@ export default class FilmPresenter {
     return this.#filmPopupComponent.scrollPosition;
   }
 
-  openPopup = (scrollPosition) => {
-    appendChild(this.#body, this.#filmPopupComponent);
-    this.#body.classList.add('hide-overflow');
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#addPopupListeners();
-    this.#changeMode();
-    this.#mode = Mode.POPUP;
-    this.#filmPopupComponent.reset(this.#film);
-    this.#filmPopupComponent.scrollPosition = scrollPosition;
+  openPopup = async (scrollPosition) => {
+    try {
+      await this.#commentsModel.init(this.#film.id, this.#handleModelEvent);
+      this.#filmPopupComponent.scrollPosition = scrollPosition;
+    } catch (err){
+      this.setViewState(State.ABORTING);
+    }
   }
 
   closePopup = () => {
@@ -87,6 +84,36 @@ export default class FilmPresenter {
       this.#mode = Mode.DEFAULT;
     }
   }
+
+  setViewState = (state) => {
+    if (this.#mode === Mode.DEFAULT) {
+      return;
+    }
+    const resetFormState = () => {
+      this.#filmPopupComponent.updateData({
+        isDisabled: false,
+        isDeleting: false,
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this.#filmPopupComponent.updateData({
+          isDisabled: true,
+        });
+        break;
+      case State.DELETING:
+        this.#filmPopupComponent.updateData({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING:
+        this.#filmPopupComponent.shake(resetFormState);
+        break;
+    }
+  }
+
 
   destroy = () => {
     remove(this.#filmComponent);
@@ -158,18 +185,16 @@ export default class FilmPresenter {
   }
 
   #handleNewCommentSubmit = (newComment) => {
-    this.#commentsModel.comments = this.#film.comments;
     this.#changeData(
       UserAction.ADD_COMMENT,
       UpdateType.MINOR,
       this.#mode,
-      {...newComment, id: nanoid(), author: 'Cheap Sellsword', date: 'Now'},
+      newComment,
       this.#film,
     );
   }
 
   #handleCommentDeleteClick = (update) => {
-    this.#commentsModel.comments = this.#film.comments;
     this.#changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
@@ -177,5 +202,20 @@ export default class FilmPresenter {
       update,
       this.#film,
     );
+  }
+
+  #handleModelEvent = (isError, comments) => {
+    if (isError) {
+      this.#filmPopupComponent = new NoCommentsView(this.#film);
+    } else {
+      this.#filmPopupComponent = new FilmPopupView(this.#film, comments, this.#addPopupListeners);
+    }
+    appendChild(this.#body, this.#filmPopupComponent);
+    this.#body.classList.add('hide-overflow');
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#addPopupListeners();
+    this.#changeMode();
+    this.#mode = Mode.POPUP;
+    this.#filmPopupComponent.reset(this.#film);
   }
 }

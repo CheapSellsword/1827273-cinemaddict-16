@@ -2,10 +2,12 @@ import { FILMS_COUNT_PER_STEP, SortType, UpdateType, UserAction, FilterType, Mod
 import { render, RenderPosition, remove } from '../utils/render';
 import { compareByField } from '../utils/common';
 import { filter } from '../utils/filter';
+import { State } from '../consts';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import FilmSectionView from '../view/film-section-view';
-import FilmPresenter from './film-presenter';
+import LoadingView from '../view/loading-view';
 import NoFilmView from '../view/no-film-view';
+import FilmPresenter from './film-presenter';
 import SortView from '../view/sort-view';
 import StatsView from '../view/stats-view';
 
@@ -26,7 +28,10 @@ export default class FilmCollectionPresenter {
     #filterModel = null;
     #filmsModel = null;
 
+    #loadingComponent = new LoadingView();
+
     #presenters = [];
+    #isLoading = true;
     #filterType = FilterType.ALL;
     #currentSortType = SortType.DEFAULT;
     #renderedFilmCount = FILMS_COUNT_PER_STEP;
@@ -84,6 +89,7 @@ export default class FilmCollectionPresenter {
       this.#presenters = [];
 
       remove(this.#filmSortComponent);
+      remove(this.#loadingComponent);
       remove(this.#showMoreButtonComponent);
       remove(this.#filmSectionComponent);
 
@@ -105,16 +111,31 @@ export default class FilmCollectionPresenter {
       this.#statsComponent = null;
     }
 
-    #handleViewAction = (actionType, updateType, mode, update, film) => {
+    #handleViewAction = async (actionType, updateType, mode, update, film) => {
       switch (actionType) {
         case UserAction.UPDATE_FILM:
-          this.#filmsModel.updateFilm(updateType, mode, update);
+          this.#presenters.find((presenter) => presenter.id === update.id).setViewState(State.SAVING);
+          try {
+            await this.#filmsModel.updateFilm(updateType, mode, update);
+          } catch (err) {
+            this.#presenters.find((presenter) => presenter.id === update.id).setViewState(State.ABORTING);
+          }
           break;
         case UserAction.ADD_COMMENT:
-          this.#commentsModel.addComment(updateType, update, mode, film);
+          this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.SAVING);
+          try {
+            await this.#commentsModel.addComment(updateType, mode, update);
+          } catch (err) {
+            this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.ABORTING);
+          }
           break;
         case UserAction.DELETE_COMMENT:
-          this.#commentsModel.deleteComment(updateType, update, mode, film);
+          this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.DELETING);
+          try {
+            await this.#commentsModel.deleteComment(updateType, mode, update, film);
+          } catch {
+            this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.ABORTING);
+          }
           break;
       }
     }
@@ -141,12 +162,18 @@ export default class FilmCollectionPresenter {
           this.#clearFilmCollection({resetRenderedFilmCount: true, resetSortType: true});
           this.init();
           break;
+        case UpdateType.INIT:
+          this.#isLoading = false;
+          remove(this.#loadingComponent);
+          this.#renderFilmCollection();
+          break;
         case UpdateType.STATS:
           if (this.#statsComponent) {
             return;
           }
           this.#renderStats();
           this.destroy();
+          break;
       }
     }
 
@@ -174,6 +201,10 @@ export default class FilmCollectionPresenter {
       if (this.#renderedFilmCount >= filmCount) {
         remove(this.#showMoreButtonComponent);
       }
+    }
+
+    #renderLoading = () => {
+      render(this.#filmListContainer, this.#loadingComponent, RenderPosition.BEFORE_END);
     }
 
     #renderNoFilm = () => {
@@ -234,6 +265,11 @@ export default class FilmCollectionPresenter {
     #renderFilmCollection = () => {
       const films = this.films;
       const filmCount = films.length;
+
+      if (this.#isLoading) {
+        this.#renderLoading();
+        return;
+      }
 
       if (filmCount === 0) {
         this.#renderNoFilm();
