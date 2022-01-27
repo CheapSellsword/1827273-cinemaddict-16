@@ -1,3 +1,4 @@
+import { getFilmLengthTotal } from '../utils/dates-and-time';
 import { FilterType, STATS_PERIODS } from '../consts';
 import { createRank } from './profile-and-rank-avatar-view';
 import { filter } from '../utils/filter';
@@ -32,6 +33,7 @@ const createPeriodListTemplate = (checkedPeriod) => {
 
 const createStatsTemplate = (data, checkedPeriod) => {
   const watchedFilms = getWatchedPeriodFilms(data);
+  const filmLengthTotal = getFilmLengthTotal(watchedFilms);
 
   return `<section class="statistic">
             <p class="statistic__rank">
@@ -52,7 +54,7 @@ const createStatsTemplate = (data, checkedPeriod) => {
                 </li>
                 <li class="statistic__text-item">
                 <h4 class="statistic__item-title">Total duration</h4>
-                <p class="statistic__item-text">69 <span class="statistic__item-description">h</span> 41 <span class="statistic__item-description">m</span></p>
+                <p class="statistic__item-text">${filmLengthTotal.hours} <span class="statistic__item-description">h</span> ${filmLengthTotal.minutes} <span class="statistic__item-description">m</span></p>
                 </li>
                 <li class="statistic__text-item">
                 <h4 class="statistic__item-title">Top genre</h4>

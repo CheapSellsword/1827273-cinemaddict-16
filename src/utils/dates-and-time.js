@@ -2,15 +2,14 @@ import { MIN_FILM_LENGTH, MAX_FILM_LENGTH, MIN_NUMBER, DATE_GAP, TIME_GAP, MINUT
 import { getRandomInteger } from './common';
 import dayjs from 'dayjs';
 
+export const convertMinutes = (num) => {
+  const hours = Math.floor(num / 60);
+  const minutes = num % 60;
+  return `${hours  }h ${  minutes}m`;
+};
+
 export const generateFilmLength = () => {
   const filmLengthInMinutes = getRandomInteger(MIN_FILM_LENGTH, MAX_FILM_LENGTH);
-
-  const convertMinutes = (num) => {
-    const hours = Math.floor(num / 60);
-    const minutes = num % 60;
-    return `${hours  }h ${  minutes}m`;
-  };
-
   return convertMinutes(filmLengthInMinutes);
 };
 
@@ -88,4 +87,21 @@ export const getFormattedTimeOfComment = () => {
     formattedTimeOfComment = timeOfComment.format('DD/MM/YYYY HH:mm');
   }
   return formattedTimeOfComment;
+};
+
+export const getFilmLengthInMinutes = (filmLength) => {
+  const lengthHours = filmLength.slice(0, filmLength.indexOf('h'));
+  const lengthMinutes = filmLength.slice(filmLength.indexOf('h') + 1, filmLength.indexOf('m'));
+  return Number(lengthHours) * 60 + Number(lengthMinutes);
+};
+
+export const getFilmLengthTotal = (films) => {
+  const lengths = [];
+  films.map((film) => lengths.push(getFilmLengthInMinutes(film.length)));
+  const sumInMinutes = lengths.reduce((total, filmLength) => total + filmLength, 0);
+  const totalLength = {
+    hours: Math.round(sumInMinutes / 60),
+    minutes: sumInMinutes % 60,
+  };
+  return totalLength;
 };
