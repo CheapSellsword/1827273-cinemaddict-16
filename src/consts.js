@@ -44,13 +44,15 @@ export const MIN_FILM_LENGTH = 60;
 export const MAX_FILM_LENGTH = 200;
 
 export const GENRES = [
-  'Musical',
-  'Western',
+  'Adventure',
+  'Action',
+  'Animation',
   'Drama',
   'Comedy',
-  'Cartoon',
-  'Mystery',
-  'Film-Noir',
+  'Family',
+  'Horror',
+  'Sci-Fi',
+  'Thriller',
 ];
 export const MAX_GENRES_COUNT = 3;
 export const COUNTRIES = ['US', 'Germany', 'France', 'Russia', 'England', 'Italy'];
@@ -154,7 +156,7 @@ export const Ranks = {
 };
 
 export const FilmsCountForRank = {
-  NOVICE: 0,
+  NOVICE: 1,
   FAN: 11,
   MOVIE_BUFF: 21,
 };

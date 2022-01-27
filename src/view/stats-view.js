@@ -10,6 +10,45 @@ dayjs.extend(isBetweenPlugin);
 // import ChartDataLabels from 'chartjs-plugin-datalabels';
 // import Chart from 'chart.js';
 
+const getGenres = (films) => {
+  if (!films.length) {
+    return;
+  }
+
+  const genresAndFilms = {
+    action: films.filter((film) => film.genres.find((genre) => genre === 'Action')),
+    adventure: films.filter((film) => film.genres.find((genre) => genre === 'Adventure')),
+    animation: films.filter((film) => film.genres.find((genre) => genre === 'Animation')),
+    comedy: films.filter((film) => film.genres.find((genre) => genre === 'Comedy')),
+    drama: films.filter((film) => film.genres.find((genre) => genre === 'Drama')),
+    family: films.filter((film) => film.genres.find((genre) => genre === 'Family')),
+    horror: films.filter((film) => film.genres.find((genre) => genre === 'Horror')),
+    sciFi: films.filter((film) => film.genres.find((genre) => genre === 'Sci-Fi')),
+    thriller: films.filter((film) => film.genres.find((genre) => genre === 'Thriller')),
+  };
+
+  return genresAndFilms;
+};
+
+const getTopGenre = (genres) => {
+  if (!genres) {
+    return;
+  }
+
+  const filmCountOfGenre = new Map(Object.entries(genres));
+  const sortedGenresAndFilms = new Map([...filmCountOfGenre.entries()].sort((a, b) => b[1].length - a[1].length));
+  const genreNames = [];
+  Array.from(sortedGenresAndFilms.keys()).map((genre) => {
+    let genreName = genre.charAt(0).toUpperCase() + genre.slice(1);
+    if (genreName === 'SciFi') {
+      genreName = 'Sci-Fi';
+    }
+    genreNames.push(genreName);
+  });
+
+  return genreNames[0];
+};
+
 const getWatchedPeriodFilms = (data) => {
   if (!data.pastDate) {
     return data.watchedFilms;
@@ -34,6 +73,9 @@ const createPeriodListTemplate = (checkedPeriod) => {
 const createStatsTemplate = (data, checkedPeriod) => {
   const watchedFilms = getWatchedPeriodFilms(data);
   const filmLengthTotal = getFilmLengthTotal(watchedFilms);
+  const genres = getGenres(watchedFilms);
+  const topGenre = getTopGenre(genres);
+
 
   return `<section class="statistic">
             <p class="statistic__rank">
@@ -58,7 +100,7 @@ const createStatsTemplate = (data, checkedPeriod) => {
                 </li>
                 <li class="statistic__text-item">
                 <h4 class="statistic__item-title">Top genre</h4>
-                <p class="statistic__item-text">Drama</p>
+                <p class="statistic__item-text">${topGenre ? topGenre : ''}</p>
                 </li>
             </ul>
 
