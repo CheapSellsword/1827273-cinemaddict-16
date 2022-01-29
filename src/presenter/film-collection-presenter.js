@@ -8,8 +8,8 @@ import FilmSectionView from '../view/film-section-view';
 import LoadingView from '../view/loading-view';
 import NoFilmView from '../view/no-film-view';
 import FilmPresenter from './film-presenter';
-import SortView from '../view/sort-view';
 import StatsView from '../view/stats-view';
+import SortView from '../view/sort-view';
 
 export default class FilmCollectionPresenter {
     #mostCommentedFilmContainer = null;
