@@ -1,7 +1,7 @@
-import { FilterType, STATS_PERIODS, BAR_HEIGHT} from '../consts';
-import { getFilmLengthTotal } from '../utils/dates-and-time';
+import { FilterType, STATS_PERIODS, BAR_HEIGHT, StatsPeriod } from '../consts';
+import { filter, statsFilter } from '../utils/filters';
+import { getFilmLengthTotal, NameToDate } from '../utils/dates-and-time';
 import { createRank } from './profile-and-rank-avatar-view';
-import { filter } from '../utils/filter';
 import SmartView from './smart-view';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -129,10 +129,16 @@ const getWatchedPeriodFilms = (data) => {
     return data.watchedFilms;
   }
 
-  const filmsInRange = data.watchedFilms.filter((film) =>
-    dayjs(film.watchingDate).isBetween(data.pastDate, data.currentDate));
-
-  return filmsInRange;
+  switch (data.pastDate) {
+    case NameToDate.TODAY:
+      return statsFilter[StatsPeriod.TODAY](data.watchedFilms);
+    case NameToDate.WEEK:
+      return statsFilter[StatsPeriod.WEEK](data.watchedFilms);
+    case NameToDate.MONTH:
+      return statsFilter[StatsPeriod.MONTH](data.watchedFilms);
+    case NameToDate.YEAR:
+      return statsFilter[StatsPeriod.YEAR](data.watchedFilms);
+  }
 };
 
 const createPeriodItemTemplate = (period, isChecked) => (
@@ -195,7 +201,6 @@ export default class StatsView extends SmartView {
 
     this._data = {
       watchedFilms: filter[FilterType.HISTORY](films),
-      currentDate: dayjs(),
     };
 
     this.#setStatsPeriodListeners();
@@ -229,20 +234,20 @@ export default class StatsView extends SmartView {
     this.#checkedPeriod = evt.target.value;
 
     switch (this.#checkedPeriod) {
-      case STATS_PERIODS[0].value:
+      case StatsPeriod.ALL:
         delete this._data.pastDate;
         break;
-      case STATS_PERIODS[1].value:
-        this._data.pastDate = this._data.currentDate.subtract(1, 'day');
+      case StatsPeriod.TODAY:
+        this._data.pastDate = NameToDate.TODAY;
         break;
-      case STATS_PERIODS[2].value:
-        this._data.pastDate = this._data.currentDate.subtract(1, 'week');
+      case StatsPeriod.WEEK:
+        this._data.pastDate = NameToDate.WEEK;
         break;
-      case STATS_PERIODS[3].value:
-        this._data.pastDate = this._data.currentDate.subtract(1, 'month');
+      case StatsPeriod.MONTH:
+        this._data.pastDate = NameToDate.MONTH;
         break;
-      case STATS_PERIODS[4].value:
-        this._data.pastDate = this._data.currentDate.subtract(1, 'year');
+      case StatsPeriod.YEAR:
+        this._data.pastDate = NameToDate.YEAR;
         break;
     }
     this.updateData(this._data);

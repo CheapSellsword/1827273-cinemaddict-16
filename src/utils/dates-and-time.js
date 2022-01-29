@@ -28,3 +28,10 @@ export const getFilmLengthTotal = (films) => {
   };
   return totalLength;
 };
+
+export const NameToDate = {
+  TODAY: dayjs(),
+  WEEK: dayjs().subtract(1, 'week'),
+  MONTH: dayjs().subtract(1, 'month'),
+  YEAR: dayjs().subtract(1, 'year'),
+};

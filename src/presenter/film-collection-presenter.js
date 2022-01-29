@@ -1,7 +1,7 @@
 import { FILMS_COUNT_PER_STEP, SortType, UpdateType, UserAction, FilterType, Mode } from '../consts';
 import { render, RenderPosition, remove } from '../utils/render';
 import { compareByField } from '../utils/common';
-import { filter } from '../utils/filter';
+import { filter } from '../utils/filters';
 import { State } from '../consts';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import FilmSectionView from '../view/film-section-view';

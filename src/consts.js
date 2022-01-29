@@ -39,6 +39,14 @@ export const STATS_PERIODS = [
   },
 ];
 
+export const StatsPeriod = {
+  ALL: 'all-time',
+  TODAY: 'today',
+  WEEK: 'week',
+  MONTH: 'month',
+  YEAR: 'year',
+};
+
 export const BAR_HEIGHT = 50;
 
 export const SortType = {

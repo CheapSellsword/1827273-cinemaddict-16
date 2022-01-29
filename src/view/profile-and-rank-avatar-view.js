@@ -1,5 +1,5 @@
 import { Ranks, FilmsCountForRank, FilterType } from '../consts';
-import { filter } from '../utils/filter';
+import { filter } from '../utils/filters';
 import SmartView from './smart-view';
 
 export const createRank = (filmsCount) => {
