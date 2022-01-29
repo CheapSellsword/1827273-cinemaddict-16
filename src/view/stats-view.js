@@ -1,10 +1,10 @@
 import { FilterType, STATS_PERIODS, BAR_HEIGHT, StatsPeriod } from '../consts';
-import { filter, statsFilter } from '../utils/filters';
 import { getFilmLengthTotal, NameToDate } from '../utils/dates-and-time';
+import { filter, statsFilter } from '../utils/filters';
 import { createRank } from './profile-and-rank-avatar-view';
-import SmartView from './smart-view';
-import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import isBetweenPlugin from 'dayjs/plugin/isBetween';
+import SmartView from './smart-view';
 import Chart from 'chart.js';
 import dayjs from 'dayjs';
 
