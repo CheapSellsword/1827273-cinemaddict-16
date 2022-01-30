@@ -1,13 +1,14 @@
 import { FILMS_COUNT_PER_STEP, SortType, UpdateType, UserAction, FilterType, Mode } from '../consts';
 import { render, RenderPosition, remove } from '../utils/render';
 import { compareByField } from '../utils/common';
-import { filter } from '../utils/filter';
+import { filter } from '../utils/filters';
 import { State } from '../consts';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import FilmSectionView from '../view/film-section-view';
 import LoadingView from '../view/loading-view';
 import NoFilmView from '../view/no-film-view';
 import FilmPresenter from './film-presenter';
+import StatsView from '../view/stats-view';
 import SortView from '../view/sort-view';
 
 export default class FilmCollectionPresenter {
@@ -21,8 +22,9 @@ export default class FilmCollectionPresenter {
     #filmSortComponent = null;
     #noFilmComponent = null;
     #topRatedSection = null;
-    #filmContainer = null;
+    #statsComponent = null;
     #commentsModel = null;
+    #filmContainer = null;
     #filterModel = null;
     #filmsModel = null;
 
@@ -40,7 +42,6 @@ export default class FilmCollectionPresenter {
       this.#filterModel = filterModel;
       this.#commentsModel = commentsModel;
 
-      this.#filmsModel.addObserver(this.#handleModelEvent);
       this.#filterModel.addObserver(this.#handleModelEvent);
     }
 
@@ -58,6 +59,10 @@ export default class FilmCollectionPresenter {
       return filteredFilms;
     }
 
+    get statsFilms() {
+      return this.#filmsModel.films;
+    }
+
     get topRatedFilms() {
       return this.#filmsModel.topRatedFilms;
     }
@@ -67,7 +72,15 @@ export default class FilmCollectionPresenter {
     }
 
     init = () => {
+      this.#filmsModel.addObserver(this.#handleModelEvent);
+
       this.#renderFilmCollection();
+    }
+
+    destroy = () => {
+      this.#clearFilmCollection({resetRenderedFilmCount: true, resetSortType: true});
+
+      this.#filmsModel.removeObserver(this.#handleModelEvent);
     }
 
     #clearFilmCollection = ({resetRenderedFilmCount = false, resetSortType = false} = {}) => {
@@ -91,6 +104,11 @@ export default class FilmCollectionPresenter {
       if (resetSortType) {
         this.#currentSortType = SortType.DEFAULT;
       }
+    }
+
+    #clearStats = () => {
+      remove(this.#statsComponent);
+      this.#statsComponent = null;
     }
 
     #handleViewAction = async (actionType, updateType, mode, update, film) => {
@@ -138,13 +156,23 @@ export default class FilmCollectionPresenter {
           }
           break;
         case UpdateType.MAJOR:
+          if (this.#statsComponent) {
+            this.#clearStats();
+          }
           this.#clearFilmCollection({resetRenderedFilmCount: true, resetSortType: true});
-          this.#renderFilmCollection();
+          this.init();
           break;
         case UpdateType.INIT:
           this.#isLoading = false;
           remove(this.#loadingComponent);
           this.#renderFilmCollection();
+          break;
+        case UpdateType.STATS:
+          if (this.#statsComponent) {
+            return;
+          }
+          this.#renderStats();
+          this.destroy();
           break;
       }
     }
@@ -191,6 +219,11 @@ export default class FilmCollectionPresenter {
       this.#filmSortComponent = new SortView(this.#currentSortType);
       this.#filmSortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
       render(this.#filmListContainer, this.#filmSortComponent, RenderPosition.BEFORE_END);
+    }
+
+    #renderStats = () => {
+      this.#statsComponent = new StatsView(this.statsFilms);
+      render(this.#filmListContainer, this.#statsComponent, RenderPosition.BEFORE_END);
     }
 
     #renderFilmSection = () => {

@@ -1,8 +1,8 @@
 import { Ranks, FilmsCountForRank, FilterType } from '../consts';
-import { filter } from '../utils/filter';
+import { filter } from '../utils/filters';
 import SmartView from './smart-view';
 
-const createRank = (filmsCount) => {
+export const createRank = (filmsCount) => {
   let rank = '';
 
   if (filmsCount >= FilmsCountForRank.NOVICE && filmsCount < FilmsCountForRank.FAN) {

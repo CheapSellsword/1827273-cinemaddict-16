@@ -1,14 +1,8 @@
-import { HOUR_IN_MINS } from '../consts';
 import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import durationPlugin from 'dayjs/plugin/duration';
-
-dayjs.extend(durationPlugin);
-dayjs.extend(relativeTime);
 
 export const convertMinutes = (num) => {
-  const hours = Math.floor(num / HOUR_IN_MINS);
-  const minutes = num % HOUR_IN_MINS;
+  const hours = Math.floor(num / 60);
+  const minutes = num % 60;
   return `${hours  }h ${  minutes}m`;
 };
 
@@ -19,6 +13,25 @@ export const getHumanizedTimeOfComments = (date) => {
 };
 
 export const getFilmLengthInMinutes = (filmLength) => {
-  const filmLengthNumbers = filmLength.replace(/\D/g, '').toString();
-  return Number(filmLengthNumbers.slice(1)) + Number(filmLengthNumbers.charAt(0) * 60);
+  const lengthHours = filmLength.slice(0, filmLength.indexOf('h'));
+  const lengthMinutes = filmLength.slice(filmLength.indexOf('h') + 1, filmLength.indexOf('m'));
+  return Number(lengthHours) * 60 + Number(lengthMinutes);
+};
+
+export const getFilmLengthTotal = (films) => {
+  const lengths = [];
+  films.map((film) => lengths.push(getFilmLengthInMinutes(film.length)));
+  const sumInMinutes = lengths.reduce((total, filmLength) => total + filmLength, 0);
+  const totalLength = {
+    hours: Math.round(sumInMinutes / 60),
+    minutes: sumInMinutes % 60,
+  };
+  return totalLength;
+};
+
+export const NameToDate = {
+  TODAY: dayjs(),
+  WEEK: dayjs().subtract(1, 'week'),
+  MONTH: dayjs().subtract(1, 'month'),
+  YEAR: dayjs().subtract(1, 'year'),
 };

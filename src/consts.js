@@ -16,6 +16,39 @@ export const EMOJI_TYPES = [
   'angry',
 ];
 
+export const STATS_PERIODS = [
+  {
+    name: 'All time',
+    value: 'all-time',
+  },
+  {
+    name: 'Today',
+    value: 'today',
+  },
+  {
+    name: 'Week',
+    value: 'week',
+  },
+  {
+    name: 'Month',
+    value: 'month',
+  },
+  {
+    name: 'Year',
+    value: 'year',
+  },
+];
+
+export const StatsPeriod = {
+  ALL: 'all-time',
+  TODAY: 'today',
+  WEEK: 'week',
+  MONTH: 'month',
+  YEAR: 'year',
+};
+
+export const BAR_HEIGHT = 50;
+
 export const SortType = {
   DEFAULT: 'default',
   DATE: 'date',
@@ -43,6 +76,7 @@ export const UserAction = {
 export const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  STATS: 'STATS',
   INIT: 'INIT',
 };
 
