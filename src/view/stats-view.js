@@ -1,4 +1,4 @@
-import { FilterType, STATS_PERIODS, BAR_HEIGHT, StatsPeriod } from '../consts';
+import { FilterType, statsPeriods, BAR_HEIGHT, StatsPeriod } from '../consts';
 import { getFilmLengthTotal, NameToDate } from '../utils/dates-and-time';
 import { filter, statsFilter } from '../utils/filters';
 import { createRank } from './profile-and-rank-avatar-view';
@@ -147,7 +147,7 @@ const createPeriodItemTemplate = (period, isChecked) => (
 );
 
 const createPeriodListTemplate = (checkedPeriod) => {
-  const createPeriodList = STATS_PERIODS.map((period, index) => createPeriodItemTemplate(period, index === STATS_PERIODS.findIndex((statsPeriod) => statsPeriod.value === checkedPeriod))).join('');
+  const createPeriodList = statsPeriods.map((period, index) => createPeriodItemTemplate(period, index === statsPeriods.findIndex((statsPeriod) => statsPeriod.value === checkedPeriod))).join('');
   return createPeriodList;
 };
 

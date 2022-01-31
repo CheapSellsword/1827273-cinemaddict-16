@@ -1,9 +1,9 @@
+import { HOUR_IN_MINUTES } from '../consts';
 import dayjs from 'dayjs';
-import { HOUR_IN_MINS } from '../consts';
 
 export const convertMinutes = (num) => {
-  const hours = Math.floor(num / HOUR_IN_MINS);
-  const minutes = num % HOUR_IN_MINS;
+  const hours = Math.floor(num / HOUR_IN_MINUTES);
+  const minutes = num % HOUR_IN_MINUTES;
   return `${hours  }h ${  minutes}m`;
 };
 
@@ -15,8 +15,8 @@ export const getHumanizedTimeOfComments = (date) => {
 
 export const getFilmLengthInMinutes = (filmLength) => {
   const lengthHours = filmLength.slice(0, filmLength.indexOf('h'));
-  const lengthMinutes = filmLength.slice(filmLength.indexOf('h') + 1, filmLength.indexOf('m'));
-  return Number(lengthHours) * HOUR_IN_MINS + Number(lengthMinutes);
+  const lengthMinutes = filmLength.slice(filmLength.indexOf('h') + 1, filmLength.indexOf('m')); //?
+  return Number(lengthHours) * HOUR_IN_MINUTES + Number(lengthMinutes);
 };
 
 export const getFilmLengthTotal = (films) => {
@@ -24,8 +24,8 @@ export const getFilmLengthTotal = (films) => {
   films.map((film) => lengths.push(getFilmLengthInMinutes(film.length)));
   const sumInMinutes = lengths.reduce((total, filmLength) => total + filmLength, 0);
   const totalLength = {
-    hours: Math.round(sumInMinutes / HOUR_IN_MINS),
-    minutes: sumInMinutes % HOUR_IN_MINS,
+    hours: Math.round(sumInMinutes / HOUR_IN_MINUTES),
+    minutes: sumInMinutes % HOUR_IN_MINUTES,
   };
   return totalLength;
 };

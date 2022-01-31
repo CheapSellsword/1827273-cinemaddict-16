@@ -1,9 +1,9 @@
-import { EvtKey, EMOJI_TYPES } from '../consts';
+import { EvtKey, emojiTypes } from '../consts';
 import { isBlank } from '../utils/common';
 import SmartView from './smart-view';
 import he from 'he';
 
-const createFilmPopup = (data, comments) => {
+const createFilmPopupTemplate = (data, comments) => {
   const {
     title,
     poster,
@@ -66,7 +66,7 @@ const createFilmPopup = (data, comments) => {
     </label>`;
 
   const createEmojiListTemplate = () => {
-    const createList = EMOJI_TYPES.map((emojiType) => createEmojiListItemTemplate(emojiType)).join('');
+    const createList = emojiTypes.map((emojiType) => createEmojiListItemTemplate(emojiType)).join('');
 
     return `<div class="film-details__emoji-list">
               ${createList}
@@ -180,7 +180,7 @@ export default class FilmPopupView extends SmartView {
   }
 
   get template() {
-    return createFilmPopup(this._data, this.#comments);
+    return createFilmPopupTemplate(this._data, this.#comments);
   }
 
   set scrollPosition(position) {

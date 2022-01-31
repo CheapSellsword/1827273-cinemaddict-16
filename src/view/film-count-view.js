@@ -1,6 +1,6 @@
 import SmartView from './smart-view';
 
-const createFilmCount = (filmsCount) => (
+const createFilmCountTemplate = (filmsCount) => (
   `<p>
     ${filmsCount} movies inside
   </p>`
@@ -17,7 +17,7 @@ export default class FilmCountView extends SmartView {
   }
 
   get template() {
-    return createFilmCount(this.#films.length);
+    return createFilmCountTemplate(this.#films.length);
   }
 
   restoreHandlers = () => {};

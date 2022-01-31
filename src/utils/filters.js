@@ -5,7 +5,7 @@ import isBetweenPlugin from 'dayjs/plugin/isBetween';
 
 dayjs.extend(isBetweenPlugin);
 
-export const filter = {
+export const filter = { //?
   [FilterType.ALL]: (films) => films.filter((film) => film.id),
   [FilterType.WATCHLIST]: (films) => films.filter((film) => film.isOnWatchlist),
   [FilterType.HISTORY]: (films) => films.filter((film) => film.isWatched),

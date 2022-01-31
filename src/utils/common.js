@@ -2,7 +2,7 @@ const compareByFieldLength = (field) => (a,b) => b[field].length - a[field].leng
 
 export const compareByField = (field) => (a,b) => b[field] - a[field];
 
-export const isBlank = (str) => !str || str.trim().length === 0;
+export const isBlank = (str) => !str || str.trim().length === 0; //?
 
 export const createTopRatedFilmList = (films) => {
   const topRatedFilmList = films.slice().sort(compareByField('rating'));
