@@ -111,44 +111,48 @@ export default class FilmCollectionPresenter {
       this.#statsComponent = null;
     }
 
-    #handleViewAction = async (actionType, updateType, mode, update, film, scrollPosition) => {
-      this.#popupScrollPosition = scrollPosition;
+    #handleViewAction = async (actionType, updateType, mode, presenterId, update, film) => {
       switch (actionType) {
         case UserAction.UPDATE_FILM:
-          this.#presenters.find((presenter) => presenter.id === update.id).setViewState(State.SAVING);
+          this.#presenters.find((presenter) => presenter.id === presenterId).setViewState(State.SAVING);
           try {
-            await this.#filmsModel.updateFilm(updateType, mode, update);
+            await this.#filmsModel.updateFilm(updateType, mode, update, presenterId);
           } catch (err) {
-            this.#presenters.find((presenter) => presenter.id === update.id).setViewState(State.ABORTING);
+            this.#presenters.find((presenter) => presenter.id === presenterId).setViewState(State.ABORTING);
           }
           break;
         case UserAction.ADD_COMMENT:
-          this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.SAVING);
+          this.#presenters.find((presenter) => presenter.id === presenterId).setViewState(State.SAVING);
           try {
-            await this.#commentsModel.addComment(updateType, mode, update);
+            await this.#commentsModel.addComment(updateType, mode, update, presenterId);
           } catch (err) {
-            this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.ABORTING);
+            this.#presenters.find((presenter) => presenter.id === presenterId).setViewState(State.ABORTING);
           }
           break;
         case UserAction.DELETE_COMMENT:
-          this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.DELETING);
+          this.#presenters.find((presenter) => presenter.id === presenterId).setViewState(State.DELETING);
           try {
-            await this.#commentsModel.deleteComment(updateType, mode, update, film);
+            await this.#commentsModel.deleteComment(updateType, mode, update, film, presenterId);
           } catch {
-            this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.ABORTING);
+            this.#presenters.find((presenter) => presenter.id === presenterId).setViewState(State.ABORTING);
           }
           break;
       }
     }
 
-    #handleModelEvent = (updateType, mode, update) => {
+    #handleModelEvent = (updateType, mode, presenterId) => {
       switch (updateType) {
         case UpdateType.MINOR:
+          if (mode === Mode.POPUP) {
+            const prevPopupPresenter = this.#presenters.find((presenter) => presenter.id === presenterId);
+            this.#popupScrollPosition = prevPopupPresenter.popupScrollPosition;
+            prevPopupPresenter.removeDocumentEventListeners();
+          }
           this.#presenters.map((presenter) => presenter.removeDocumentEventListeners());
           this.#clearFilmCollection();
           this.#renderFilmCollection();
           if (mode === Mode.POPUP) {
-            const newPopupPresenter = this.#presenters.find((presenter) => presenter.id === update.id);
+            const newPopupPresenter = this.#presenters.find((presenter) => presenter.id === presenterId);
             newPopupPresenter.openPopup(this.#popupScrollPosition);
           }
           break;
@@ -236,8 +240,11 @@ export default class FilmCollectionPresenter {
 
     #renderFilm = (filmContainer, film) => {
       const filmPresenter = new FilmPresenter(filmContainer, this.#handleViewAction, this.#handleModeChange, this.#commentsModel);
-      filmPresenter.init(film);
       this.#presenters.push(filmPresenter);
+      this.#presenters.map((presenter, index) => {
+        presenter.id = index;
+      });
+      filmPresenter.init(film);
     }
 
     #renderFilms = (sectionFilms, filmContainer) => {

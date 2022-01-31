@@ -58,8 +58,11 @@ export default class FilmPresenter {
     }
   }
 
+  set id(id) {
+    this.#id = id;
+  }
+
   get id() {
-    this.#id = this.#film.id;
     return this.#id;
   }
 
@@ -89,7 +92,7 @@ export default class FilmPresenter {
   }
 
   setViewState = (state) => {
-    if (this.#mode === Mode.DEFAULT) {
+    if (this.#mode !== Mode.POPUP) {
       return;
     }
     const resetFormState = () => {
@@ -117,14 +120,13 @@ export default class FilmPresenter {
     }
   }
 
-
   destroy = () => {
     remove(this.#filmComponent);
     remove(this.#filmPopupComponent);
   }
 
   removeDocumentEventListeners = () => {
-    if (this.#mode === Mode.DEFAULT) {
+    if (this.#mode !== Mode.POPUP) {
       return;
     }
     document.removeEventListener('keydown', this.#escKeyDownHandler);
@@ -168,8 +170,8 @@ export default class FilmPresenter {
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
       this.#mode,
+      this.id,
       {...this.#film, isOnWatchlist: !this.#film.isOnWatchlist},
-      this.popupScrollPosition,
     );
   }
 
@@ -178,8 +180,8 @@ export default class FilmPresenter {
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
       this.#mode,
+      this.id,
       {...this.#film, isWatched: !this.#film.isWatched},
-      this.popupScrollPosition,
     );
   }
 
@@ -188,8 +190,8 @@ export default class FilmPresenter {
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
       this.#mode,
+      this.id,
       {...this.#film, isFavorite: !this.#film.isFavorite},
-      this.popupScrollPosition,
     );
   }
 
@@ -198,9 +200,9 @@ export default class FilmPresenter {
       UserAction.ADD_COMMENT,
       UpdateType.MINOR,
       this.#mode,
+      this.id,
       newComment,
       this.#film,
-      this.popupScrollPosition,
     );
   }
 
@@ -209,9 +211,9 @@ export default class FilmPresenter {
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
       this.#mode,
+      this.id,
       update,
       this.#film,
-      this.popupScrollPosition,
     );
   }
 

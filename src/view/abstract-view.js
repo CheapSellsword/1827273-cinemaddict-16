@@ -35,4 +35,3 @@ export default class AbstractView {
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 }
-
