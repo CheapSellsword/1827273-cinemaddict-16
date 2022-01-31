@@ -3,12 +3,6 @@ export const MAX_DESCRIPTION_LENGTH = 140;
 export const HOUR_IN_MINS = 60;
 export const EXTRA_FILMS_COUNT = 2;
 
-export const FILM_SECTION_TYPES = [
-  'All movies. Upcoming',
-  'Top rated',
-  'Most commented'
-];
-
 export const EMOJI_TYPES = [
   'smile',
   'sleeping',

@@ -1,31 +1,72 @@
 import AbstractView from './abstract-view';
-import { FILM_SECTION_TYPES } from '../consts';
+import { createElement } from '../utils/render';
 
-const createFilmSectionTemplate = (filmSectionType) => {
-  const titleClass = filmSectionType === 'All movies. Upcoming' ? 'visually-hidden' : '';
-  const sectionClass = filmSectionType !== 'All movies. Upcoming' ? 'films-list--extra' : '';
-  return  `<section class="films-list ${sectionClass}">
-            <h2 class="films-list__title ${titleClass}">${filmSectionType}</h2>
-            <div class="films-list__container"></div>
-          </section>`;
-};
+const createFilmSectionTemplate = () => (
+  `<section class="films">
+    <section class="films-list">
+      <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+      <div class="films-list__container"></div>
+    </section>
+  </section>`
+);
 
-const createFilmSection = () => {
-  const filmSection = FILM_SECTION_TYPES.map((filmSectionType) => createFilmSectionTemplate(filmSectionType)).join('');
-  return `<section class="films">
-          ${filmSection}
-         </section>`;
-};
+const createTopRatedTemplate = () => (
+  `<section class="films-list films-list--extra">
+    <h2 class="films-list__title">Top rated</h2>
+    <div class="films-list__container"></div>
+  </section>`
+);
+
+const createMostCommentedTemplate = () => (
+  `<section class="films-list films-list--extra">
+    <h2 class="films-list__title">Most commented</h2>
+    <div class="films-list__container"></div>
+  </section>`
+);
 
 export default class FilmsSectionView extends AbstractView {
+  #topRatedElement = null;
+  #mostCommentedElement = null;
 
   get template() {
-    return createFilmSection();
+    return createFilmSectionTemplate();
+  }
+
+  get topRatedTemplate() {
+    return createTopRatedTemplate();
+  }
+
+  get mostCommentedTemplate() {
+    return createMostCommentedTemplate();
+  }
+
+  get topRatedSectionElement() {
+    if (!this.#topRatedElement) {
+      this.#topRatedElement = createElement(this.topRatedTemplate);
+    }
+    return this.#topRatedElement;
+  }
+
+  get mostCommentedSectionElement() {
+    if (!this.#mostCommentedElement) {
+      this.#mostCommentedElement = createElement(this.mostCommentedTemplate);
+    }
+    return this.#mostCommentedElement;
+  }
+
+  get sectionsContainer() {
+    const sectionsContainer = this.filmsListContainer.parentElement;
+    return sectionsContainer;
   }
 
   get filmContainer() {
-    const filmContainer = this.element.querySelector('.films-list__container');
+    const filmContainer = this.filmsListContainer.querySelector('.films-list__container');
     return filmContainer;
+  }
+
+  get filmsListContainer() {
+    const sectionContainer = this.element.querySelector('.films-list');
+    return sectionContainer;
   }
 
   get topRatedSection() {
@@ -44,7 +85,7 @@ export default class FilmsSectionView extends AbstractView {
   }
 
   get mostCommentedFilmContainer() {
-    const mostCommentedFilmsContainer = this.mostCommentedSection.querySelector('.films-list__container');
+    const mostCommentedFilmsContainer = this.mostCommentedSectionElement.querySelector('.films-list__container');
     return mostCommentedFilmsContainer;
   }
 }

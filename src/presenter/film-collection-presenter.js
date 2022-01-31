@@ -229,11 +229,20 @@ export default class FilmCollectionPresenter {
 
     #renderFilmSection = () => {
       this.#filmSectionComponent = new FilmSectionView();
+      const sectionsContainer = this.#filmSectionComponent.sectionsContainer;
+
+      const filmsListContainer = this.#filmSectionComponent.filmsListContainer;
       this.#filmContainer = this.#filmSectionComponent.filmContainer;
-      this.#topRatedSection = this.#filmSectionComponent.topRatedSection;
-      this.#topRatedFilmContainer = this.#filmSectionComponent.topRatedFilmContainer;
-      this.#mostCommentedSection = this.#filmSectionComponent.mostCommentedSection;
-      this.#mostCommentedFilmContainer = this.#filmSectionComponent.mostCommentedFilmContainer;
+      if (this.topRatedFilms.length) {
+        render(filmsListContainer, this.#filmSectionComponent.topRatedSectionElement, RenderPosition.AFTER_END);
+        this.#topRatedSection = this.#filmSectionComponent.topRatedSection;
+        this.#topRatedFilmContainer = this.#filmSectionComponent.topRatedFilmContainer;
+      }
+      if (this.mostCommentedFilms.length) {
+        render(sectionsContainer, this.#filmSectionComponent.mostCommentedSectionElement, RenderPosition.BEFORE_END);
+        this.#mostCommentedSection = this.#filmSectionComponent.mostCommentedSection;
+        this.#mostCommentedFilmContainer = this.#filmSectionComponent.mostCommentedFilmContainer;
+      }
 
       render(this.#filmSortComponent, this.#filmSectionComponent, RenderPosition.AFTER_END);
     }
@@ -286,8 +295,11 @@ export default class FilmCollectionPresenter {
       if (filmCount > this.#renderedFilmCount) {
         this.#renderShowMoreButton();
       }
-
-      this.#renderExtraFilms(this.#topRatedFilmContainer, this.topRatedFilms, this.#topRatedSection);
-      this.#renderExtraFilms(this.#mostCommentedFilmContainer, this.mostCommentedFilms, this.#mostCommentedSection);
+      if (this.topRatedFilms.length) {
+        this.#renderExtraFilms(this.#topRatedFilmContainer, this.topRatedFilms, this.#topRatedSection);
+      }
+      if (this.mostCommentedFilms.length) {
+        this.#renderExtraFilms(this.#mostCommentedFilmContainer, this.mostCommentedFilms, this.#mostCommentedSection);
+      }
     }
 }
