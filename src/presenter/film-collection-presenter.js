@@ -111,7 +111,8 @@ export default class FilmCollectionPresenter {
       this.#statsComponent = null;
     }
 
-    #handleViewAction = async (actionType, updateType, mode, update, film) => {
+    #handleViewAction = async (actionType, updateType, mode, update, film, scrollPosition) => {
+      this.#popupScrollPosition = scrollPosition;
       switch (actionType) {
         case UserAction.UPDATE_FILM:
           this.#presenters.find((presenter) => presenter.id === update.id).setViewState(State.SAVING);
@@ -143,11 +144,7 @@ export default class FilmCollectionPresenter {
     #handleModelEvent = (updateType, mode, update) => {
       switch (updateType) {
         case UpdateType.MINOR:
-          if (mode === Mode.POPUP) {
-            const prevPopupPresenter = this.#presenters.find((presenter) => presenter.id === update.id);
-            this.#popupScrollPosition = prevPopupPresenter.popupScrollPosition;
-            prevPopupPresenter.removeDocumentEventListeners();
-          }
+          this.#presenters.map((presenter) => presenter.removeDocumentEventListeners());
           this.#clearFilmCollection();
           this.#renderFilmCollection();
           if (mode === Mode.POPUP) {

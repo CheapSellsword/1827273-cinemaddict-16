@@ -64,6 +64,9 @@ export default class FilmPresenter {
   }
 
   get popupScrollPosition() {
+    if (this.#mode === Mode.DEFAULT) {
+      return null;
+    }
     return this.#filmPopupComponent.scrollPosition;
   }
 
@@ -121,6 +124,9 @@ export default class FilmPresenter {
   }
 
   removeDocumentEventListeners = () => {
+    if (this.#mode === Mode.DEFAULT) {
+      return;
+    }
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#filmPopupComponent.removeFormSubmitHandler();
   }
@@ -162,7 +168,8 @@ export default class FilmPresenter {
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
       this.#mode,
-      {...this.#film, isOnWatchlist: !this.#film.isOnWatchlist}
+      {...this.#film, isOnWatchlist: !this.#film.isOnWatchlist},
+      this.popupScrollPosition,
     );
   }
 
@@ -171,7 +178,8 @@ export default class FilmPresenter {
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
       this.#mode,
-      {...this.#film, isWatched: !this.#film.isWatched}
+      {...this.#film, isWatched: !this.#film.isWatched},
+      this.popupScrollPosition,
     );
   }
 
@@ -180,7 +188,8 @@ export default class FilmPresenter {
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
       this.#mode,
-      {...this.#film, isFavorite: !this.#film.isFavorite}
+      {...this.#film, isFavorite: !this.#film.isFavorite},
+      this.popupScrollPosition,
     );
   }
 
@@ -191,6 +200,7 @@ export default class FilmPresenter {
       this.#mode,
       newComment,
       this.#film,
+      this.popupScrollPosition,
     );
   }
 
@@ -201,6 +211,7 @@ export default class FilmPresenter {
       this.#mode,
       update,
       this.#film,
+      this.popupScrollPosition,
     );
   }
 
