@@ -48,7 +48,7 @@ export default class FilmsModel extends AbstractObservable {
     try {
       const films = await this.#apiService.films;
       this.#films = films.map(adaptToClient);
-    } catch(err) {
+    } catch (err) {
       this.#films = [];
     }
     this._notify(UpdateType.INIT);
@@ -66,7 +66,7 @@ export default class FilmsModel extends AbstractObservable {
     return createMostCommentedFilmList(this.#films).slice(0, EXTRA_FILMS_COUNT);
   }
 
-  updateFilm = async (updateType, mode, update, presenterId) => {
+  updateFilm = async (updateType, mode, update) => {
     const index = this.#films.findIndex((film) => film.id === update.id);
 
     if (index === -1) {
@@ -80,13 +80,13 @@ export default class FilmsModel extends AbstractObservable {
         updatedFilm,
         ...this.#films.slice(index + 1),
       ];
-      this._notify(updateType, mode, presenterId);
-    } catch(err) {
+      this._notify(updateType, mode, update);
+    } catch (err) {
       throw new Error('Can\'t update film');
     }
   }
 
-  #updateFilmComments = (updateType, mode, presenterId, update) => {
+  #updateFilmComments = (updateType, mode, update) => {
     const index = this.#films.findIndex((film) => film.id === update.id);
     if (index === -1) {
       throw new Error('Can\'t update unexisting film');
@@ -96,6 +96,6 @@ export default class FilmsModel extends AbstractObservable {
       update,
       ...this.#films.slice(index + 1),
     ];
-    this._notify(updateType, mode, presenterId, update);
+    this._notify(updateType, mode, update);
   }
 }

@@ -37,19 +37,19 @@ export default class CommentsModel extends AbstractObservable {
       callback(isError, this.#comments);
     }
 
-    addComment = async (updateType, mode, update, presenterId) => {
+    addComment = async (updateType, mode, update) => {
       this.#apiService.filmId = this.#filmId;
       try {
         const response = await this.#apiService.addComment(update);
         this.#comments = response.comments.map(this.#adaptCommentToClient);
         const updatedFilm = adaptToClient(response.movie);
-        this._notify(updateType, mode, presenterId, updatedFilm);
-      } catch(err) {
+        this._notify(updateType, mode, updatedFilm);
+      } catch (err) {
         throw new Error('Can\'t add comment');
       }
     }
 
-    deleteComment = async (updateType, mode, update, film, presenterId) => {
+    deleteComment = async (updateType, mode, update, film) => {
       const index = this.#comments.findIndex((comment) => comment.id === update.id);
 
       if (index === -1) {
@@ -66,8 +66,8 @@ export default class CommentsModel extends AbstractObservable {
         const filmComments = [];
         this.#comments.map((comment) => filmComments.push(comment.id));
         const updatedFilm = {...film, comments: filmComments};
-        this._notify(updateType, mode, presenterId, updatedFilm);
-      } catch(err) {
+        this._notify(updateType, mode, updatedFilm);
+      } catch (err) {
         throw new Error('Can\'t delete comment');
       }
     }

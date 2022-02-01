@@ -111,40 +111,41 @@ export default class FilmCollectionPresenter {
       this.#statsComponent = null;
     }
 
-    #handleViewAction = async (actionType, updateType, mode, presenterId, update, film) => {
+    #handleViewAction = async (actionType, updateType, mode, update, film) => {
       switch (actionType) {
         case UserAction.UPDATE_FILM:
-          this.#presenters.find((presenter) => presenter.id === presenterId).setViewState(State.SAVING);
+          this.#presenters.filter((presenter) => presenter.id === update.id).at(-1).setViewState(State.SAVING);
           try {
-            await this.#filmsModel.updateFilm(updateType, mode, update, presenterId);
+            await this.#filmsModel.updateFilm(updateType, mode, update);
           } catch (err) {
-            this.#presenters.find((presenter) => presenter.id === presenterId).setViewState(State.ABORTING);
+            this.#presenters.filter((presenter) => presenter.id === update.id).at(-1).setViewState(State.ABORTING);
           }
           break;
         case UserAction.ADD_COMMENT:
-          this.#presenters.find((presenter) => presenter.id === presenterId).setViewState(State.SAVING);
+          this.#presenters.filter((presenter) => presenter.id === film.id).at(-1).setViewState(State.SAVING);
           try {
-            await this.#commentsModel.addComment(updateType, mode, update, presenterId);
+            await this.#commentsModel.addComment(updateType, mode, update);
           } catch (err) {
-            this.#presenters.find((presenter) => presenter.id === presenterId).setViewState(State.ABORTING);
+            this.#presenters.filter((presenter) => presenter.id === film.id).at(-1).setViewState(State.ABORTING);
           }
           break;
         case UserAction.DELETE_COMMENT:
-          this.#presenters.find((presenter) => presenter.id === presenterId).setViewState(State.DELETING);
+          this.#presenters.filter((presenter) => presenter.id === film.id).at(-1).setViewState(State.DELETING);
           try {
-            await this.#commentsModel.deleteComment(updateType, mode, update, film, presenterId);
+            await this.#commentsModel.deleteComment(updateType, mode, update, film);
           } catch {
-            this.#presenters.find((presenter) => presenter.id === presenterId).setViewState(State.ABORTING);
+            this.#presenters.filter((presenter) => presenter.id === film.id).at(-1).setViewState(State.ABORTING);
+
           }
           break;
       }
     }
 
-    #handleModelEvent = (updateType, mode, presenterId) => {
+    #handleModelEvent = (updateType, mode, update) => {
       switch (updateType) {
         case UpdateType.MINOR:
           if (mode === Mode.POPUP) {
-            const prevPopupPresenter = this.#presenters.find((presenter) => presenter.id === presenterId);
+            const prevPopupPresenter = this.#presenters.filter((presenter) => presenter.id === update.id).at(-1);
             this.#popupScrollPosition = prevPopupPresenter.popupScrollPosition;
             prevPopupPresenter.removeDocumentEventListeners();
           }
@@ -152,8 +153,10 @@ export default class FilmCollectionPresenter {
           this.#clearFilmCollection();
           this.#renderFilmCollection();
           if (mode === Mode.POPUP) {
-            const newPopupPresenter = this.#presenters.find((presenter) => presenter.id === presenterId);
-            newPopupPresenter.openPopup(this.#popupScrollPosition);
+            const newPopupPresenter = this.#presenters.filter((presenter) => presenter.id === update.id).at(-1);
+            if (newPopupPresenter) {
+              newPopupPresenter.openPopup(this.#popupScrollPosition);
+            }
           }
           break;
         case UpdateType.MAJOR:
@@ -250,9 +253,6 @@ export default class FilmCollectionPresenter {
     #renderFilm = (filmContainer, film) => {
       const filmPresenter = new FilmPresenter(filmContainer, this.#handleViewAction, this.#handleModeChange, this.#commentsModel);
       this.#presenters.push(filmPresenter);
-      this.#presenters.map((presenter, index) => {
-        presenter.id = index;
-      });
       filmPresenter.init(film);
     }
 

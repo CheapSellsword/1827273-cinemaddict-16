@@ -3,16 +3,16 @@ export const MAX_DESCRIPTION_LENGTH = 140;
 export const HOUR_IN_MINUTES = 60;
 export const EXTRA_FILMS_COUNT = 2;
 export const BAR_HEIGHT = 50;
+export const GENRES_COUNT = 9;
 
-
-export const emojiTypes = [
+export const EMOJI_TYPES = [
   'smile',
   'sleeping',
   'puke',
   'angry',
 ];
 
-export const statsPeriods = [
+export const STATS_PERIODS = [
   {
     name: 'All time',
     value: 'all-time',
@@ -106,5 +106,5 @@ export const State = {
 };
 
 export const SHAKE_ANIMATION_TIMEOUT = 600;
-export const AUTHORIZATION = 'Basic lvldmkgldjpkvmjgmlgoigd';
+export const AUTHORIZATION = 'Basic lvldmkgldjpkvjgmlgoigd';
 export const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';

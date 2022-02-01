@@ -58,12 +58,8 @@ export default class FilmPresenter {
     }
   }
 
-  set id(id) {
-    this.#id = id;
-  }
-
   get id() {
-    return this.#id;
+    return this.#film.id;
   }
 
   get popupScrollPosition() {
@@ -170,7 +166,6 @@ export default class FilmPresenter {
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
       this.#mode,
-      this.id,
       {...this.#film, isOnWatchlist: !this.#film.isOnWatchlist},
     );
   }
@@ -180,7 +175,6 @@ export default class FilmPresenter {
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
       this.#mode,
-      this.id,
       {...this.#film, isWatched: !this.#film.isWatched},
     );
   }
@@ -190,7 +184,6 @@ export default class FilmPresenter {
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
       this.#mode,
-      this.id,
       {...this.#film, isFavorite: !this.#film.isFavorite},
     );
   }
@@ -200,7 +193,6 @@ export default class FilmPresenter {
       UserAction.ADD_COMMENT,
       UpdateType.MINOR,
       this.#mode,
-      this.id,
       newComment,
       this.#film,
     );
@@ -211,7 +203,6 @@ export default class FilmPresenter {
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
       this.#mode,
-      this.id,
       update,
       this.#film,
     );

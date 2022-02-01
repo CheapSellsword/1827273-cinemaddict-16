@@ -1,5 +1,5 @@
-import { EvtKey, emojiTypes } from '../consts';
-import { isBlank } from '../utils/common';
+import { EvtKey, EMOJI_TYPES } from '../consts';
+import { isEmptyString } from '../utils/common';
 import SmartView from './smart-view';
 import he from 'he';
 
@@ -66,7 +66,7 @@ const createFilmPopupTemplate = (data, comments) => {
     </label>`;
 
   const createEmojiListTemplate = () => {
-    const createList = emojiTypes.map((emojiType) => createEmojiListItemTemplate(emojiType)).join('');
+    const createList = EMOJI_TYPES.map((emojiType) => createEmojiListItemTemplate(emojiType)).join('');
 
     return `<div class="film-details__emoji-list">
               ${createList}
@@ -291,7 +291,7 @@ export default class FilmPopupView extends SmartView {
   #formSubmitHandler = (evt) => {
     if (evt.key === EvtKey.ENTER && (evt.ctrlKey || evt.metaKey)) {
       evt.preventDefault();
-      if (isBlank(this.#newComment.emoji) || isBlank(this.#newComment.text)) {
+      if (isEmptyString(this.#newComment.emoji) || isEmptyString(this.#newComment.text)) {
         return;
       }
       this._callback.formSubmit(this.#newComment);

@@ -1,4 +1,4 @@
-import { FilterType, statsPeriods, BAR_HEIGHT, StatsPeriod } from '../consts';
+import { FilterType, STATS_PERIODS, BAR_HEIGHT, GENRES_COUNT, StatsPeriod } from '../consts';
 import { getFilmLengthTotal, NameToDate } from '../utils/dates-and-time';
 import { filter, statsFilter } from '../utils/filters';
 import { createRank } from './profile-and-rank-avatar-view';
@@ -147,7 +147,7 @@ const createPeriodItemTemplate = (period, isChecked) => (
 );
 
 const createPeriodListTemplate = (checkedPeriod) => {
-  const createPeriodList = statsPeriods.map((period, index) => createPeriodItemTemplate(period, index === statsPeriods.findIndex((statsPeriod) => statsPeriod.value === checkedPeriod))).join('');
+  const createPeriodList = STATS_PERIODS.map((period, index) => createPeriodItemTemplate(period, index === STATS_PERIODS.findIndex((statsPeriod) => statsPeriod.value === checkedPeriod))).join('');
   return createPeriodList;
 };
 
@@ -255,7 +255,7 @@ export default class StatsView extends SmartView {
 
    #setCharts = () => {
      const statisticCtx = this.element.querySelector('.statistic__chart');
-     statisticCtx.height = BAR_HEIGHT * 9;
+     statisticCtx.height = BAR_HEIGHT * GENRES_COUNT;
      const watchedFilms = getWatchedPeriodFilms(this._data);
      const genres = getGenres(watchedFilms);
      const topGenres = getTopGenres(genres);

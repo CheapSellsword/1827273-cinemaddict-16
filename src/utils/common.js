@@ -2,15 +2,14 @@ const compareByFieldLength = (field) => (a,b) => b[field].length - a[field].leng
 
 export const compareByField = (field) => (a,b) => b[field] - a[field];
 
-export const isBlank = (str) => !str || str.trim().length === 0; //?
+export const isEmptyString = (str) => !str || str.trim().length === 0;
 
 export const createTopRatedFilmList = (films) => {
-  const topRatedFilmList = films.slice().sort(compareByField('rating'));
-  const topRatedFilms = topRatedFilmList.filter((film) => film.rating > 0);
+  const topRatedFilmList = films.filter((film) => film.rating > 0).sort(compareByField('rating'));
   if (Math.max(topRatedFilmList[0].rating, topRatedFilmList[1].rating) === 0) {
     return [];
   }
-  return topRatedFilms;
+  return topRatedFilmList;
 };
 
 export const createMostCommentedFilmList = (films) => {

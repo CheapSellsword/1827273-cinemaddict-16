@@ -15,7 +15,7 @@ export const getHumanizedTimeOfComments = (date) => {
 
 export const getFilmLengthInMinutes = (filmLength) => {
   const lengthHours = filmLength.slice(0, filmLength.indexOf('h'));
-  const lengthMinutes = filmLength.slice(filmLength.indexOf('h') + 1, filmLength.indexOf('m')); //?
+  const lengthMinutes = filmLength.slice(filmLength.indexOf('h') + 1, filmLength.indexOf('m'));
   return Number(lengthHours) * HOUR_IN_MINUTES + Number(lengthMinutes);
 };
 
