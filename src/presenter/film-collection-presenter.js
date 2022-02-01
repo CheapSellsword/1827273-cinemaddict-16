@@ -35,6 +35,7 @@ export default class FilmCollectionPresenter {
     #filterType = FilterType.ALL;
     #currentSortType = SortType.DEFAULT;
     #renderedFilmCount = FILMS_COUNT_PER_STEP;
+    #body = document.querySelector('body');
 
     constructor(filmCollectionContainer, filmsModel, filterModel, commentsModel) {
       this.#filmListContainer = filmCollectionContainer;
@@ -135,7 +136,6 @@ export default class FilmCollectionPresenter {
             await this.#commentsModel.deleteComment(updateType, mode, update, film);
           } catch {
             this.#presenters.filter((presenter) => presenter.id === film.id).at(-1).setViewState(State.ABORTING);
-
           }
           break;
       }
@@ -149,10 +149,10 @@ export default class FilmCollectionPresenter {
             this.#popupScrollPosition = prevPopupPresenter.popupScrollPosition;
             prevPopupPresenter.removeDocumentEventListeners();
           }
-          this.#presenters.map((presenter) => presenter.removeDocumentEventListeners());
           this.#clearFilmCollection();
           this.#renderFilmCollection();
           if (mode === Mode.POPUP) {
+            this.#body.classList.remove('hide-overflow');
             const newPopupPresenter = this.#presenters.filter((presenter) => presenter.id === update.id).at(-1);
             if (newPopupPresenter) {
               newPopupPresenter.openPopup(this.#popupScrollPosition);
@@ -231,21 +231,12 @@ export default class FilmCollectionPresenter {
     }
 
     #renderFilmSection = () => {
-      this.#filmSectionComponent = new FilmSectionView();
-      const sectionsContainer = this.#filmSectionComponent.sectionsContainer;
-
-      const filmsListContainer = this.#filmSectionComponent.filmsListContainer;
+      this.#filmSectionComponent = new FilmSectionView(this.topRatedFilms, this.mostCommentedFilms);
       this.#filmContainer = this.#filmSectionComponent.filmContainer;
-      if (this.topRatedFilms.length) {
-        render(filmsListContainer, this.#filmSectionComponent.topRatedSectionElement, RenderPosition.AFTER_END);
-        this.#topRatedSection = this.#filmSectionComponent.topRatedSection;
-        this.#topRatedFilmContainer = this.#filmSectionComponent.topRatedFilmContainer;
-      }
-      if (this.mostCommentedFilms.length) {
-        render(sectionsContainer, this.#filmSectionComponent.mostCommentedSectionElement, RenderPosition.BEFORE_END);
-        this.#mostCommentedSection = this.#filmSectionComponent.mostCommentedSection;
-        this.#mostCommentedFilmContainer = this.#filmSectionComponent.mostCommentedFilmContainer;
-      }
+      this.#topRatedSection = this.#filmSectionComponent.topRatedSection;
+      this.#topRatedFilmContainer = this.#filmSectionComponent.topRatedFilmContainer;
+      this.#mostCommentedSection = this.#filmSectionComponent.mostCommentedSection;
+      this.#mostCommentedFilmContainer = this.#filmSectionComponent.mostCommentedFilmContainer;
 
       render(this.#filmSortComponent, this.#filmSectionComponent, RenderPosition.AFTER_END);
     }
