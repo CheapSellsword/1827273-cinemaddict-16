@@ -9,7 +9,7 @@ import FilterPresenter from './presenter/filter-presenter';
 import CommentsModel from './model/comments-model';
 import ApiService from './api-service.js';
 
-export const mainElement = document.querySelector('.main');
+const mainElement = document.querySelector('.main');
 const headerElement = document.querySelector('.header');
 const footerElement = document.querySelector('.footer');
 const footerStatsElement = footerElement.querySelector('.footer__statistics');

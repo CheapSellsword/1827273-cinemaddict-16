@@ -12,7 +12,6 @@ export default class FilmPresenter {
   #filmPopupComponent = null;
   #film = null;
   #commentsModel = null;
-  #id = null;
 
   #mode = Mode.DEFAULT;
   #body = document.querySelector('body');
@@ -122,9 +121,6 @@ export default class FilmPresenter {
   }
 
   removeDocumentEventListeners = () => {
-    if (this.#mode !== Mode.POPUP) {
-      return;
-    }
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#filmPopupComponent.removeFormSubmitHandler();
   }
