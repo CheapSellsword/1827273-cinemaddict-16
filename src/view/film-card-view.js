@@ -1,8 +1,21 @@
 import { MAX_DESCRIPTION_LENGTH } from '../consts';
 import AbstractView from './abstract-view';
 
-const createFilmCard = (film) => {
-  const {description, title, poster, releaseYear, rating, length, genres, comments, isOnWatchlist, isWatched, isFavorite} = film;
+const createFilmCardTemplate = (film) => {
+  const {
+    description,
+    title,
+    poster,
+    releaseYear,
+    rating,
+    length,
+    genres,
+    comments,
+    isOnWatchlist,
+    isWatched,
+    isFavorite
+  } = film;
+
   const watchlistClassName = isOnWatchlist
     ? 'film-card__controls-item--active'
     : '';
@@ -46,7 +59,7 @@ export default class FilmCardView extends AbstractView {
   }
 
   get template() {
-    return createFilmCard(this.#film);
+    return createFilmCardTemplate(this.#film);
   }
 
   setFilmCardClickHandler = (callback) => {

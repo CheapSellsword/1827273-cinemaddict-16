@@ -59,11 +59,13 @@ export default class FilmPresenter {
   }
 
   get id() {
-    this.#id = this.#film.id;
-    return this.#id;
+    return this.#film.id;
   }
 
   get popupScrollPosition() {
+    if (this.#mode === Mode.DEFAULT) {
+      return null;
+    }
     return this.#filmPopupComponent.scrollPosition;
   }
 
@@ -86,7 +88,7 @@ export default class FilmPresenter {
   }
 
   setViewState = (state) => {
-    if (this.#mode === Mode.DEFAULT) {
+    if (this.#mode !== Mode.POPUP) {
       return;
     }
     const resetFormState = () => {
@@ -114,13 +116,15 @@ export default class FilmPresenter {
     }
   }
 
-
   destroy = () => {
     remove(this.#filmComponent);
     remove(this.#filmPopupComponent);
   }
 
   removeDocumentEventListeners = () => {
+    if (this.#mode !== Mode.POPUP) {
+      return;
+    }
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#filmPopupComponent.removeFormSubmitHandler();
   }
@@ -162,7 +166,7 @@ export default class FilmPresenter {
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
       this.#mode,
-      {...this.#film, isOnWatchlist: !this.#film.isOnWatchlist}
+      {...this.#film, isOnWatchlist: !this.#film.isOnWatchlist},
     );
   }
 
@@ -171,7 +175,7 @@ export default class FilmPresenter {
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
       this.#mode,
-      {...this.#film, isWatched: !this.#film.isWatched}
+      {...this.#film, isWatched: !this.#film.isWatched},
     );
   }
 
@@ -180,7 +184,7 @@ export default class FilmPresenter {
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
       this.#mode,
-      {...this.#film, isFavorite: !this.#film.isFavorite}
+      {...this.#film, isFavorite: !this.#film.isFavorite},
     );
   }
 

@@ -7,19 +7,19 @@ import dayjs from 'dayjs';
 export const adaptToClient = (film) => {
   const adaptedFilm = {...film,
     cast: film['film_info']['actors'],
-    ageRestriction:  film['film_info']['age_rating'],
-    alternativeTitle:  film['film_info']['alternative_title'],
-    description:  film['film_info']['description'],
-    director:  film['film_info']['director'],
-    genres:  film['film_info']['genre'],
-    poster:  film['film_info']['poster'],
+    ageRestriction: film['film_info']['age_rating'],
+    alternativeTitle: film['film_info']['alternative_title'],
+    description: film['film_info']['description'],
+    director: film['film_info']['director'],
+    genres: film['film_info']['genre'],
+    poster: film['film_info']['poster'],
     fullReleaseDate:  dayjs(film['film_info']['release']['date']).format('DD MMMM YYYY'),
     releaseYear:  dayjs(film['film_info']['release']['date']).format('YYYY'),
-    country:   film['film_info']['release']['release_country'],
+    country: film['film_info']['release']['release_country'],
     length: convertMinutes(film['film_info']['runtime']),
-    title:  film['film_info']['title'],
-    rating:  film['film_info']['total_rating'],
-    writers:  film['film_info']['writers'],
+    title: film['film_info']['title'],
+    rating: film['film_info']['total_rating'],
+    writers: film['film_info']['writers'],
     isOnWatchlist: film['user_details']['watchlist'],
     isWatched: film['user_details']['already_watched'],
     isFavorite: film['user_details']['favorite'],
@@ -48,7 +48,7 @@ export default class FilmsModel extends AbstractObservable {
     try {
       const films = await this.#apiService.films;
       this.#films = films.map(adaptToClient);
-    } catch(err) {
+    } catch (err) {
       this.#films = [];
     }
     this._notify(UpdateType.INIT);
@@ -72,7 +72,6 @@ export default class FilmsModel extends AbstractObservable {
     if (index === -1) {
       throw new Error('Can\'t update unexisting film');
     }
-
     try {
       const response = await this.#apiService.updateFilm(update);
       const updatedFilm = adaptToClient(response);
@@ -81,7 +80,7 @@ export default class FilmsModel extends AbstractObservable {
         updatedFilm,
         ...this.#films.slice(index + 1),
       ];
-      this._notify(updateType, mode, updatedFilm);
+      this._notify(updateType, mode, update);
     } catch (err) {
       throw new Error('Can\'t update film');
     }

@@ -38,6 +38,7 @@ export default class CommentsModel extends AbstractObservable {
     }
 
     addComment = async (updateType, mode, update) => {
+      this.#apiService.filmId = this.#filmId;
       try {
         const response = await this.#apiService.addComment(update);
         this.#comments = response.comments.map(this.#adaptCommentToClient);
@@ -66,7 +67,7 @@ export default class CommentsModel extends AbstractObservable {
         this.#comments.map((comment) => filmComments.push(comment.id));
         const updatedFilm = {...film, comments: filmComments};
         this._notify(updateType, mode, updatedFilm);
-      } catch(err) {
+      } catch (err) {
         throw new Error('Can\'t delete comment');
       }
     }

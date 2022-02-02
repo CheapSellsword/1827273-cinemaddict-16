@@ -1,13 +1,9 @@
 export const FILMS_COUNT_PER_STEP = 5;
 export const MAX_DESCRIPTION_LENGTH = 140;
-export const HOUR_IN_MINS = 60;
+export const HOUR_IN_MINUTES = 60;
 export const EXTRA_FILMS_COUNT = 2;
-
-export const FILM_SECTION_TYPES = [
-  'All movies. Upcoming',
-  'Top rated',
-  'Most commented'
-];
+export const BAR_HEIGHT = 50;
+export const GENRES_COUNT = 9;
 
 export const EMOJI_TYPES = [
   'smile',
@@ -46,8 +42,6 @@ export const StatsPeriod = {
   MONTH: 'month',
   YEAR: 'year',
 };
-
-export const BAR_HEIGHT = 50;
 
 export const SortType = {
   DEFAULT: 'default',
@@ -105,9 +99,6 @@ export const Method = {
   POST: 'POST',
 };
 
-export const AUTHORIZATION = 'Basic lvldmkgldjpkvmjgmlgoigd';
-export const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';
-
 export const State = {
   SAVING: 'SAVING',
   DELETING: 'DELETING',
@@ -115,3 +106,5 @@ export const State = {
 };
 
 export const SHAKE_ANIMATION_TIMEOUT = 600;
+export const AUTHORIZATION = 'Basic lvldmkgldjpkvjgmlgoigd';
+export const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';

@@ -1,10 +1,10 @@
-import { FilterType, STATS_PERIODS, BAR_HEIGHT, StatsPeriod } from '../consts';
-import { filter, statsFilter } from '../utils/filters';
+import { FilterType, STATS_PERIODS, BAR_HEIGHT, GENRES_COUNT, StatsPeriod } from '../consts';
 import { getFilmLengthTotal, NameToDate } from '../utils/dates-and-time';
+import { filter, statsFilter } from '../utils/filters';
 import { createRank } from './profile-and-rank-avatar-view';
-import SmartView from './smart-view';
-import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import isBetweenPlugin from 'dayjs/plugin/isBetween';
+import SmartView from './smart-view';
 import Chart from 'chart.js';
 import dayjs from 'dayjs';
 
@@ -255,7 +255,7 @@ export default class StatsView extends SmartView {
 
    #setCharts = () => {
      const statisticCtx = this.element.querySelector('.statistic__chart');
-     statisticCtx.height = BAR_HEIGHT * 9;
+     statisticCtx.height = BAR_HEIGHT * GENRES_COUNT;
      const watchedFilms = getWatchedPeriodFilms(this._data);
      const genres = getGenres(watchedFilms);
      const topGenres = getTopGenres(genres);

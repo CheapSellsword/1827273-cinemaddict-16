@@ -35,6 +35,7 @@ export default class FilmCollectionPresenter {
     #filterType = FilterType.ALL;
     #currentSortType = SortType.DEFAULT;
     #renderedFilmCount = FILMS_COUNT_PER_STEP;
+    #body = document.querySelector('body');
 
     constructor(filmCollectionContainer, filmsModel, filterModel, commentsModel) {
       this.#filmListContainer = filmCollectionContainer;
@@ -114,27 +115,27 @@ export default class FilmCollectionPresenter {
     #handleViewAction = async (actionType, updateType, mode, update, film) => {
       switch (actionType) {
         case UserAction.UPDATE_FILM:
-          this.#presenters.find((presenter) => presenter.id === update.id).setViewState(State.SAVING);
+          this.#presenters.filter((presenter) => presenter.id === update.id).at(-1).setViewState(State.SAVING);
           try {
             await this.#filmsModel.updateFilm(updateType, mode, update);
           } catch (err) {
-            this.#presenters.find((presenter) => presenter.id === update.id).setViewState(State.ABORTING);
+            this.#presenters.filter((presenter) => presenter.id === update.id).at(-1).setViewState(State.ABORTING);
           }
           break;
         case UserAction.ADD_COMMENT:
-          this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.SAVING);
+          this.#presenters.filter((presenter) => presenter.id === film.id).at(-1).setViewState(State.SAVING);
           try {
             await this.#commentsModel.addComment(updateType, mode, update);
           } catch (err) {
-            this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.ABORTING);
+            this.#presenters.filter((presenter) => presenter.id === film.id).at(-1).setViewState(State.ABORTING);
           }
           break;
         case UserAction.DELETE_COMMENT:
-          this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.DELETING);
+          this.#presenters.filter((presenter) => presenter.id === film.id).at(-1).setViewState(State.DELETING);
           try {
             await this.#commentsModel.deleteComment(updateType, mode, update, film);
           } catch {
-            this.#presenters.find((presenter) => presenter.id === film.id).setViewState(State.ABORTING);
+            this.#presenters.filter((presenter) => presenter.id === film.id).at(-1).setViewState(State.ABORTING);
           }
           break;
       }
@@ -144,15 +145,18 @@ export default class FilmCollectionPresenter {
       switch (updateType) {
         case UpdateType.MINOR:
           if (mode === Mode.POPUP) {
-            const prevPopupPresenter = this.#presenters.find((presenter) => presenter.id === update.id);
+            const prevPopupPresenter = this.#presenters.filter((presenter) => presenter.id === update.id).at(-1);
             this.#popupScrollPosition = prevPopupPresenter.popupScrollPosition;
             prevPopupPresenter.removeDocumentEventListeners();
           }
           this.#clearFilmCollection();
           this.#renderFilmCollection();
           if (mode === Mode.POPUP) {
-            const newPopupPresenter = this.#presenters.find((presenter) => presenter.id === update.id);
-            newPopupPresenter.openPopup(this.#popupScrollPosition);
+            this.#body.classList.remove('hide-overflow');
+            const newPopupPresenter = this.#presenters.filter((presenter) => presenter.id === update.id).at(-1);
+            if (newPopupPresenter) {
+              newPopupPresenter.openPopup(this.#popupScrollPosition);
+            }
           }
           break;
         case UpdateType.MAJOR:
@@ -227,7 +231,7 @@ export default class FilmCollectionPresenter {
     }
 
     #renderFilmSection = () => {
-      this.#filmSectionComponent = new FilmSectionView();
+      this.#filmSectionComponent = new FilmSectionView(this.topRatedFilms, this.mostCommentedFilms);
       this.#filmContainer = this.#filmSectionComponent.filmContainer;
       this.#topRatedSection = this.#filmSectionComponent.topRatedSection;
       this.#topRatedFilmContainer = this.#filmSectionComponent.topRatedFilmContainer;
@@ -239,8 +243,8 @@ export default class FilmCollectionPresenter {
 
     #renderFilm = (filmContainer, film) => {
       const filmPresenter = new FilmPresenter(filmContainer, this.#handleViewAction, this.#handleModeChange, this.#commentsModel);
-      filmPresenter.init(film);
       this.#presenters.push(filmPresenter);
+      filmPresenter.init(film);
     }
 
     #renderFilms = (sectionFilms, filmContainer) => {
@@ -282,8 +286,11 @@ export default class FilmCollectionPresenter {
       if (filmCount > this.#renderedFilmCount) {
         this.#renderShowMoreButton();
       }
-
-      this.#renderExtraFilms(this.#topRatedFilmContainer, this.topRatedFilms, this.#topRatedSection);
-      this.#renderExtraFilms(this.#mostCommentedFilmContainer, this.mostCommentedFilms, this.#mostCommentedSection);
+      if (this.topRatedFilms.length) {
+        this.#renderExtraFilms(this.#topRatedFilmContainer, this.topRatedFilms, this.#topRatedSection);
+      }
+      if (this.mostCommentedFilms.length) {
+        this.#renderExtraFilms(this.#mostCommentedFilmContainer, this.mostCommentedFilms, this.#mostCommentedSection);
+      }
     }
 }

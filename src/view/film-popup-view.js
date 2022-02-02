@@ -1,9 +1,9 @@
 import { EvtKey, EMOJI_TYPES } from '../consts';
-import { isBlank } from '../utils/common';
+import { isEmptyString } from '../utils/common';
 import SmartView from './smart-view';
 import he from 'he';
 
-const createFilmPopup = (data, comments) => {
+const createFilmPopupTemplate = (data, comments) => {
   const {
     title,
     poster,
@@ -180,7 +180,7 @@ export default class FilmPopupView extends SmartView {
   }
 
   get template() {
-    return createFilmPopup(this._data, this.#comments);
+    return createFilmPopupTemplate(this._data, this.#comments);
   }
 
   set scrollPosition(position) {
@@ -291,7 +291,7 @@ export default class FilmPopupView extends SmartView {
   #formSubmitHandler = (evt) => {
     if (evt.key === EvtKey.ENTER && (evt.ctrlKey || evt.metaKey)) {
       evt.preventDefault();
-      if (isBlank(this.#newComment.emoji) || isBlank(this.#newComment.text)) {
+      if (isEmptyString(this.#newComment.emoji) || isEmptyString(this.#newComment.text)) {
         return;
       }
       this._callback.formSubmit(this.#newComment);

@@ -1,6 +1,6 @@
 import AbstractView from './abstract-view';
 
-const createFilmPopup = (film) => {
+const createFilmPopupTemplate = (film) => {
   const {
     title,
     poster,
@@ -126,7 +126,7 @@ export default class NoCommentsView extends AbstractView {
   }
 
   get template() {
-    return createFilmPopup(this.#film);
+    return createFilmPopupTemplate(this.#film);
   }
 
   setCloseButtonClickHandler = (callback) => {

@@ -1,26 +1,50 @@
 import AbstractView from './abstract-view';
-import { FILM_SECTION_TYPES } from '../consts';
 
-const createFilmSectionTemplate = (filmSectionType) => {
-  const titleClass = filmSectionType === 'All movies. Upcoming' ? 'visually-hidden' : '';
-  const sectionClass = filmSectionType !== 'All movies. Upcoming' ? 'films-list--extra' : '';
-  return  `<section class="films-list ${sectionClass}">
-            <h2 class="films-list__title ${titleClass}">${filmSectionType}</h2>
-            <div class="films-list__container"></div>
-          </section>`;
-};
-
-const createFilmSection = () => {
-  const filmSection = FILM_SECTION_TYPES.map((filmSectionType) => createFilmSectionTemplate(filmSectionType)).join('');
-  return `<section class="films">
-          ${filmSection}
+const createTopRatedTemplate = (films) => {
+  if (films.length) {
+    return   `<section class="films-list films-list--extra">
+               <h2 class="films-list__title">Top rated</h2>
+               <div class="films-list__container"></div>
+             </section>`;
+  }
+  return `<section class="films-list films-list--extra">
          </section>`;
 };
 
+const createMostCommentedTemplate = (films) => {
+  if (films.length) {
+    return   `<section class="films-list films-list--extra">
+               <h2 class="films-list__title">Most commented</h2>
+               <div class="films-list__container"></div>
+             </section>`;
+  }
+  return `<section class="films-list films-list--extra">
+         </section>`;
+};
+
+const createFilmSectionsTemplate = (topRatedFilms, mostCommentedFilms) => (
+  `<section class="films">
+    <section class="films-list">
+      <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+      <div class="films-list__container"></div>
+    </section>
+    ${createTopRatedTemplate(topRatedFilms)}
+    ${createMostCommentedTemplate(mostCommentedFilms)}
+  </section>`
+);
+
 export default class FilmsSectionView extends AbstractView {
+  #topRatedFilms = null;
+  #mostCommentedFilms = null;
+
+  constructor(topRatedFilms, mostCommentedFilms) {
+    super();
+    this.#topRatedFilms = topRatedFilms;
+    this.#mostCommentedFilms = mostCommentedFilms;
+  }
 
   get template() {
-    return createFilmSection();
+    return createFilmSectionsTemplate(this.#topRatedFilms, this.#mostCommentedFilms);
   }
 
   get filmContainer() {

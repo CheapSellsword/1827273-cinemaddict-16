@@ -21,7 +21,7 @@ export const createRank = (filmsCount) => {
   return rank;
 };
 
-const createProfileRankAndAvatar = (filmsCount) => (
+const createProfileRankAndAvatarTemplate = (filmsCount) => (
   `<section class="header__profile profile">
     <p class="profile__rating">${createRank(filmsCount)}</p>
     <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
@@ -39,7 +39,7 @@ export default class ProfileRankAndAvatarView extends SmartView {
   }
 
   get template() {
-    return createProfileRankAndAvatar(this.#films.length);
+    return createProfileRankAndAvatarTemplate(this.#films.length);
   }
 
   restoreHandlers = () => {};

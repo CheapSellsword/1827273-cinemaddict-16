@@ -1,5 +1,5 @@
 import { AUTHORIZATION, END_POINT } from './consts';
-import { RenderPosition, render } from './utils/render';
+import { render } from './utils/render';
 import FilmCountView from './view/film-count-view';
 import ProfileRankAndAvatarView from './view/profile-and-rank-avatar-view';
 import FilmCollectionPresenter from './presenter/film-collection-presenter';
@@ -9,8 +9,8 @@ import FilterPresenter from './presenter/filter-presenter';
 import CommentsModel from './model/comments-model';
 import ApiService from './api-service.js';
 
-const headerElement = document.querySelector('.header');
 export const mainElement = document.querySelector('.main');
+const headerElement = document.querySelector('.header');
 const footerElement = document.querySelector('.footer');
 const footerStatsElement = footerElement.querySelector('.footer__statistics');
 
@@ -26,5 +26,5 @@ filterPresenter.init();
 filmCollectionPresenter.init();
 filmsModel.init();
 
-render(headerElement, new ProfileRankAndAvatarView(filmsModel), RenderPosition.BEFORE_END);
-render(footerStatsElement, new FilmCountView(filmsModel), RenderPosition.BEFORE_END);
+render(headerElement, new ProfileRankAndAvatarView(filmsModel));
+render(footerStatsElement, new FilmCountView(filmsModel));

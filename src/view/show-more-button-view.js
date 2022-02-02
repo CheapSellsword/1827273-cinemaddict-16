@@ -1,6 +1,6 @@
 import AbstractView from './abstract-view';
 
-const createShowMoreButton = () => (
+const createShowMoreButtonTemplate = () => (
   `<button class="films-list__show-more">
     Show more
   </button>`
@@ -9,7 +9,7 @@ const createShowMoreButton = () => (
 export default class ShowMoreButtonView extends AbstractView {
 
   get template() {
-    return createShowMoreButton();
+    return createShowMoreButtonTemplate();
   }
 
   setShowMoreButtonClickHandler = (callback) => {
