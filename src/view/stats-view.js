@@ -1,4 +1,4 @@
-import { FilterType, STATS_PERIODS, BAR_HEIGHT, GENRES_COUNT, StatsPeriod, Color } from '../consts';
+import { FilterType, STATS_PERIODS, BAR_HEIGHT, GENRES_COUNT, StatsPeriod } from '../consts';
 import { getFilmLengthTotal, NameToDate } from '../utils/dates-and-time';
 import { filter, statsFilter } from '../utils/filters';
 import { createRank } from './profile-and-rank-avatar-view';
@@ -18,8 +18,8 @@ const renderStatsChart = (statisticCtx, topGenres, filmCountsOfGenres) => {
       labels: topGenres,
       datasets: [{
         data: filmCountsOfGenres,
-        backgroundColor: Color.YELLOW,
-        hoverBackgroundColor: Color.YELLOW,
+        backgroundColor: '#ffe800',
+        hoverBackgroundColor: '#ffe800',
         anchor: 'start',
         barThickness: 24,
       }],
@@ -31,7 +31,7 @@ const renderStatsChart = (statisticCtx, topGenres, filmCountsOfGenres) => {
           font: {
             size: 20,
           },
-          color: Color.WHITE,
+          color: '#ffffff',
           anchor: 'start',
           align: 'start',
           offset: 40,
@@ -40,7 +40,7 @@ const renderStatsChart = (statisticCtx, topGenres, filmCountsOfGenres) => {
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: Color.WHITE,
+            fontColor: '#ffffff',
             padding: 100,
             fontSize: 20,
           },
