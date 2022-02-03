@@ -35,6 +35,11 @@ export const STATS_PERIODS = [
   },
 ];
 
+export const Color = {
+  WHITE: '#ffffff',
+  YELLOW: '#ffe800',
+};
+
 export const StatsPeriod = {
   ALL: 'all-time',
   TODAY: 'today',
