@@ -104,6 +104,9 @@ export default class FilmPresenter {
         });
         break;
       case State.DELETING:
+        if (this.#mode !== Mode.POPUP) {
+          return;
+        }
         this.#filmPopupComponent.updateData({
           isDisabled: true,
           isDeleting: true,
