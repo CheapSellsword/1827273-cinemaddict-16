@@ -10,14 +10,14 @@ import dayjs from 'dayjs';
 
 dayjs.extend(isBetweenPlugin);
 
-const renderStatsChart = (statisticCtx, topGenres, filmCountsOfGenres) => {
+const renderStatsChart = (statisticCtx, sortedGenres, sortedFilmCounts) => {
   new Chart(statisticCtx, {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
-      labels: topGenres,
+      labels: sortedGenres,
       datasets: [{
-        data: filmCountsOfGenres,
+        data: sortedFilmCounts,
         backgroundColor: '#ffe800',
         hoverBackgroundColor: '#ffe800',
         anchor: 'start',
@@ -70,103 +70,42 @@ const renderStatsChart = (statisticCtx, topGenres, filmCountsOfGenres) => {
   });
 };
 
-const getGenres = (films) => {
+const getFilmsOfGenre = (films) => {
   if (!films.length) {
     return;
   }
-
-  /*массив жанров србирает колво жанров
-
-    action: колво фильмов в жанре экшн
-
-
-  массив жанров c массивом фильмов*/
-  const genreAndFilms = { //
-    action: films.filter((film) => film.genres.find((genre) => genre === 'Action')),
-    adventure: films.filter((film) => film.genres.find((genre) => genre === 'Adventure')),
-    animation: films.filter((film) => film.genres.find((genre) => genre === 'Animation')),
-    comedy: films.filter((film) => film.genres.find((genre) => genre === 'Comedy')),
-    drama: films.filter((film) => film.genres.find((genre) => genre === 'Drama')),
-    family: films.filter((film) => film.genres.find((genre) => genre === 'Family')),
-    horror: films.filter((film) => film.genres.find((genre) => genre === 'Horror')),
-    sciFi: films.filter((film) => film.genres.find((genre) => genre === 'Sci-Fi')),
-    thriller: films.filter((film) => film.genres.find((genre) => genre === 'Thriller')),
-  };
-
-  const genres = [];
+  const collectedGenres = [];
   films.map((film) => {
-    genres.push(film.genres);
+    collectedGenres.push(film.genres);
   });
 
-  console.log(genres.flat());
-  const reduced = genres.flat().reduce((total, genre) => {
+  const filmsOfGenre = collectedGenres.flat().reduce((total, genre) => {
     if (!total[genre]) {
       total[genre] = 1;
     } else {
       total[genre] = total[genre] + 1;
     }
-
-    // console.log(genre);
-
     return total;
-  }, { });
-
-  console.log('reduced', reduced);
-
-  const keysSorted = Object.keys(reduced).sort((a, b) => reduced[b] - reduced[a]);
-
-  const valuesSorted = Object.values(reduced).sort((a, b) => b - a);
-
-  console.log('keysSorted', keysSorted, 'valuesSorted', valuesSorted);
-
-  return genreAndFilms;
+  }, {});
+  return filmsOfGenre;
 };
 
-const getTopGenres = (genres) => {
-  if (!genres) {
+const getTopGenres = (filmsOfGenre) => {
+  if (!filmsOfGenre) {
     return [];
   }
-
-  //
-
-  // cons{
-  //   action: 1,
-  //   comedy: 3,
-  // }
-
-  const filmCountOfGenre = new Map(Object.entries(genres)); //
-  // console.log(filmCountOfGenre);
-  // console.log(Object.entries(genres));
-  const sortedGenresAndFilms = new Map([...filmCountOfGenre.entries()].sort((a, b) => b[1].length - a[1].length));
-  const genreNames = [];
-  Array.from(sortedGenresAndFilms.keys()).map((genre) => {
-    let genreName = genre.charAt(0).toUpperCase() + genre.slice(1);
-    if (genreName === 'SciFi') {
-      genreName = 'Sci-Fi';
-    }
-    genreNames.push(genreName);
-  });
-  //console.log(genreNames);
-
-
-  return genreNames;
+  const sortedGenres = Object.keys(filmsOfGenre).sort((a, b) => filmsOfGenre[b] - filmsOfGenre[a]);
+  return sortedGenres;
 };
 
-const getFilmCountsOfGenres = (genres) => {
-  if (!genres) {
+const getGenreFilmCounts = (filmsOfGenre) => {
+  if (!filmsOfGenre) {
     return [];
   }
-
-  const filmCountOfGenres = new Map(Object.entries(genres)); //
-  const sortedGenresAndFilms = new Map([...filmCountOfGenres.entries()].sort((a, b) => b[1].length - a[1].length));
-  const filmCountsOfGenres = [];
-  Array.from(sortedGenresAndFilms.values()).map((film) => {
-    const filmCountOfGenre = film.length;
-    filmCountsOfGenres.push(filmCountOfGenre);
-  });
-  //console.log(filmCountsOfGenres);
-  return filmCountsOfGenres;
+  const sortedFilmCounts = Object.values(filmsOfGenre).sort((a, b) => b - a);
+  return sortedFilmCounts;
 };
+
 
 const getWatchedPeriodFilms = (data) => {
   if (!data.pastDate) {
@@ -198,13 +137,8 @@ const createPeriodListTemplate = (checkedPeriod) => {
 const createStatsTemplate = (data, checkedPeriod) => {
   const watchedFilms = getWatchedPeriodFilms(data);
   const filmLengthTotal = getFilmLengthTotal(watchedFilms);
-  const genres = getGenres(watchedFilms);
-  const topGenre = getTopGenres(genres)[0];//
-
-  // console.log(genres);
-
-  getFilmCountsOfGenres(genres);
-
+  const filmsOfGenre = getFilmsOfGenre(watchedFilms);
+  const topGenre = getTopGenres(filmsOfGenre)[0];
 
   return `<section class="statistic">
             <p class="statistic__rank">
@@ -304,10 +238,10 @@ export default class StatsView extends SmartView {
      const statisticCtx = this.element.querySelector('.statistic__chart');
      statisticCtx.height = BAR_HEIGHT * GENRES_COUNT;
      const watchedFilms = getWatchedPeriodFilms(this._data);
-     const genres = getGenres(watchedFilms);
-     const topGenres = getTopGenres(genres);
-     const filmCountsOfGenres = getFilmCountsOfGenres(genres);
-     renderStatsChart(statisticCtx, topGenres, filmCountsOfGenres);
+     const filmsOfGenre = getFilmsOfGenre(watchedFilms);
+     const sortedGenres = getTopGenres(filmsOfGenre);
+     const sortedFilmCounts = getGenreFilmCounts(filmsOfGenre);
+     renderStatsChart(statisticCtx, sortedGenres, sortedFilmCounts);
    }
 }
 
