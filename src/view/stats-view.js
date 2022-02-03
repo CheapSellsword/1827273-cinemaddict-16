@@ -75,7 +75,13 @@ const getGenres = (films) => {
     return;
   }
 
-  const genreAndFilms = {
+  /*массив жанров србирает колво жанров
+
+    action: колво фильмов в жанре экшн
+
+
+  массив жанров c массивом фильмов*/
+  const genreAndFilms = { //
     action: films.filter((film) => film.genres.find((genre) => genre === 'Action')),
     adventure: films.filter((film) => film.genres.find((genre) => genre === 'Adventure')),
     animation: films.filter((film) => film.genres.find((genre) => genre === 'Animation')),
@@ -87,6 +93,32 @@ const getGenres = (films) => {
     thriller: films.filter((film) => film.genres.find((genre) => genre === 'Thriller')),
   };
 
+  const genres = [];
+  films.map((film) => {
+    genres.push(film.genres);
+  });
+
+  console.log(genres.flat());
+  const reduced = genres.flat().reduce((total, genre) => {
+    if (!total[genre]) {
+      total[genre] = 1;
+    } else {
+      total[genre] = total[genre] + 1;
+    }
+
+    // console.log(genre);
+
+    return total;
+  }, { });
+
+  console.log('reduced', reduced);
+
+  const keysSorted = Object.keys(reduced).sort((a, b) => reduced[b] - reduced[a]);
+
+  const valuesSorted = Object.values(reduced).sort((a, b) => b - a);
+
+  console.log('keysSorted', keysSorted, 'valuesSorted', valuesSorted);
+
   return genreAndFilms;
 };
 
@@ -95,7 +127,16 @@ const getTopGenres = (genres) => {
     return [];
   }
 
-  const filmCountOfGenre = new Map(Object.entries(genres));
+  //
+
+  // cons{
+  //   action: 1,
+  //   comedy: 3,
+  // }
+
+  const filmCountOfGenre = new Map(Object.entries(genres)); //
+  // console.log(filmCountOfGenre);
+  // console.log(Object.entries(genres));
   const sortedGenresAndFilms = new Map([...filmCountOfGenre.entries()].sort((a, b) => b[1].length - a[1].length));
   const genreNames = [];
   Array.from(sortedGenresAndFilms.keys()).map((genre) => {
@@ -105,6 +146,8 @@ const getTopGenres = (genres) => {
     }
     genreNames.push(genreName);
   });
+  //console.log(genreNames);
+
 
   return genreNames;
 };
@@ -114,13 +157,14 @@ const getFilmCountsOfGenres = (genres) => {
     return [];
   }
 
-  const filmCountOfGenres = new Map(Object.entries(genres));
+  const filmCountOfGenres = new Map(Object.entries(genres)); //
   const sortedGenresAndFilms = new Map([...filmCountOfGenres.entries()].sort((a, b) => b[1].length - a[1].length));
   const filmCountsOfGenres = [];
   Array.from(sortedGenresAndFilms.values()).map((film) => {
     const filmCountOfGenre = film.length;
     filmCountsOfGenres.push(filmCountOfGenre);
   });
+  //console.log(filmCountsOfGenres);
   return filmCountsOfGenres;
 };
 
@@ -155,7 +199,9 @@ const createStatsTemplate = (data, checkedPeriod) => {
   const watchedFilms = getWatchedPeriodFilms(data);
   const filmLengthTotal = getFilmLengthTotal(watchedFilms);
   const genres = getGenres(watchedFilms);
-  const topGenre = getTopGenres(genres)[0];
+  const topGenre = getTopGenres(genres)[0];//
+
+  // console.log(genres);
 
   getFilmCountsOfGenres(genres);
 
