@@ -92,7 +92,7 @@ const getGenres = (films) => {
 
 const getTopGenres = (genres) => {
   if (!genres) {
-    return;
+    return [];
   }
 
   const filmCountOfGenre = new Map(Object.entries(genres));
@@ -155,7 +155,8 @@ const createStatsTemplate = (data, checkedPeriod) => {
   const watchedFilms = getWatchedPeriodFilms(data);
   const filmLengthTotal = getFilmLengthTotal(watchedFilms);
   const genres = getGenres(watchedFilms);
-  const topGenres = getTopGenres(genres);
+  const topGenre = getTopGenres(genres)[0];
+
   getFilmCountsOfGenres(genres);
 
 
@@ -182,7 +183,7 @@ const createStatsTemplate = (data, checkedPeriod) => {
                 </li>
                 <li class="statistic__text-item">
                 <h4 class="statistic__item-title">Top genre</h4>
-                <p class="statistic__item-text">${topGenres ? topGenres[0] : ''}</p>
+                <p class="statistic__item-text">${topGenre ? topGenre : ''}</p>
                 </li>
             </ul>
 

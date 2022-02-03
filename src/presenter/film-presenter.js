@@ -87,9 +87,6 @@ export default class FilmPresenter {
   }
 
   setViewState = (state) => {
-    if (this.#mode !== Mode.POPUP) {
-      return;
-    }
     const resetFormState = () => {
       this.#filmPopupComponent.updateData({
         isDisabled: false,
@@ -99,6 +96,9 @@ export default class FilmPresenter {
 
     switch (state) {
       case State.SAVING:
+        if (this.#mode !== Mode.POPUP) {
+          return;
+        }
         this.#filmPopupComponent.updateData({
           isDisabled: true,
         });
@@ -110,6 +110,10 @@ export default class FilmPresenter {
         });
         break;
       case State.ABORTING:
+        if (this.#mode !== Mode.POPUP) {
+          this.#filmComponent.shake();
+          return;
+        }
         this.#filmPopupComponent.shake(resetFormState);
         break;
     }

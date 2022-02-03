@@ -190,7 +190,7 @@ export default class FilmCollectionPresenter {
         return;
       }
       this.#currentSortType = sortType;
-      this.#clearFilmCollection();
+      this.#clearFilmCollection({resetRenderedFilmCount: true});
       this.#renderFilmCollection();
     }
 
