@@ -307,20 +307,4 @@ export default class FilmPopupView extends SmartView {
     isDisabled: false,
     isDeleting: false,
   })
-
-  static parseDataToFilm = (data) => {
-    const film = {...data};
-
-    film.emoji = '';
-    film.text = '';
-    film.checkedEmoji = '';
-
-    delete film.emoji;
-    delete film.text;
-    delete film.checkedEmoji;
-    delete film.isDisabled;
-    delete film.isDeleting;
-
-    return film;
-  }
 }
